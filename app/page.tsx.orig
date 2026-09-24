@@ -1,0 +1,163 @@
+'use client';
+
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+
+import Image from "next/image";
+import { getImageProps } from "next/image";
+import type { Swiper as SwiperInstance } from "swiper";
+import { A11y, Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/effect-fade";
+import "swiper/css/pagination";
+
+import { HeroBanner } from "./components/hero-banner";
+import { journeyConfig } from "./config/journey";
+
+const languages = { en: "English", fr: "Français" } as const;
+type Locale = keyof typeof languages;
+const locales = Object.keys(languages) as Locale[];
+
+const rewardIcons = ["♢", "✹", "◎", "▦"] as const;
+
+const map = {
+  desktop: getImageProps({
+    ...journeyConfig.map.desktop,
+    alt: "",
+    quality: 75,
+    sizes: "(min-width: 769px) 1180px, 100vw",
+  }).props,
+  mobile: getImageProps({
+    ...journeyConfig.map.mobile,
+    alt: "",
+    sizes: "100vw",
+    loading: "eager",
+    unoptimized: true,
+  }).props,
+};
+
+export default function Home() {
+  const [locale, setLocale] = useState<Locale>("en");
+  const [activeStep, setActiveStep] = useState(0);
+  const swiperRef = useRef<SwiperInstance | null>(null);
+  const text = journeyConfig.copy[locale];
+
+  useEffect(() => {
+    document.documentElement.lang = locale;
+  }, [locale]);
+
+  return (
+    <main className="page">
+      <header className="header">
+        <Image
+          className="logo"
+          src="/brand/logo.svg"
+          alt="1MLNBET"
+          width={152}
+          height={24}
+          unoptimized
+        />
+
+        <nav className="languages" aria-label="Language">
+          {locales.map((item) => (
+            <button
+              key={item}
+              type="button"
+              aria-label={languages[item]}
+              aria-pressed={locale === item}
+              onClick={() => setLocale(item)}
+            >
+              {item.toUpperCase()}
+            </button>
+          ))}
+        </nav>
+      </header>
+
+      <section className="banner">
+        <HeroBanner locale={locale} />
+
+        <div className="map" aria-label={text.mapLabel}>
+          <picture>
+            <source media="(min-width: 769px)" srcSet={map.desktop.srcSet} />
+            <img
+              {...map.mobile}
+              alt=""
+              aria-hidden="true"
+              className="map-image"
+            />
+          </picture>
+
+          <ol className="steps">
+            {text.steps.map((step, index) => (
+              <li className="step" key={step}>
+                <button
+                  type="button"
+                  aria-label={step}
+                  aria-pressed={activeStep === index}
+                  onClick={() => swiperRef.current?.slideToLoop(index)}
+                >
+                  {index + 1}
+                </button>
+                <strong>{step}</strong>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        <section className="rewards-carousel" aria-label={text.carouselLabel}>
+          <Swiper
+            key={locale}
+            className="reward-swiper"
+            modules={[Navigation, Pagination, A11y]}
+            navigation
+            pagination={{ clickable: true }}
+            slidesPerView={1}
+            spaceBetween={20}
+            loop
+            onSwiper={(swiper) => {
+              swiperRef.current = swiper;
+              setActiveStep(swiper.realIndex);
+            }}
+            onSlideChange={(swiper) => setActiveStep(swiper.realIndex)}
+          >
+            {carousel.slides.map((slide, index) => (
+              <SwiperSlide key={slide.title}>
+                <article className="reward-card">
+                  <Image
+                    className="reward-image"
+                    src={slideImages[index]}
+                    alt=""
+                    width={1254}
+                    height={1254}
+                    sizes="(max-width: 768px) 105px, 260px"
+                  />
+
+                  <div className="reward-copy">
+                    <p className="reward-step">
+                      STEP {index + 1}/{carousel.slides.length}
+                    </p>
+                    <h2>{slide.title}</h2>
+                    <p className="reward-description">{slide.description}</p>
+                  </div>
+
+                  <ul className="reward-benefits">
+                    {slide.rewards.map((reward, rewardIndex) => (
+                      <li key={reward}>
+                        <span aria-hidden="true">
+                          {rewardIcons[rewardIndex]}
+                        </span>
+                        <small>{reward}</small>
+                      </li>
+                    ))}
+                  </ul>
+                </article>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </section>
+      </section>
+    </main>
+  );
+}
