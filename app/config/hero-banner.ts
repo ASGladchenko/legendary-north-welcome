@@ -28,12 +28,12 @@ export const heroConfig = {
       copy: {
         en: {
           eyebrow: "WELCOME OFFER <span>5 BONUS STEPS</span>",
-          titleLead: "UP TO 590%",
-          titleAccent: "700 FREESPINS",
+          titleLead: "UP TO 590 %",
+          titleAccent: "700 FREE SPINS",
         },
         fr: {
           eyebrow: "OFFRE DE BIENVENUE <span>5 ÉTAPES BONUS</span>",
-          titleLead: "JUSQU’À 1000 %",
+          titleLead: "JUSQU’À 590 %",
           titleAccent: "700 TOURS GRATUITS",
         },
       } satisfies Record<HeroLocale, HeroCopy>,

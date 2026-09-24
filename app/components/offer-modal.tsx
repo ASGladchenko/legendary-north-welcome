@@ -82,12 +82,14 @@ export function OfferModal({ locale }: { locale: HeroLocale }) {
           {copy.descriptionLead} <strong>{copy.amount}</strong>{" "}
           {copy.descriptionTail}
         </p>
-        <button className="offer-modal-action" type="button" onClick={close}>
-          {copy.action}
-        </button>
-        <button className="offer-modal-dismiss" type="button" onClick={dismiss}>
-          {copy.dismissAction}
-        </button>
+        <div className="offer-modal-actions">
+          <button className="offer-modal-action" type="button" onClick={close}>
+            {copy.action}
+          </button>
+          <button className="offer-modal-dismiss" type="button" onClick={dismiss}>
+            {copy.dismissAction}
+          </button>
+        </div>
       </div>
     </dialog>
   );

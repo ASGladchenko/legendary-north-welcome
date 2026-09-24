@@ -133,29 +133,31 @@ export function RewardsSlider({
 
           return (
             <SwiperSlide key={step.id}>
-              <article className={`reward-card${step.bonusChoice ? " reward-card-choice" : ""}`}>
-                <Image
-                  className="reward-image"
-                  src={step.image}
-                  alt=""
-                  width={1254}
-                  height={1254}
-                  sizes="(max-width: 768px) calc(100vw - 36px), 270px"
-                />
-
-                <div className="reward-copy">
-                  <div className="reward-heading">
-                    <p className="reward-step">
-                      {labels.stepLabel} {index + 1}/{journeyConfig.steps.length} · {labels.depositLabel} {index + 1}
-                    </p>
-                    <h2>
-                      <strong>{copy.title}</strong>
-                    </h2>
-                  </div>
-                  <p
-                    className="reward-description"
-                    dangerouslySetInnerHTML={{ __html: copy.description }}
+              <article className="reward-card">
+                <div className="reward-summary">
+                  <Image
+                    className="reward-image"
+                    src={step.image}
+                    alt=""
+                    width={1254}
+                    height={1254}
+                    sizes="(max-width: 768px) 118px, 270px"
                   />
+
+                  <div className="reward-copy">
+                    <div className="reward-heading">
+                      <p className="reward-step">
+                        {labels.stepLabel} {index + 1}/{journeyConfig.steps.length}
+                      </p>
+                      <h2>
+                        <strong>{copy.title}</strong>
+                      </h2>
+                    </div>
+                    <p
+                      className="reward-description"
+                      dangerouslySetInnerHTML={{ __html: copy.description }}
+                    />
+                  </div>
                 </div>
 
                 {step.bonusChoice && (

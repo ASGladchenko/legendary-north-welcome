@@ -40,7 +40,6 @@ export const journeyConfig = {
       mapLabel: "Five steps through the legendary north",
       carouselLabel: "Welcome bonus steps",
       stepLabel: "STEP",
-      depositLabel: "DEPOSIT",
       choiceLabel: "CHOOSE 1 BONUS",
       orLabel: "OR",
       labels: {
@@ -57,7 +56,6 @@ export const journeyConfig = {
       mapLabel: "Cinq étapes à travers le nord légendaire",
       carouselLabel: "Étapes du bonus de bienvenue",
       stepLabel: "ÉTAPE",
-      depositLabel: "DÉPÔT",
       choiceLabel: "CHOISISSEZ 1 BONUS",
       orLabel: "OU",
       labels: {
@@ -154,7 +152,7 @@ export const journeyConfig = {
       },
       copy: {
         en: {
-          title: "CHOOSE YOUR BONUS",
+          title: "THIRD DEPOSIT",
           description: "Reach the mountain pass and choose the reward that fits your journey.",
           bonus: {
             minimumDeposit: "50 CAD",
@@ -166,7 +164,7 @@ export const journeyConfig = {
           },
         },
         fr: {
-          title: "CHOISISSEZ VOTRE BONUS",
+          title: "TROISIÈME DÉPÔT",
           description: "Atteignez le col et choisissez la récompense qui correspond à votre aventure.",
           bonus: {
             minimumDeposit: "50 CAD",
@@ -228,7 +226,7 @@ export const journeyConfig = {
           description: "Complete the journey and choose the final reward that suits you best.",
           bonus: {
             minimumDeposit: "50 CAD",
-            depositBonus: "100%",
+            depositBonus: "100% up to 750 CAD",
             freeSpins: "75 FS",
             cashback: "5% for 3 days",
             depositWager: "×35",
@@ -240,7 +238,7 @@ export const journeyConfig = {
           description: "Terminez l’aventure et choisissez la récompense finale qui vous convient le mieux.",
           bonus: {
             minimumDeposit: "50 CAD",
-            depositBonus: "100 %",
+            depositBonus: "100 % jusqu’à 750 CAD",
             freeSpins: "75 FS",
             cashback: "5 % pendant 3 jours",
             depositWager: "×35",

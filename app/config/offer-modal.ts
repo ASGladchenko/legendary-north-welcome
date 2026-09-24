@@ -13,25 +13,25 @@ export const offerModalConfig = {
   },
   copy: {
     en: {
-      eyebrow: "A LITTLE SECRET",
+      eyebrow: "",
       titleLead: "OOPS...",
-      titleAccent: "I CAN'T BELIEVE I'M TELLING YOU THIS.",
+      titleAccent: "I CAN'T BELIEVE I'M TELLING YOU THIS",
       descriptionLead: "Make your first deposit of",
-      amount: "C$200",
+      amount: "C$200 or more, ",
       descriptionTail:
-        "and unlock an incredible journey packed with seriously epic rewards.",
+        "and unlock an incredible journey packed with seriously epic rewards !",
       action: "LET'S GO",
       dismissAction: "DON'T SHOW AGAIN",
       closeLabel: "Close offer",
     },
     fr: {
-      eyebrow: "UN PETIT SECRET",
+      eyebrow: "",
       titleLead: "OUPS...",
-      titleAccent: "JE N'ARRIVE PAS À CROIRE QUE JE VOUS DIS ÇA.",
+      titleAccent: "JE N'ARRIVE PAS À CROIRE QUE JE VOUS DIS ÇA",
       descriptionLead: "Effectuez votre premier dépôt de",
-      amount: "200 $ CA",
+      amount: "200 $ CA ou plus, ",
       descriptionTail:
-        "et débloquez une aventure incroyable regorgeant de récompenses vraiment épiques.",
+        "et débloquez une aventure incroyable regorgeant de récompenses vraiment épiques !",
       action: "C'EST PARTI",
       dismissAction: "NE PLUS AFFICHER",
       closeLabel: "Fermer l’offre",
