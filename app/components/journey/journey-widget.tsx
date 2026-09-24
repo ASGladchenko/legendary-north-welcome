@@ -13,7 +13,7 @@ export function JourneyWidget({ locale }: { locale: JourneyLocale }) {
   const swiperRef = useRef<SwiperInstance | null>(null);
 
   return (
-    <div className="journey-widget">
+    <div>
       <JourneyMap
         locale={locale}
         activeStep={activeStep}

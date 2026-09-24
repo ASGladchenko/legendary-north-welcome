@@ -6,6 +6,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css";
 import "swiper/css/effect-fade";
+import "./hero-banner.css";
 
 import { heroConfig, type HeroLocale } from "../config/hero-banner";
 
@@ -43,7 +44,7 @@ export function HeroBanner({ locale }: { locale: HeroLocale }) {
             return (
               <SwiperSlide key={slide.id}>
                 <article
-                  className={`hero-slide hero-slide--${slide.textSide} hero-slide--${slide.id}`}
+                  className={`hero-slide hero-slide--${slide.textSide}`}
                 >
                   <Image
                     className={`hero-character hero-character--${slide.characterSide}`}
@@ -56,15 +57,16 @@ export function HeroBanner({ locale }: { locale: HeroLocale }) {
                   />
 
                   <div className={`hero-copy hero-copy--${slide.textSide}`}>
-                    {copy.eyebrow && <p className="hero-eyebrow">{copy.eyebrow}</p>}
+                    {copy.eyebrow && (
+                      <p
+                        className="hero-eyebrow"
+                        dangerouslySetInnerHTML={{ __html: copy.eyebrow }}
+                      />
+                    )}
                     <h1>
                       <span>{copy.titleLead}</span>
                       {copy.titleAccent && <strong>{copy.titleAccent}</strong>}
                     </h1>
-                    <p className="hero-subtitle">{copy.subtitle}</p>
-                    {"tagline" in copy && copy.tagline && (
-                      <p className="hero-tagline">{copy.tagline}</p>
-                    )}
                   </div>
                 </article>
               </SwiperSlide>

@@ -7,7 +7,7 @@ export const offerModalConfig = {
     maxAgeSeconds: 60 * 60 * 24 * 365,
   },
   image: {
-    src: "/images/modal/deposit-guide.png",
+    src: "/images/modal/deposit-offer-host.png",
     width: 1086,
     height: 1448,
   },

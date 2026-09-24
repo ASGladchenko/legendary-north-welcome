@@ -2,6 +2,8 @@ import type { CSSProperties } from "react";
 
 import { getImageProps } from "next/image";
 
+import "./journey-map.css";
+
 import { journeyConfig, type JourneyLocale } from "../../config/journey";
 
 const map = {

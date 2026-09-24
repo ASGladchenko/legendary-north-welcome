@@ -1,0 +1,169 @@
+.hero-slider-shell {
+  position: relative;
+
+  overflow: hidden;
+
+  background: var(--color-surface);
+
+  aspect-ratio: 2073 / 582;
+}
+
+.hero-slider {
+  position: relative;
+  z-index: 1;
+
+  height: 100%;
+}
+
+.hero-slide {
+  position: relative;
+
+  height: 100%;
+
+  overflow: hidden;
+}
+
+.hero-background {
+  z-index: 0;
+
+  object-fit: cover;
+}
+
+.hero-slide::after {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+
+  pointer-events: none;
+
+  content: "";
+}
+
+.hero-slide--right::after {
+  background: linear-gradient(90deg, transparent 34%, rgb(1 7 11 / 76%) 100%);
+}
+
+.hero-slide--left::after {
+  background: linear-gradient(90deg, rgb(1 7 11 / 76%) 0%, transparent 66%);
+}
+
+.hero-character {
+  position: absolute;
+  bottom: -3%;
+  z-index: 2;
+
+  width: auto;
+  height: 104%;
+
+  pointer-events: none;
+
+  object-fit: contain;
+}
+
+.hero-character--left {
+  left: -1%;
+}
+
+.hero-character--right {
+  right: -1%;
+}
+
+.hero-copy {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+
+  width: 43%;
+
+  text-shadow: 0 2px 14px var(--color-shadow);
+
+  transform: translateY(-50%);
+}
+
+.hero-copy--left {
+  left: 6.5%;
+}
+
+.hero-copy--right {
+  right: 6.5%;
+}
+
+.hero-eyebrow {
+  margin: 0;
+
+  font-size: clamp(10px, 1vw, 15px);
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+
+.hero-eyebrow span {
+  color: var(--color-accent);
+}
+
+.hero-copy h1 {
+  margin: 0.18em 0 0.16em;
+
+  font-family: var(--font-montserrat-italic), var(--font-montserrat), sans-serif;
+  font-size: clamp(30px, 4.2vw, 58px);
+  font-weight: 900;
+  font-style: italic;
+  line-height: 0.9;
+  letter-spacing: -0.055em;
+  text-transform: uppercase;
+  text-shadow:
+            0 2px 2px rgb(0 0 0 / 80%),
+            0 6px 16px rgb(0 0 0 / 45%);
+}
+
+.hero-copy h1 span,
+.hero-copy h1 strong {
+  display: block;
+}
+
+.hero-copy h1 strong {
+  font-weight: inherit;
+
+  color: var(--color-accent);
+}
+
+
+@media (max-width: 768px) {
+  .hero-character {
+    bottom: -4%;
+
+    height: 105%;
+  }
+
+  .hero-character--left {
+    left: -5%;
+  }
+
+  .hero-character--right {
+    right: -5%;
+  }
+
+  .hero-copy {
+    width: 47%;
+  }
+
+  .hero-copy--left {
+    left: 3%;
+  }
+
+  .hero-copy--right {
+    right: 3%;
+  }
+
+  .hero-eyebrow {
+    font-size: clamp(7px, 2vw, 10px);
+  }
+
+  .hero-copy h1 {
+    margin-block: 0.08em 0.12em;
+
+    font-size: clamp(15px, 5vw, 22px);
+    line-height: 0.9;
+  }
+}

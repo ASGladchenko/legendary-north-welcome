@@ -4,6 +4,7 @@ import { A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css";
+import "./rewards-slider.css";
 
 import { journeyConfig, type JourneyLocale } from "../../config/journey";
 
@@ -16,6 +17,24 @@ type RewardsSliderProps = {
   onStepChange: (index: number) => void;
 };
 
+type BenefitProps = {
+  icon: string;
+  label: string;
+  value: string;
+};
+
+function Benefit({ icon, label, value }: BenefitProps) {
+  return (
+    <li>
+      <Image src={icon} alt="" width={96} height={96} sizes="48px" />
+      <span>
+        <small>{label}</small>
+        <strong>{value}</strong>
+      </span>
+    </li>
+  );
+}
+
 export function RewardsSlider({
   activeStep,
   locale,
@@ -24,11 +43,10 @@ export function RewardsSlider({
   onReady,
   onStepChange,
 }: RewardsSliderProps) {
+  const labels = journeyConfig.copy[locale];
+
   return (
-    <section
-      className="rewards-carousel"
-      aria-label={journeyConfig.copy[locale].carouselLabel}
-    >
+    <section className="rewards-carousel" aria-label={labels.carouselLabel}>
       <button
         className="reward-nav reward-prev"
         type="button"
@@ -61,46 +79,131 @@ export function RewardsSlider({
         }}
         onSlideChange={(swiper) => onStepChange(swiper.realIndex)}
       >
-        {journeyConfig.steps.map((step, index) => (
-          <SwiperSlide key={step.id}>
-            <article className="reward-card">
-              <Image
-                className="reward-image"
-                src={step.image}
-                alt=""
-                width={1254}
-                height={1254}
-                sizes="(max-width: 768px) 105px, 260px"
-              />
+        {journeyConfig.steps.map((step, index) => {
+          const copy = step.copy[locale];
+          const bonus = copy.bonus;
+          const commonBenefits = [
+            {
+              icon: journeyConfig.rewardIcons.minimumDeposit,
+              label: labels.labels.minimumDeposit,
+              value: bonus.minimumDeposit,
+            },
+            {
+              icon: journeyConfig.rewardIcons.depositBonus,
+              label: labels.labels.depositBonus,
+              value: bonus.depositBonus,
+            },
+            {
+              icon: journeyConfig.rewardIcons.freeSpins,
+              label: labels.labels.freeSpins,
+              value: bonus.freeSpins,
+            },
+            {
+              icon: journeyConfig.rewardIcons.wager,
+              label: labels.labels.wager,
+              value: bonus.depositWager,
+            },
+          ];
+          const choiceBenefits = [
+            {
+              icon: journeyConfig.rewardIcons.minimumDeposit,
+              label: labels.labels.minimumDeposit,
+              value: bonus.minimumDeposit,
+            },
+            {
+              icon: journeyConfig.rewardIcons.wager,
+              label: labels.labels.depositWager,
+              value: bonus.depositWager,
+            },
+            {
+              icon: journeyConfig.rewardIcons.wager,
+              label: labels.labels.freeSpinsWager,
+              value: bonus.freeSpinsWager,
+            },
+            ...(bonus.cashback === "—"
+              ? []
+              : [
+                  {
+                    icon: journeyConfig.rewardIcons.cashback,
+                    label: labels.labels.cashback,
+                    value: bonus.cashback,
+                  },
+                ]),
+          ];
 
-              <div className="reward-copy">
-                <p className="reward-step">
-                  {journeyConfig.copy[locale].stepLabel} {index + 1}/{journeyConfig.steps.length}
-                </p>
-                <h2>{step.copy[locale].title}</h2>
-                <p className="reward-description">
-                  {step.copy[locale].description}
-                </p>
-              </div>
+          return (
+            <SwiperSlide key={step.id}>
+              <article className={`reward-card${step.bonusChoice ? " reward-card-choice" : ""}`}>
+                <Image
+                  className="reward-image"
+                  src={step.image}
+                  alt=""
+                  width={1254}
+                  height={1254}
+                  sizes="(max-width: 768px) calc(100vw - 36px), 270px"
+                />
 
-              <ul className="reward-benefits">
-                {step.copy[locale].rewards.map((reward, rewardIndex) => (
-                  <li key={reward}>
-                    <Image
-                      className="reward-benefit-icon"
-                      src={journeyConfig.rewardIcons[rewardIndex]}
-                      alt=""
-                      width={64}
-                      height={64}
-                      sizes="(max-width: 768px) 25px, 31px"
-                    />
-                    <small>{reward}</small>
-                  </li>
-                ))}
-              </ul>
-            </article>
-          </SwiperSlide>
-        ))}
+                <div className="reward-copy">
+                  <div className="reward-heading">
+                    <p className="reward-step">
+                      {labels.stepLabel} {index + 1}/{journeyConfig.steps.length} · {labels.depositLabel} {index + 1}
+                    </p>
+                    <h2>
+                      <strong>{copy.title}</strong>
+                    </h2>
+                  </div>
+                  <p
+                    className="reward-description"
+                    dangerouslySetInnerHTML={{ __html: copy.description }}
+                  />
+                </div>
+
+                {step.bonusChoice && (
+                  <fieldset className="reward-choice">
+                    <legend>{labels.choiceLabel}</legend>
+                    <div className="reward-choice-options">
+                      <div className="reward-option">
+                        <Image
+                          src={journeyConfig.rewardIcons.depositBonus}
+                          alt=""
+                          width={96}
+                          height={96}
+                          sizes="46px"
+                        />
+                        <span>
+                          <strong>{bonus.depositBonus}</strong>
+                          <small>{labels.labels.depositBonus}</small>
+                        </span>
+                      </div>
+                      <b>{labels.orLabel}</b>
+                      <div className="reward-option">
+                        <Image
+                          src={journeyConfig.rewardIcons.freeSpins}
+                          alt=""
+                          width={96}
+                          height={96}
+                          sizes="46px"
+                        />
+                        <span>
+                          <strong>{bonus.freeSpins}</strong>
+                          <small>{labels.labels.freeSpins}</small>
+                        </span>
+                      </div>
+                    </div>
+                  </fieldset>
+                )}
+
+                <ul className="reward-benefits">
+                  {(step.bonusChoice ? choiceBenefits : commonBenefits).map(
+                    (benefit) => (
+                      <Benefit key={benefit.label} {...benefit} />
+                    ),
+                  )}
+                </ul>
+              </article>
+            </SwiperSlide>
+          );
+        })}
       </Swiper>
     </section>
   );
