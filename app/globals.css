@@ -19,6 +19,28 @@
 
 html {
   background: var(--color-page);
+  scrollbar-color: rgb(255 106 36 / 72%) transparent;
+  scrollbar-width: thin;
+}
+
+html::-webkit-scrollbar {
+  width: 6px;
+}
+
+html::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb {
+  background:
+    linear-gradient(var(--color-accent), var(--color-accent-bright)) padding-box;
+  border: 1px solid transparent;
+  border-radius: 999px;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background:
+    linear-gradient(#ff7a36, #ff9f52) padding-box;
 }
 
 body {
