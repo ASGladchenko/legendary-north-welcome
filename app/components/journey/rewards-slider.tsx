@@ -130,6 +130,9 @@ export function RewardsSlider({
                   },
                 ]),
           ];
+          const benefits = step.bonusChoice
+            ? choiceBenefits
+            : [commonBenefits[0], commonBenefits[3]];
 
           return (
             <SwiperSlide key={step.id}>
@@ -160,47 +163,47 @@ export function RewardsSlider({
                   </div>
                 </div>
 
-                {step.bonusChoice && (
-                  <fieldset className="reward-choice">
-                    <legend>{labels.choiceLabel}</legend>
-                    <div className="reward-choice-options">
-                      <div className="reward-option">
-                        <Image
-                          src={journeyConfig.rewardIcons.depositBonus}
-                          alt=""
-                          width={96}
-                          height={96}
-                          sizes="46px"
-                        />
-                        <span>
-                          <strong>{bonus.depositBonus}</strong>
-                          <small>{labels.labels.depositBonus}</small>
-                        </span>
-                      </div>
-                      <b>{labels.orLabel}</b>
-                      <div className="reward-option">
-                        <Image
-                          src={journeyConfig.rewardIcons.freeSpins}
-                          alt=""
-                          width={96}
-                          height={96}
-                          sizes="46px"
-                        />
-                        <span>
-                          <strong>{bonus.freeSpins}</strong>
-                          <small>{labels.labels.freeSpins}</small>
-                        </span>
-                      </div>
+                <fieldset className="reward-choice">
+                  <legend>
+                    {step.bonusChoice ? labels.choiceLabel : labels.comboLabel}
+                  </legend>
+                  <div className="reward-choice-options">
+                    <div className="reward-option">
+                      <Image
+                        src={journeyConfig.rewardIcons.depositBonus}
+                        alt=""
+                        width={96}
+                        height={96}
+                        sizes="46px"
+                      />
+                      <span>
+                        <strong>{bonus.depositBonus}</strong>
+                        <small>{labels.labels.depositBonus}</small>
+                      </span>
                     </div>
-                  </fieldset>
-                )}
+                    <b>
+                      {step.bonusChoice ? labels.orLabel : labels.andLabel}
+                    </b>
+                    <div className="reward-option">
+                      <Image
+                        src={journeyConfig.rewardIcons.freeSpins}
+                        alt=""
+                        width={96}
+                        height={96}
+                        sizes="46px"
+                      />
+                      <span>
+                        <strong>{bonus.freeSpins}</strong>
+                        <small>{labels.labels.freeSpins}</small>
+                      </span>
+                    </div>
+                  </div>
+                </fieldset>
 
                 <ul className="reward-benefits">
-                  {(step.bonusChoice ? choiceBenefits : commonBenefits).map(
-                    (benefit) => (
-                      <Benefit key={benefit.label} {...benefit} />
-                    ),
-                  )}
+                  {benefits.map((benefit) => (
+                    <Benefit key={benefit.label} {...benefit} />
+                  ))}
                 </ul>
               </article>
             </SwiperSlide>

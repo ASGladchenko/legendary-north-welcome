@@ -18,30 +18,33 @@ type JourneyStepCopy = {
 export const journeyConfig = {
   map: {
     desktop: {
-      src: "/images/map/route-desktop.png",
+      src: "/images/map/route-desktop.webp",
       width: 2078,
       height: 564,
     },
     mobile: {
-      src: "/images/map/route-mobile.png",
+      src: "/images/map/route-mobile.webp",
       width: 1808,
       height: 727,
     },
   },
   rewardIcons: {
-    cashback: "/icons/rewards/cashback.png",
-    depositBonus: "/icons/rewards/deposit-bonus.png",
-    freeSpins: "/icons/rewards/free-spins.png",
-    minimumDeposit: "/icons/rewards/minimum-deposit.png",
-    wager: "/icons/rewards/wagering-requirement.png",
+    cashback: "/icons/rewards/cashback.webp",
+    depositBonus: "/icons/rewards/deposit-bonus.webp",
+    freeSpins: "/icons/rewards/free-spins.webp",
+    minimumDeposit: "/icons/rewards/minimum-deposit.webp",
+    wager: "/icons/rewards/wagering-requirement.webp",
   },
   copy: {
     en: {
       mapLabel: "Five steps through the legendary north",
       carouselLabel: "Welcome bonus steps",
+      signupAction: "SIGN UP & GET STARTED",
       stepLabel: "STEP",
       choiceLabel: "CHOOSE 1 BONUS",
       orLabel: "OR",
+      comboLabel: "COMBO",
+      andLabel: "AND",
       labels: {
         cashback: "Cashback",
         depositBonus: "Deposit Bonus",
@@ -55,9 +58,12 @@ export const journeyConfig = {
     fr: {
       mapLabel: "Cinq étapes à travers le nord légendaire",
       carouselLabel: "Étapes du bonus de bienvenue",
+      signupAction: "INSCRIVEZ-VOUS ET COMMENCEZ",
       stepLabel: "ÉTAPE",
       choiceLabel: "CHOISISSEZ 1 BONUS",
       orLabel: "OU",
+      comboLabel: "COMBO",
+      andLabel: "ET",
       labels: {
         cashback: "Cashback",
         depositBonus: "Bonus dépôt",
@@ -72,7 +78,7 @@ export const journeyConfig = {
   steps: [
     {
       id: "first-deposit",
-      image: "/images/rewards/step-1-cabin.png",
+      image: "/images/rewards/step-1-cabin.webp",
       bonusChoice: false,
       position: {
         desktop: { x: "14.5%", y: "30%" },
@@ -109,7 +115,7 @@ export const journeyConfig = {
     },
     {
       id: "second-deposit",
-      image: "/images/rewards/step-2-bear.png",
+      image: "/images/rewards/step-2-bear.webp",
       bonusChoice: false,
       position: {
         desktop: { x: "33.5%", y: "60%" },
@@ -144,7 +150,7 @@ export const journeyConfig = {
     },
     {
       id: "third-deposit",
-      image: "/images/rewards/step-3-mountain.png",
+      image: "/images/rewards/step-3-mountain.webp",
       bonusChoice: true,
       position: {
         desktop: { x: "50%", y: "22%" },
@@ -179,7 +185,7 @@ export const journeyConfig = {
     },
     {
       id: "fourth-deposit",
-      image: "/images/rewards/step-4-waterfall.png",
+      image: "/images/rewards/step-4-waterfall.webp",
       bonusChoice: false,
       position: {
         desktop: { x: "69%", y: "66%" },
@@ -214,7 +220,7 @@ export const journeyConfig = {
     },
     {
       id: "final-treasure",
-      image: "/images/rewards/step-5-treasure.png",
+      image: "/images/rewards/step-5-treasure.webp",
       bonusChoice: true,
       position: {
         desktop: { x: "91.5%", y: "35%" },

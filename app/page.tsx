@@ -5,7 +5,7 @@ import { OfferModal } from "./components/offer-modal";
 import { JourneyWidget } from "./components/journey/journey-widget";
 
 export default async function Home({ searchParams }: PageProps<"/">) {
-  const { lang } = await searchParams;
+  const { lang, login } = await searchParams;
   const locale = lang === "fr" ? "fr" : "en";
 
   return (
@@ -13,7 +13,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
       <section className="banner">
         <HeroBanner locale={locale} />
 
-        <JourneyWidget locale={locale} />
+        <JourneyWidget locale={locale} showSignup={login === "no"} />
       </section>
 
       <OfferModal locale={locale} />

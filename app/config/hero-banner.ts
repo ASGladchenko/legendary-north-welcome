@@ -8,7 +8,7 @@ type HeroCopy = {
 export const heroConfig = {
   autoplayDelay: 6000,
   fadeDuration: 2200,
-  background: "/images/hero/aurora-background.png",
+  background: "/images/hero/aurora-background.webp",
   label: {
     en: "Legendary North welcome offers",
     fr: "Offres de bienvenue du Nord légendaire",
@@ -16,7 +16,7 @@ export const heroConfig = {
   slides: [
     {
       id: "welcome-bonus",
-      character: "/images/hero/welcome-adventurer.png",
+      character: "/images/hero/welcome-adventurer.webp",
       characterAlt: {
         en: "Cheerful northern adventurer celebrating",
         fr: "Aventurier nordique célébrant joyeusement",
@@ -40,7 +40,7 @@ export const heroConfig = {
     },
     {
       id: "guide",
-      character: "/images/hero/compass-guide.png",
+      character: "/images/hero/compass-guide.webp",
       characterAlt: {
         en: "Northern guide holding a compass",
         fr: "Guide nordique tenant une boussole",
@@ -64,7 +64,7 @@ export const heroConfig = {
     },
     {
       id: "explorer",
-      character: "/images/hero/ice-axe-explorer.png",
+      character: "/images/hero/ice-axe-explorer.webp",
       characterAlt: {
         en: "Northern explorer holding an ice axe",
         fr: "Exploratrice nordique tenant un piolet",
