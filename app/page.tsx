@@ -18,7 +18,6 @@ export default async function Home({ searchParams }: PageProps<"/">) {
 
         <JourneyWidget
           locale={locale}
-          showSignup={showSignup}
           actionHref={showSignup ? signupHref : `${destination}/promo`}
         />
       </section>

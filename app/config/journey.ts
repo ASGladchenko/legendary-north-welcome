@@ -39,7 +39,6 @@ export const journeyConfig = {
     en: {
       mapLabel: "Five steps through the legendary north",
       carouselLabel: "Welcome bonus steps",
-      promoAction: "VIEW PROMOTION",
       signupAction: "SIGN UP & GET STARTED",
       stepLabel: "STEP",
       choiceLabel: "CHOOSE 1 BONUS",
@@ -59,7 +58,6 @@ export const journeyConfig = {
     fr: {
       mapLabel: "Cinq étapes à travers le nord légendaire",
       carouselLabel: "Étapes du bonus de bienvenue",
-      promoAction: "VOIR LA PROMOTION",
       signupAction: "INSCRIVEZ-VOUS ET COMMENCEZ",
       stepLabel: "ÉTAPE",
       choiceLabel: "CHOISISSEZ 1 BONUS",

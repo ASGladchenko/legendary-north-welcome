@@ -13,13 +13,11 @@ import { RewardsSlider } from "./rewards-slider";
 type JourneyWidgetProps = {
   actionHref: string;
   locale: JourneyLocale;
-  showSignup: boolean;
 };
 
 export function JourneyWidget({
   actionHref,
   locale,
-  showSignup,
 }: JourneyWidgetProps) {
   const [activeStep, setActiveStep] = useState(0);
   const swiperRef = useRef<SwiperInstance | null>(null);
@@ -34,9 +32,7 @@ export function JourneyWidget({
 
       <div className="journey-cta-anchor">
         <a className="journey-cta" href={actionHref} target="_top">
-          {showSignup
-            ? journeyConfig.copy[locale].signupAction
-            : journeyConfig.copy[locale].promoAction}
+          {journeyConfig.copy[locale].signupAction}
         </a>
       </div>
 
