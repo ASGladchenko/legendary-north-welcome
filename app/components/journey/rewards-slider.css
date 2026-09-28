@@ -4,20 +4,7 @@
   overflow: hidden;
 
   margin: 18px clamp(14px, 2vw, 26px) 38px;
-  padding: 8px clamp(8px, 1.2vw, 14px) 12px;
-
-  background:
-    linear-gradient(145deg, rgb(5 16 25 / 97%), rgb(2 8 14 / 99%)) padding-box,
-    linear-gradient(110deg, #173a55, #317ba5, #1b5d8a, #4b9fc2, #173a55) border-box;
-  background-size: 100% 100%, 220% 100%;
-  border: 1px solid transparent;
-  border-radius: 20px;
-  box-shadow:
-    inset 0 1px 0 rgb(174 226 255 / 7%),
-    0 14px 38px rgb(0 0 0 / 34%),
-    0 0 22px rgb(36 140 220 / 9%);
-
-  animation: reward-border-shimmer 16s ease-in-out infinite alternate;
+  padding-block: 8px 12px;
 }
 
 .reward-swiper {
@@ -93,7 +80,18 @@
   grid-template-columns: 270px minmax(0, 1fr);
   grid-template-rows: auto 1fr auto;
 
-  background: transparent;
+  background:
+    linear-gradient(145deg, rgb(5 16 25 / 97%), rgb(2 8 14 / 99%)) padding-box,
+    linear-gradient(110deg, #173a55, #317ba5, #1b5d8a, #4b9fc2, #173a55) border-box;
+  background-size: 100% 100%, 220% 100%;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  box-shadow:
+    inset 0 1px 0 rgb(174 226 255 / 7%),
+    0 14px 38px rgb(0 0 0 / 34%),
+    0 0 22px rgb(36 140 220 / 9%);
+
+  animation: reward-border-shimmer 16s ease-in-out infinite alternate;
 }
 
 .reward-summary {
@@ -302,8 +300,7 @@
 @media (max-width: 768px) {
   .rewards-carousel {
     margin: 12px 8px 24px;
-    padding: 5px 2px 9px;
-    border-radius: 16px;
+    padding: 5px 0 9px;
   }
 
   .reward-nav {
@@ -326,7 +323,8 @@
   }
 
   .reward-card {
-    height: clamp(280px, 66vw, 310px);
+    height: clamp(300px, 72vw, 325px);
+    border-radius: 16px;
     padding: 8px 10px 10px;
     display: flex;
     flex-direction: column;
@@ -348,7 +346,7 @@
 
   .reward-copy {
     min-width: 0;
-    padding: 6px 38px 0 0;
+    padding: 6px 18px 0 0;
     flex: 1;
   }
 
@@ -378,7 +376,7 @@
 
   .reward-choice {
     width: auto;
-    margin: auto 20px 0;
+    margin: auto 6px 0;
     flex: 0 0 auto;
     align-self: stretch;
     order: 3;
@@ -403,12 +401,12 @@
   }
 
   .reward-option img {
-    width: 36px;
-    height: 36px;
+    width: 34px;
+    height: 34px;
   }
 
   .reward-option strong {
-    font-size: clamp(12px, 3.6vw, 16px);
+    font-size: clamp(11px, 3.2vw, 14px);
   }
 
   .reward-option small {
@@ -463,7 +461,7 @@
     transition-duration: 0ms !important;
   }
 
-  .rewards-carousel {
+  .reward-card {
     animation: none;
   }
 }

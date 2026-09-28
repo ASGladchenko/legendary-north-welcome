@@ -188,6 +188,10 @@
 
     font-size: clamp(7px, 2.1vw, 11px);
   }
+
+  .step:last-child strong {
+    transform: translateX(-25%);
+  }
 }
 
 @keyframes step-pulse {

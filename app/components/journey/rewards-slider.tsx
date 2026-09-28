@@ -71,8 +71,11 @@ export function RewardsSlider({
         key={locale}
         className="reward-swiper"
         modules={[A11y]}
-        slidesPerView={1}
-        spaceBetween={20}
+        slidesPerView={1.1}
+        spaceBetween={8}
+        breakpoints={{
+          769: { slidesPerView: 1.1, spaceBetween: 20 },
+        }}
         onSwiper={(swiper) => {
           onReady(swiper);
           onStepChange(swiper.realIndex);
