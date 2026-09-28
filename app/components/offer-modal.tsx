@@ -9,7 +9,12 @@ import "./offer-modal.css";
 import { offerModalConfig } from "../config/offer-modal";
 import type { HeroLocale } from "../config/hero-banner";
 
-export function OfferModal({ locale }: { locale: HeroLocale }) {
+type OfferModalProps = {
+  actionHref: string;
+  locale: HeroLocale;
+};
+
+export function OfferModal({ actionHref, locale }: OfferModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const copy = offerModalConfig.copy[locale];
 
@@ -83,9 +88,14 @@ export function OfferModal({ locale }: { locale: HeroLocale }) {
           {copy.descriptionTail}
         </p>
         <div className="offer-modal-actions">
-          <button className="offer-modal-action" type="button" onClick={close}>
+          <a
+            className="offer-modal-action"
+            href={actionHref}
+            target="_top"
+            onClick={close}
+          >
             {copy.action}
-          </button>
+          </a>
           <button className="offer-modal-dismiss" type="button" onClick={dismiss}>
             {copy.dismissAction}
           </button>

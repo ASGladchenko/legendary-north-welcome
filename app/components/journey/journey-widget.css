@@ -21,6 +21,8 @@
   font-weight: 900;
   letter-spacing: 0.08em;
   white-space: nowrap;
+  text-align: center;
+  text-decoration: none;
 
   color: #fff;
   background: linear-gradient(120deg, #ff4b16, var(--color-accent-bright));
