@@ -11,7 +11,7 @@
   overflow: hidden;
 
   color: #fff8e9;
-  background: #071419;
+  background: #161616;
 }
 
 .fortune-background {
@@ -27,8 +27,32 @@
   z-index: -2;
 
   background:
-    radial-gradient(circle at center, transparent 18%, rgb(0 8 12 / 24%) 68%),
-    linear-gradient(0deg, rgb(1 7 9 / 52%), transparent 48%);
+    linear-gradient(
+      90deg,
+      #161616 0%,
+      rgb(22 22 22 / 88%) 4%,
+      rgb(22 22 22 / 54%) 13%,
+      rgb(22 22 22 / 22%) 22%,
+      transparent 31%,
+      transparent 69%,
+      rgb(22 22 22 / 22%) 78%,
+      rgb(22 22 22 / 54%) 87%,
+      rgb(22 22 22 / 88%) 96%,
+      #161616 100%
+    ),
+    linear-gradient(
+      180deg,
+      #161616 0%,
+      rgb(22 22 22 / 86%) 4%,
+      rgb(22 22 22 / 50%) 13%,
+      rgb(22 22 22 / 20%) 21%,
+      transparent 29%,
+      transparent 71%,
+      rgb(22 22 22 / 20%) 79%,
+      rgb(22 22 22 / 50%) 87%,
+      rgb(22 22 22 / 86%) 96%,
+      #161616 100%
+    );
   pointer-events: none;
 }
 
@@ -180,6 +204,32 @@
 
   .fortune-stage {
     width: min(100%, 74svh);
+  }
+
+  .fortune-vignette {
+    background:
+      linear-gradient(
+        90deg,
+        #161616 0%,
+        rgb(22 22 22 / 72%) 7%,
+        rgb(22 22 22 / 32%) 19%,
+        transparent 34%,
+        transparent 66%,
+        rgb(22 22 22 / 32%) 81%,
+        rgb(22 22 22 / 72%) 93%,
+        #161616 100%
+      ),
+      linear-gradient(
+        180deg,
+        #161616 0%,
+        rgb(22 22 22 / 76%) 6%,
+        rgb(22 22 22 / 34%) 17%,
+        transparent 30%,
+        transparent 70%,
+        rgb(22 22 22 / 34%) 83%,
+        rgb(22 22 22 / 76%) 94%,
+        #161616 100%
+      );
   }
 }
 
