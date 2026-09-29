@@ -17,7 +17,7 @@ export const offerModalConfig = {
       titleLead: "OOPS...",
       titleAccent: "I CAN'T BELIEVE I'M TELLING YOU THIS",
       descriptionLead: "Make your first deposit of",
-      amount: "C$200 or more, ",
+      amount: "200 CAD or more, ",
       descriptionTail:
         "and unlock an incredible journey packed with seriously epic rewards !",
       action: "LET'S GO",
@@ -29,7 +29,7 @@ export const offerModalConfig = {
       titleLead: "OUPS...",
       titleAccent: "JE N'ARRIVE PAS À CROIRE QUE JE VOUS DIS ÇA",
       descriptionLead: "Effectuez votre premier dépôt de",
-      amount: "200 $ CA ou plus, ",
+      amount: "200 CAD ou plus, ",
       descriptionTail:
         "et débloquez une aventure incroyable regorgeant de récompenses vraiment épiques !",
       action: "C'EST PARTI",
