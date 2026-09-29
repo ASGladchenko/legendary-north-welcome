@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Image from "next/image";
 
@@ -21,11 +21,15 @@ const rewards = [
 ] as const;
 
 const WINNING_REWARD_INDEX = 0;
+const PRIZE_URL = "/";
 
 const copy = {
   en: {
     action: "Spin the wheel",
     spinning: "Finding your fortune...",
+    won: "You won",
+    claim: "CLAIM NOW",
+    redirecting: "CLAIM IN",
     wheelLabel: "Fortune wheel with eight rewards",
     mystery: "MYSTERY",
     units: {
@@ -38,6 +42,9 @@ const copy = {
   fr: {
     action: "Tourner la roue",
     spinning: "Votre fortune se dessine...",
+    won: "Vous avez gagné",
+    claim: "RÉCLAMER MAINTENANT",
+    redirecting: "RÉCLAMEZ DANS",
     wheelLabel: "Roue de la fortune avec huit récompenses",
     mystery: "MYSTÈRE",
     units: {
@@ -54,6 +61,25 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
   const rotorRef = useRef<HTMLDivElement>(null);
   const [rotation, setRotation] = useState(0);
   const [spinning, setSpinning] = useState(false);
+  const [showPrize, setShowPrize] = useState(false);
+  const [countdown, setCountdown] = useState(3);
+  const prize = rewards[WINNING_REWARD_INDEX];
+  const prizeLabel = `${prize.value} ${text.units[prize.unit]}`;
+
+  useEffect(() => {
+    if (!showPrize) return;
+
+    const timer = window.setTimeout(() => {
+      if (countdown > 1) {
+        setCountdown(countdown - 1);
+        return;
+      }
+
+      window.location.href = new URL(PRIZE_URL, window.location.origin).href;
+    }, 1000);
+
+    return () => window.clearTimeout(timer);
+  }, [countdown, showPrize]);
 
   const spin = () => {
     if (spinning) return;
@@ -69,6 +95,8 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
     const rotor = rotorRef.current;
 
     setSpinning(true);
+    setShowPrize(false);
+    setCountdown(3);
 
     if (
       !rotor ||
@@ -76,6 +104,7 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
     ) {
       setRotation(finalRotation);
       setSpinning(false);
+      setShowPrize(true);
       return;
     }
 
@@ -127,6 +156,7 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
       animation.cancel();
       setRotation(finalRotation);
       setSpinning(false);
+      setShowPrize(true);
     };
   };
 
@@ -216,6 +246,26 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
           </button>
         </div>
       </section>
+
+      {showPrize && (
+        <div
+          className="fortune-win-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="fortune-win-title"
+        >
+          <div className="fortune-win-card">
+            <p>{text.won}</p>
+            <h2 id="fortune-win-title">{prizeLabel}</h2>
+            <a className="fortune-win-action" href={PRIZE_URL}>
+              {text.claim}
+            </a>
+            <span className="fortune-countdown" aria-live="polite">
+              {text.redirecting} <strong>{countdown}</strong>
+            </span>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
