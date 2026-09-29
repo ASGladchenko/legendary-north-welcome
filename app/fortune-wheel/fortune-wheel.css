@@ -11,7 +11,7 @@
   overflow: hidden;
 
   color: #fff8e9;
-  background: #161616;
+  background: #000;
 }
 
 .fortune-background {
@@ -29,29 +29,29 @@
   background:
     linear-gradient(
       90deg,
-      #161616 0%,
-      rgb(22 22 22 / 88%) 4%,
-      rgb(22 22 22 / 54%) 13%,
-      rgb(22 22 22 / 22%) 22%,
-      transparent 31%,
-      transparent 69%,
-      rgb(22 22 22 / 22%) 78%,
-      rgb(22 22 22 / 54%) 87%,
-      rgb(22 22 22 / 88%) 96%,
-      #161616 100%
+      #000 0%,
+      rgb(0 0 0 / 92%) 3%,
+      rgb(0 0 0 / 60%) 10%,
+      rgb(0 0 0 / 24%) 17%,
+      transparent 24%,
+      transparent 76%,
+      rgb(0 0 0 / 24%) 83%,
+      rgb(0 0 0 / 60%) 90%,
+      rgb(0 0 0 / 92%) 97%,
+      #000 100%
     ),
     linear-gradient(
       180deg,
-      #161616 0%,
-      rgb(22 22 22 / 86%) 4%,
-      rgb(22 22 22 / 50%) 13%,
-      rgb(22 22 22 / 20%) 21%,
-      transparent 29%,
-      transparent 71%,
-      rgb(22 22 22 / 20%) 79%,
-      rgb(22 22 22 / 50%) 87%,
-      rgb(22 22 22 / 86%) 96%,
-      #161616 100%
+      #000 0%,
+      rgb(0 0 0 / 90%) 3%,
+      rgb(0 0 0 / 56%) 9%,
+      rgb(0 0 0 / 22%) 16%,
+      transparent 23%,
+      transparent 77%,
+      rgb(0 0 0 / 22%) 84%,
+      rgb(0 0 0 / 56%) 91%,
+      rgb(0 0 0 / 90%) 97%,
+      #000 100%
     );
   pointer-events: none;
 }
@@ -210,25 +210,25 @@
     background:
       linear-gradient(
         90deg,
-        #161616 0%,
-        rgb(22 22 22 / 72%) 7%,
-        rgb(22 22 22 / 32%) 19%,
-        transparent 34%,
-        transparent 66%,
-        rgb(22 22 22 / 32%) 81%,
-        rgb(22 22 22 / 72%) 93%,
-        #161616 100%
+        #000 0%,
+        rgb(0 0 0 / 78%) 5%,
+        rgb(0 0 0 / 38%) 15%,
+        transparent 27%,
+        transparent 73%,
+        rgb(0 0 0 / 38%) 85%,
+        rgb(0 0 0 / 78%) 95%,
+        #000 100%
       ),
       linear-gradient(
         180deg,
-        #161616 0%,
-        rgb(22 22 22 / 76%) 6%,
-        rgb(22 22 22 / 34%) 17%,
-        transparent 30%,
-        transparent 70%,
-        rgb(22 22 22 / 34%) 83%,
-        rgb(22 22 22 / 76%) 94%,
-        #161616 100%
+        #000 0%,
+        rgb(0 0 0 / 82%) 5%,
+        rgb(0 0 0 / 40%) 14%,
+        transparent 25%,
+        transparent 75%,
+        rgb(0 0 0 / 40%) 86%,
+        rgb(0 0 0 / 82%) 95%,
+        #000 100%
       );
   }
 }
