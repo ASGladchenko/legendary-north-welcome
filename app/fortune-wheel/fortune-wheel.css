@@ -1,0 +1,190 @@
+.fortune-page {
+  position: relative;
+  isolation: isolate;
+
+  min-height: 100svh;
+  padding: 20px;
+
+  display: grid;
+  place-items: center;
+
+  overflow: hidden;
+
+  color: #fff8e9;
+  background: #071419;
+}
+
+.fortune-background {
+  z-index: -3;
+
+  object-fit: cover;
+  object-position: center;
+}
+
+.fortune-vignette {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+
+  background:
+    radial-gradient(circle at center, transparent 18%, rgb(0 8 12 / 24%) 68%),
+    linear-gradient(0deg, rgb(1 7 9 / 52%), transparent 48%);
+  pointer-events: none;
+}
+
+.fortune-stage {
+  position: relative;
+
+  width: min(92vw, 82svh, 820px);
+  aspect-ratio: 1;
+}
+
+.fortune-wheel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  width: 100%;
+  aspect-ratio: 1;
+
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 28px 38px rgb(0 0 0 / 54%));
+}
+
+.fortune-rotor {
+  position: absolute;
+  inset: 5.6%;
+  z-index: 1;
+
+  will-change: transform;
+}
+
+.fortune-disk {
+  object-fit: contain;
+}
+
+.fortune-prizes {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+
+.fortune-prize {
+  position: absolute;
+
+  width: 15%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+  text-shadow:
+    0 2px 2px #000,
+    0 0 8px #000;
+}
+
+.fortune-prize strong {
+  font-size: clamp(9px, 1.5vmin, 18px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.fortune-prize small {
+  margin-top: 3px;
+
+  font-size: clamp(4px, 0.68vmin, 8px);
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: 0.03em;
+}
+
+.fortune-frame {
+  z-index: 3;
+
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.fortune-pointer {
+  position: absolute;
+  top: -5.5px;
+  left: 29%;
+  z-index: 5;
+
+  width: 42%;
+  height: auto;
+
+  pointer-events: none;
+  filter: drop-shadow(0 8px 10px rgb(0 0 0 / 60%));
+}
+
+.fortune-spin-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 6;
+
+  width: 21%;
+  aspect-ratio: 1;
+  padding: 0;
+
+  background: transparent;
+  border: 0;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.fortune-spin-button img {
+  z-index: 1;
+
+  object-fit: contain;
+  transition: filter 180ms ease;
+}
+
+.fortune-spin-button:not(:disabled) img {
+  animation: fortune-button-pulse 2.4s ease-in-out infinite;
+}
+
+.fortune-spin-button:not(:disabled):hover img {
+  filter: brightness(1.2);
+}
+
+.fortune-spin-button:disabled {
+  cursor: wait;
+}
+
+.fortune-spin-button:focus-visible {
+  outline: 3px solid #fff0ad;
+  outline-offset: 5px;
+}
+
+@keyframes fortune-button-pulse {
+  0%,
+  100% {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+
+  50% {
+    filter: brightness(1.22) drop-shadow(0 0 12px rgb(255 201 84 / 68%));
+    transform: scale(1.07);
+  }
+}
+
+@media (max-width: 520px) {
+  .fortune-page {
+    padding: 10px;
+  }
+
+  .fortune-stage {
+    width: min(100%, 74svh);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fortune-spin-button img {
+    animation: none;
+  }
+}
