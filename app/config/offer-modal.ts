@@ -1,7 +1,7 @@
 import type { HeroLocale } from "./hero-banner";
 
 export const offerModalConfig = {
-  delayMs: 6500,
+  delayMs: 12000,
   dismissCookie: {
     name: "offer_modal_hidden",
     maxAgeSeconds: 60 * 60 * 24 * 365,
