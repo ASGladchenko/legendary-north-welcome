@@ -2,10 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import Image from "next/image";
+import Image, { getImageProps } from "next/image";
 
+import wheelBackground from "../../public/images/fortune-wheel/fw-bg.webp";
+import wheelBackgroundPortrait from "../../public/images/fortune-wheel/fw-bg-portrait.webp";
 import wheelButton from "../../public/images/fortune-wheel/fw-btn.webp";
 import wheelDisk from "../../public/images/fortune-wheel/fw-disk.webp";
+import { useIsInIframe } from "../hooks/use-is-in-iframe";
 
 type Locale = "en" | "fr";
 
@@ -22,6 +25,19 @@ const rewards = [
 
 const WINNING_REWARD_INDEX = 0;
 const PRIZE_URL = "/";
+
+const backgroundImageProps = {
+  alt: "",
+  fill: true,
+  sizes: "100vw",
+  fetchPriority: "high" as const,
+};
+const {
+  props: { srcSet: landscapeBackground },
+} = getImageProps({ ...backgroundImageProps, src: wheelBackground });
+const {
+  props: { srcSet: portraitBackground, ...backgroundProps },
+} = getImageProps({ ...backgroundImageProps, src: wheelBackgroundPortrait });
 
 const copy = {
   en: {
@@ -57,6 +73,7 @@ const copy = {
 } as const;
 
 export function FortuneWheel({ locale }: { locale: Locale }) {
+  const isInIframe = useIsInIframe();
   const text = copy[locale];
   const rotorRef = useRef<HTMLDivElement>(null);
   const [rotation, setRotation] = useState(0);
@@ -161,15 +178,15 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
   };
 
   return (
-    <main className="fortune-page" lang={locale}>
-      <Image
-        className="fortune-background"
-        src="/images/fortune-wheel/fw-bg.webp"
-        alt=""
-        fill
-        sizes="100vw"
-        preload
-      />
+    <main
+      className={`fortune-page${isInIframe ? " fortune-page--iframe" : ""}`}
+      lang={locale}
+    >
+      <picture>
+        <source media="(orientation: landscape)" srcSet={landscapeBackground} />
+        <source media="(orientation: portrait)" srcSet={portraitBackground} />
+        <img {...backgroundProps} className="fortune-background" alt="" />
+      </picture>
       <div className="fortune-vignette" aria-hidden="true" />
 
       <section className="fortune-stage" aria-label={text.wheelLabel}>

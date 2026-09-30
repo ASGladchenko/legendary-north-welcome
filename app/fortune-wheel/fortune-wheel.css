@@ -5,13 +5,18 @@
   min-height: 100svh;
   padding: 20px;
 
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   overflow: hidden;
 
   color: #fff8e9;
   background: #000;
+}
+
+.fortune-page--iframe {
+  min-height: calc(100svh - 110px);
 }
 
 .fortune-background {
@@ -340,6 +345,12 @@
         rgb(0 0 0 / 82%) 95%,
         #000 100%
       );
+  }
+}
+
+@media (min-width: 1280px) {
+  .fortune-page--iframe {
+    min-height: calc(100svh - 56px);
   }
 }
 
