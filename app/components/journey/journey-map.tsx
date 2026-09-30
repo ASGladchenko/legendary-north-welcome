@@ -4,7 +4,12 @@ import { getImageProps } from "next/image";
 
 import "./journey-map.css";
 
-import { journeyConfig, type JourneyLocale } from "../../config/journey";
+import {
+  getJourneySteps,
+  journeyConfig,
+  type JourneyLocale,
+  type JourneyVariant,
+} from "../../config/journey";
 
 const map = {
   desktop: getImageProps({
@@ -26,13 +31,17 @@ type JourneyMapProps = {
   locale: JourneyLocale;
   activeStep: number;
   onStepSelect: (index: number) => void;
+  variant: JourneyVariant;
 };
 
 export function JourneyMap({
   locale,
   activeStep,
   onStepSelect,
+  variant,
 }: JourneyMapProps) {
+  const steps = getJourneySteps(variant);
+
   return (
     <div className="map" aria-label={journeyConfig.copy[locale].mapLabel}>
       <picture>
@@ -46,7 +55,7 @@ export function JourneyMap({
       </picture>
 
       <ol className="steps">
-        {journeyConfig.steps.map((step, index) => (
+        {steps.map((step, index) => (
           <li
             className="step"
             key={step.id}

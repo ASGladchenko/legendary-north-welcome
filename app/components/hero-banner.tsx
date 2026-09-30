@@ -9,8 +9,14 @@ import "swiper/css/effect-fade";
 import "./hero-banner.css";
 
 import { heroConfig, type HeroLocale } from "../config/hero-banner";
+import type { JourneyVariant } from "../config/journey";
 
-export function HeroBanner({ locale }: { locale: HeroLocale }) {
+type HeroBannerProps = {
+  locale: HeroLocale;
+  variant: JourneyVariant;
+};
+
+export function HeroBanner({ locale, variant }: HeroBannerProps) {
   return (
     <section aria-label={heroConfig.label[locale]}>
       <div className="hero-slider-shell">
@@ -39,7 +45,10 @@ export function HeroBanner({ locale }: { locale: HeroLocale }) {
           loop
         >
           {heroConfig.slides.map((slide, index) => {
-            const copy = slide.copy[locale];
+            const copy =
+              variant === "vip" && index === 0
+                ? heroConfig.vipWelcomeCopy[locale]
+                : slide.copy[locale];
 
             return (
               <SwiperSlide key={slide.id}>

@@ -183,12 +183,16 @@
   transform: scaleX(-1);
 }
 
+.reward-choice--triple legend {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+}
+
 .reward-choice-options {
   margin-top: 3px;
-  display: grid;
+  display: flex;
   align-items: center;
-  gap: 8px;
-  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  gap: 5px;
 }
 
 .reward-choice-options > b {
@@ -200,8 +204,9 @@
 .reward-option {
   min-width: 0;
   min-height: 55px;
-  padding: 4px 10px;
+  padding: 4px 6px;
   display: flex;
+  flex: 1;
   align-items: center;
   justify-content: center;
   gap: 8px;
@@ -240,6 +245,66 @@
   color: var(--color-card-muted);
 }
 
+.reward-option em {
+  margin-top: 2px;
+  font-size: 8px;
+  font-weight: 700;
+  font-style: normal;
+  color: var(--color-card-muted);
+}
+
+.reward-option--game {
+  gap: 5px;
+}
+
+.reward-option--game img {
+  width: 42px;
+  height: 42px;
+  border-radius: 7px;
+}
+
+.reward-option--game strong {
+  font-size: clamp(9px, 0.9vw, 12px);
+}
+
+.reward-options-marquee {
+  --reward-option-gap: 12px;
+
+  width: 100%;
+  margin-top: 3px;
+  overflow: hidden;
+}
+
+.reward-options-track {
+  width: max-content;
+  display: flex;
+  gap: var(--reward-option-gap);
+  animation: reward-options-scroll 16s linear infinite;
+  will-change: transform;
+}
+
+.reward-options-item {
+  width: clamp(180px, 38vw, 360px);
+  flex: 0 0 auto;
+}
+
+.reward-options-item .reward-option {
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.reward-options-marquee--combo .reward-option--game small::before {
+  color: var(--color-accent);
+  font-weight: 900;
+  content: "+ ";
+}
+
+@keyframes reward-options-scroll {
+  to {
+    transform: translateX(calc(-50% - var(--reward-option-gap) / 2));
+  }
+}
+
 .reward-benefits {
   margin: 7px 0 0;
   grid-column: 2;
@@ -253,6 +318,10 @@
 
 .reward-benefits:has(> :nth-child(2):last-child) {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.reward-benefits:has(> :nth-child(3):last-child) {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .reward-benefits li {
@@ -448,6 +517,12 @@
     font-size: clamp(9px, 2.5vw, 11px);
   }
 
+
+  .reward-option em {
+    font-size: 7px;
+  }
+
+
 }
 
 @keyframes reward-border-shimmer {
@@ -460,6 +535,10 @@
   .reward-swiper .swiper-wrapper {
     transition-duration: 0ms !important;
   }
+  .reward-options-track {
+    animation: none;
+  }
+
 
   .reward-card {
     animation: none;

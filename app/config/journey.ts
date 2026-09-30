@@ -1,4 +1,5 @@
 export type JourneyLocale = "en" | "fr";
+export type JourneyVariant = "standard" | "vip";
 
 type BonusDetails = {
   cashback: string;
@@ -46,6 +47,7 @@ export const journeyConfig = {
       comboLabel: "COMBO",
       andLabel: "AND",
       labels: {
+        bonusGame: "Bonus Game",
         cashback: "Cashback",
         depositBonus: "Deposit Bonus",
         depositWager: "Bonus Wager",
@@ -65,6 +67,7 @@ export const journeyConfig = {
       comboLabel: "COMBO",
       andLabel: "ET",
       labels: {
+        bonusGame: "Jeu bonus",
         cashback: "Cashback",
         depositBonus: "Bonus dépôt",
         depositWager: "Mise bonus",
@@ -255,3 +258,210 @@ export const journeyConfig = {
     },
   ],
 } as const;
+export const vipJourneySteps = [
+  {
+    id: "vip-first-deposit",
+    image: "/images/rewards/step-1-cabin.webp",
+    bonusChoice: false,
+    position: {
+      desktop: { x: "14.5%", y: "30%" },
+      mobile: { x: "12.6%", y: "32.3%" },
+    },
+    copy: {
+      en: {
+        title: "FIRST DEPOSIT",
+        description:
+          "Deposit 200 CAD or more to claim a 100% bonus up to 1,500 CAD and up to 100 Free Spins.",
+        bonus: {
+          minimumDeposit: "200 CAD",
+          depositBonus: "100% up to 1,500 CAD",
+          freeSpins: "Up to 100 FS",
+          cashback: "—",
+          depositWager: "×35",
+          freeSpinsWager: "×35",
+        },
+      },
+      fr: {
+        title: "PREMIER DÉPÔT",
+        description:
+          "Déposez 200 CAD ou plus pour recevoir un bonus de 100 % jusqu’à 1 500 CAD et jusqu’à 100 tours gratuits.",
+        bonus: {
+          minimumDeposit: "200 CAD",
+          depositBonus: "100 % jusqu’à 1 500 CAD",
+          freeSpins: "Jusqu’à 100 FS",
+          cashback: "—",
+          depositWager: "×35",
+          freeSpinsWager: "×35",
+        },
+      },
+    } satisfies Record<JourneyLocale, JourneyStepCopy>,
+  },
+  {
+    id: "vip-second-deposit",
+    image: "/images/rewards/step-2-bear.webp",
+    bonusChoice: false,
+    bonusGame: {
+      image:
+        "/images/rewards/bonus-games/sweet-bonanza-super-scatter.webp",
+      name: "Sweet Bonanza",
+      wager: null,
+    },
+    position: {
+      desktop: { x: "33.5%", y: "60%" },
+      mobile: { x: "34.9%", y: "54%" },
+    },
+    copy: {
+      en: {
+        title: "SECOND DEPOSIT",
+        description:
+          "Claim a 150% bonus up to 2,000 CAD and unlock a Sweet Bonanza Super Scatter Bonus Game.",
+        bonus: {
+          minimumDeposit: "200 CAD",
+          depositBonus: "150% up to 2,000 CAD",
+          freeSpins: "—",
+          cashback: "—",
+          depositWager: "×35",
+          freeSpinsWager: "×35",
+        },
+      },
+      fr: {
+        title: "DEUXIÈME DÉPÔT",
+        description:
+          "Recevez un bonus de 150 % jusqu’à 2 000 CAD et débloquez un Bonus Game Sweet Bonanza Super Scatter.",
+        bonus: {
+          minimumDeposit: "200 CAD",
+          depositBonus: "150 % jusqu’à 2 000 CAD",
+          freeSpins: "—",
+          cashback: "—",
+          depositWager: "×35",
+          freeSpinsWager: "×35",
+        },
+      },
+    } satisfies Record<JourneyLocale, JourneyStepCopy>,
+  },
+  {
+    id: "vip-third-deposit",
+    image: "/images/rewards/step-3-mountain.webp",
+    bonusChoice: true,
+    bonusGame: {
+      image: "/images/rewards/bonus-games/sugar-rush-1000.webp",
+      name: "Sugar Rush 1000",
+      wager: null,
+    },
+    position: {
+      desktop: { x: "50%", y: "22%" },
+      mobile: { x: "50%", y: "22.2%" },
+    },
+    copy: {
+      en: {
+        title: "THIRD DEPOSIT",
+        description:
+          "Choose a 150% bonus up to 1,200 CAD, 150 Free Spins, or a Sugar Rush 1000 Bonus Game.",
+        bonus: {
+          minimumDeposit: "200 CAD",
+          depositBonus: "150% up to 1,200 CAD",
+          freeSpins: "150 FS",
+          cashback: "—",
+          depositWager: "×35",
+          freeSpinsWager: "×25",
+        },
+      },
+      fr: {
+        title: "TROISIÈME DÉPÔT",
+        description:
+          "Choisissez un bonus de 150 % jusqu’à 1 200 CAD, 150 tours gratuits ou un Bonus Game Sugar Rush 1000.",
+        bonus: {
+          minimumDeposit: "200 CAD",
+          depositBonus: "150 % jusqu’à 1 200 CAD",
+          freeSpins: "150 FS",
+          cashback: "—",
+          depositWager: "×35",
+          freeSpinsWager: "×25",
+        },
+      },
+    } satisfies Record<JourneyLocale, JourneyStepCopy>,
+  },
+  {
+    id: "vip-fourth-deposit",
+    image: "/images/rewards/step-4-waterfall.webp",
+    bonusChoice: false,
+    bonusGame: {
+      image: "/images/rewards/bonus-games/big-bass-splash.webp",
+      name: "Big Bass Splash",
+      wager: "×35",
+    },
+    position: {
+      desktop: { x: "69%", y: "66%" },
+      mobile: { x: "64%", y: "59%" },
+    },
+    copy: {
+      en: {
+        title: "FOURTH DEPOSIT",
+        description:
+          "Claim a 200% bonus up to 1,200 CAD, 50 Free Spins, and a Big Bass Splash Bonus Game.",
+        bonus: {
+          minimumDeposit: "200 CAD",
+          depositBonus: "200% up to 1,200 CAD",
+          freeSpins: "50 FS",
+          cashback: "—",
+          depositWager: "×35",
+          freeSpinsWager: "×35",
+        },
+      },
+      fr: {
+        title: "QUATRIÈME DÉPÔT",
+        description:
+          "Recevez un bonus de 200 % jusqu’à 1 200 CAD, 50 tours gratuits et un Bonus Game Big Bass Splash.",
+        bonus: {
+          minimumDeposit: "200 CAD",
+          depositBonus: "200 % jusqu’à 1 200 CAD",
+          freeSpins: "50 FS",
+          cashback: "—",
+          depositWager: "×35",
+          freeSpinsWager: "×35",
+        },
+      },
+    } satisfies Record<JourneyLocale, JourneyStepCopy>,
+  },
+  {
+    id: "vip-fifth-deposit",
+    image: "/images/rewards/step-5-treasure.webp",
+    bonusChoice: true,
+    position: {
+      desktop: { x: "91.5%", y: "35%" },
+      mobile: { x: "89.9%", y: "37.7%" },
+    },
+    copy: {
+      en: {
+        title: "FIFTH DEPOSIT",
+        description:
+          "Choose a 150% bonus up to 1,000 CAD or 150 Free Spins, plus get 8% cashback for 3 days.",
+        bonus: {
+          minimumDeposit: "200 CAD",
+          depositBonus: "150% up to 1,000 CAD",
+          freeSpins: "150 FS",
+          cashback: "8% for 3 days",
+          depositWager: "×35",
+          freeSpinsWager: "×25",
+        },
+      },
+      fr: {
+        title: "CINQUIÈME DÉPÔT",
+        description:
+          "Choisissez un bonus de 150 % jusqu’à 1 000 CAD ou 150 tours gratuits, plus 8 % de cashback pendant 3 jours.",
+        bonus: {
+          minimumDeposit: "200 CAD",
+          depositBonus: "150 % jusqu’à 1 000 CAD",
+          freeSpins: "150 FS",
+          cashback: "8 % pendant 3 jours",
+          depositWager: "×35",
+          freeSpinsWager: "×25",
+        },
+      },
+    } satisfies Record<JourneyLocale, JourneyStepCopy>,
+  },
+] as const;
+
+export function getJourneySteps(variant: JourneyVariant) {
+  return variant === "vip" ? vipJourneySteps : journeyConfig.steps;
+}

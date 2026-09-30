@@ -9,6 +9,18 @@ export const heroConfig = {
   autoplayDelay: 6000,
   fadeDuration: 2200,
   background: "/images/hero/aurora-background.webp",
+  vipWelcomeCopy: {
+    en: {
+      eyebrow: "VIP WELCOME OFFER <span>5 BONUS STEPS</span>",
+      titleLead: "UP TO 750 %",
+      titleAccent: "450 FREE SPINS",
+    },
+    fr: {
+      eyebrow: "OFFRE DE BIENVENUE VIP <span>5 ÉTAPES BONUS</span>",
+      titleLead: "JUSQU’À 750 %",
+      titleAccent: "450 TOURS GRATUITS",
+    },
+  } satisfies Record<HeroLocale, HeroCopy>,
   label: {
     en: "Legendary North welcome offers",
     fr: "Offres de bienvenue du Nord légendaire",
