@@ -77,6 +77,22 @@ export function HeroBanner({ locale, variant }: HeroBannerProps) {
                       {copy.titleAccent && <strong>{copy.titleAccent}</strong>}
                     </h1>
                   </div>
+
+                  {variant === "vip" && index === 0 && (
+                    <Image
+                      className="hero-vip-badge"
+                      src={heroConfig.vipBonusBadge}
+                      alt={
+                        locale === "fr"
+                          ? "3 jeux bonus supplémentaires"
+                          : "3 bonus games"
+                      }
+                      width={1254}
+                      height={1254}
+                      sizes="(min-width: 769px) 220px, 11vw"
+                      loading="eager"
+                    />
+                  )}
                 </article>
               </SwiperSlide>
             );

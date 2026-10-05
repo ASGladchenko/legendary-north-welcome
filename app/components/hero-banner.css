@@ -50,7 +50,7 @@
 .hero-character {
   position: absolute;
   bottom: -3%;
-  z-index: 2;
+  z-index: 3;
 
   width: auto;
   height: 104%;
@@ -71,7 +71,7 @@
 .hero-copy {
   position: absolute;
   top: 50%;
-  z-index: 3;
+  z-index: 4;
 
   width: 43%;
 
@@ -128,6 +128,20 @@
   color: var(--color-accent);
 }
 
+.hero-vip-badge {
+  position: absolute;
+  top: 10%;
+  left: 46%;
+  z-index: 2;
+
+  width: clamp(145px, 16vw, 220px);
+  height: auto;
+  aspect-ratio: 1;
+
+  filter: drop-shadow(0 5px 10px rgb(0 0 0 / 60%));
+  transform: rotate(-10deg);
+}
+
 
 @media (max-width: 768px) {
   .hero-character {
@@ -165,5 +179,12 @@
 
     font-size: clamp(15px, 5vw, 22px);
     line-height: 0.9;
+  }
+
+  .hero-vip-badge {
+    top: 16%;
+    left: 51.5%;
+
+    width: clamp(44px, 11vw, 76px);
   }
 }

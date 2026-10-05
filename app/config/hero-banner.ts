@@ -9,6 +9,7 @@ export const heroConfig = {
   autoplayDelay: 6000,
   fadeDuration: 2200,
   background: "/images/hero/aurora-background.webp",
+  vipBonusBadge: "/images/hero/bonus-game.webp",
   vipWelcomeCopy: {
     en: {
       eyebrow: "VIP WELCOME OFFER <span>5 BONUS STEPS</span>",
