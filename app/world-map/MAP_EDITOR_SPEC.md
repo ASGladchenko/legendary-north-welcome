@@ -11,7 +11,6 @@
 ## 1. Core Idea
 
 Редактор должен позволять:
-
 - выбирать ассет из библиотеки;
 - добавлять его на карту;
 - перемещать;
@@ -23,11 +22,9 @@
 - сохранять результат как JSON;
 - загружать ранее созданную карту.
 
-Pixi runtime затем должен рендерить этот JSON.
+Pixi runtime затем рендерит этот JSON.
 
 ## 2. World Grid
-
-Использовать те же правила, что runtime:
 
 ```text
 CELL_SIZE = 256
@@ -37,12 +34,24 @@ CELL_SIZE = 256
 
 Новые области мира добавляются без изменения `CELL_SIZE`.
 
-## 3. Asset Library
+## 3. Base Terrain
+
+Base terrain является системным слоем.
+
+Пользователь редактора не должен вручную раскладывать seamless snow texture по всей карте.
+
+Редактор должен:
+- автоматически покрывать текущие world bounds `terrain_snow_base_01`;
+- автоматически расширять base terrain при расширении bounds;
+- позволять заменить base terrain theme при необходимости.
+
+## 4. Asset Library
 
 Категории:
 
 ```text
-Terrain
+Base Terrain
+Terrain Patches
 Roads
 Rivers
 Water
@@ -69,7 +78,7 @@ FX
 }
 ```
 
-## 4. Placement Modes
+## 5. Placement Modes
 
 ### Grid placement
 
@@ -84,6 +93,7 @@ location footprints
 ### Free placement
 
 ```text
+terrain patches
 trees
 rocks
 props
@@ -93,7 +103,21 @@ FX
 
 Должна быть возможность временно отключить snap.
 
-## 5. Object Controls
+## 6. Terrain Patch Editing
+
+Terrain patches должны свободно перемещаться, масштабироваться, вращаться, перекрываться и не требовать grid snap.
+
+Нужно поддержать:
+
+```text
+duplicate
+flip X
+opacity
+scale
+rotation
+```
+
+## 7. Object Controls
 
 Для выбранного объекта:
 
@@ -103,6 +127,7 @@ Y
 Scale
 Rotation
 Layer
+Opacity
 zIndex override
 Flip X
 Visible
@@ -118,7 +143,7 @@ Bring forward
 Send backward
 ```
 
-## 6. Location Editing
+## 8. Location Editing
 
 ```ts
 {
@@ -138,7 +163,7 @@ Standard Location = 6×6
 Major Location    = 8×6
 ```
 
-## 7. Location Exits
+## 9. Location Exits
 
 Можно добавить:
 
@@ -153,7 +178,7 @@ west
 
 Exit хранится отдельно от визуального road asset.
 
-## 8. Road Editing
+## 10. Road Editing
 
 Road module snap'ится к grid.
 
@@ -171,7 +196,7 @@ bridge-entry
 
 На первом этапе автоматический pathfinding не нужен.
 
-## 9. River Editing
+## 11. River Editing
 
 ```text
 straight
@@ -182,11 +207,12 @@ waterfall-entry
 bridge-crossing
 ```
 
-## 10. Layers
+## 12. Layers
 
 ```text
 Background
-Terrain
+BaseTerrain
+TerrainPatches
 Water
 Roads
 Environment
@@ -196,7 +222,7 @@ Foreground
 FX
 ```
 
-## 11. Export Format
+## 13. Export Format
 
 ```ts
 type MapData = {
@@ -216,6 +242,15 @@ type MapData = {
   "locations": [],
   "objects": [
     {
+      "id": "terrain-patch-001",
+      "asset": "terrain_forest_floor_01",
+      "x": 900,
+      "y": 1400,
+      "scale": 1.2,
+      "rotation": 0,
+      "layer": "TerrainPatches"
+    },
+    {
       "id": "tree-001",
       "asset": "tree_pine_single_01",
       "x": 1234,
@@ -228,27 +263,31 @@ type MapData = {
 }
 ```
 
-## 12. Expandable World
+## 14. Expandable World
 
 Редактор не должен иметь жёстко ограниченный canvas.
 
 World bounds рассчитываются по содержимому.
 
-При добавлении объекта за текущей границей bounds автоматически расширяются.
+При добавлении объекта за текущей границей:
+- bounds автоматически расширяются;
+- BaseTerrain автоматически расширяется;
+- существующие координаты не меняются.
 
-Существующие координаты не меняются.
-
-## 13. MVP Editor
+## 15. MVP Editor
 
 На первом этапе достаточно:
 
 ```text
 asset library
+automatic base terrain
+terrain patch placement
 drag/drop or click-to-place
 selection
 move
 scale
 rotate
+opacity
 delete
 duplicate
 grid snap
@@ -269,7 +308,7 @@ procedural generation UI
 cloud storage
 ```
 
-## 14. Runtime Contract
+## 16. Runtime Contract
 
 Map Editor только создаёт данные.
 

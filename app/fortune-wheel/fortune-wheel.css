@@ -105,31 +105,31 @@
 .fortune-prize {
   position: absolute;
 
-  width: 15%;
+  width: 18%;
 
   display: flex;
   flex-direction: column;
   align-items: center;
 
+  color: #f1dfbd;
   text-align: center;
   text-shadow:
     0 2px 2px #000,
     0 0 8px #000;
 }
 
-.fortune-prize strong {
-  font-size: clamp(9px, 1.5vmin, 18px);
+.fortune-prize strong,
+.fortune-prize small {
+  font-size: clamp(11px, 1.9vmin, 19px);
+  font-weight: 900;
   line-height: 1;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.03em;
 }
 
 .fortune-prize small {
-  margin-top: 3px;
+  margin-top: 2px;
 
-  font-size: clamp(4px, 0.68vmin, 8px);
-  font-weight: 900;
-  line-height: 1;
-  letter-spacing: 0.03em;
+  letter-spacing: 0;
 }
 
 .fortune-frame {

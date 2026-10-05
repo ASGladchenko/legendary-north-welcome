@@ -6,7 +6,7 @@
 
 Карта НЕ является одной большой картинкой.
 
-Мир собирается из terrain, roads, rivers, lakes, bridges, trees, rocks, mountains, buildings, unique landmarks и FX.
+Мир собирается из seamless base terrain, terrain patches, roads, rivers, lakes, bridges, trees, rocks, mountains, buildings, unique landmarks и FX.
 
 Пользователь должен иметь возможность двигать карту свайпом/drag, масштабировать pinch/wheel, нажимать на локации и плавно фокусировать камеру.
 
@@ -43,6 +43,8 @@ const CELL_SIZE = 256;
 
 Не масштабировать существующий мир для добавления новых территорий.
 
+`WORLD_MAX_SIZE` не фиксирован.
+
 ## 3. Coordinates
 
 ```ts
@@ -52,7 +54,38 @@ worldY = cellY * CELL_SIZE;
 
 Мелкий декор может использовать произвольные координаты внутри клеток.
 
-## 4. Locations
+## 4. Base Terrain
+
+Весь текущий world bounds всегда покрыт непрерывным базовым terrain layer.
+
+Для Legendary North базовый слой:
+
+```text
+terrain_snow_base_01
+```
+
+Он должен быть seamless/tileable и может рендериться через PixiJS `TilingSprite`.
+
+При расширении world bounds базовый terrain автоматически расширяется вместе с миром.
+
+## 5. Terrain Patches
+
+Поверх base terrain размещаются irregular terrain patches:
+
+```text
+snow
+snow + rock
+rocky ground
+forest floor
+ice
+dark snow
+snow drift
+transition patches
+```
+
+Terrain patches могут занимать несколько клеток, выходить за grid, не обязаны snap'иться к клеткам, имеют прозрачный фон и мягкие края.
+
+## 6. Locations
 
 Стандартная локация:
 
@@ -68,27 +101,13 @@ worldY = cellY * CELL_SIZE;
 2048 × 1536 units
 ```
 
-Пример:
-
-```text
-Standard:
-Welcome Camp
-Explorer's Dock
-Northern Vault
-
-Major:
-Sports Peak
-Ice Casino Valley
-Northern Hall
-```
-
 Это footprint области, а не размер одного здания.
 
-## 5. Distance Between Locations
+## 7. Distance Between Locations
 
 Между крупными локациями оставлять минимум `2–3 cells` для дорог, леса, воды, гор, мостов и transition areas.
 
-## 6. Roads
+## 8. Roads
 
 Один road module:
 
@@ -120,7 +139,7 @@ East   = (256, 128)
 
 Визуальная ширина дороги: `~80–115 world units`.
 
-## 7. Rivers
+## 9. Rivers
 
 Используют ту же систему подключения, что дороги.
 
@@ -135,27 +154,26 @@ bridge-crossing
 
 Базовый river module: `1 × 1 cell`.
 
-## 8. Large Environment Assets
+## 10. Large Environment Assets
 
 ```text
 small lake      2×2
 medium lake     3×2
 large lake      4×3
-
 small mountain  1×1
 medium mountain 2×2
 large mountain  3×3
-
 landmark        2×2 – 4×4
 ```
 
 Объект визуально может выходить за свой footprint.
 
-## 9. Free Placement Assets
+## 11. Free Placement Assets
 
 Не привязывать строго к клеткам:
 
 ```text
+terrain patches
 trees
 tree clusters
 rocks
@@ -165,11 +183,12 @@ crates
 bushes
 snow props
 small decorations
+FX
 ```
 
-## 10. Anchors
+## 12. Anchors
 
-Для деревьев, гор, зданий и landmark:
+Для деревьев, гор, зданий и landmarks:
 
 ```ts
 anchor.set(0.5, 1);
@@ -177,11 +196,12 @@ anchor.set(0.5, 1);
 
 Координата объекта означает точку контакта с землёй.
 
-## 11. Rendering Layers
+## 13. Rendering Layers
 
 ```text
 Background
-Terrain
+BaseTerrain
+TerrainPatches
 Water
 Roads
 Environment
@@ -191,13 +211,13 @@ Foreground
 FX
 ```
 
-При необходимости внутри слоя:
+При необходимости внутри подходящего слоя:
 
 ```ts
 object.zIndex = object.y;
 ```
 
-## 12. Camera
+## 14. Camera
 
 Поддержать:
 
@@ -220,7 +240,7 @@ max: 1.25
 
 Camera bounds рассчитываются по текущему содержимому карты и автоматически расширяются.
 
-## 13. World Data
+## 15. World Data
 
 ```ts
 type WorldObject = {
@@ -246,46 +266,26 @@ type Location = {
 };
 ```
 
-## 14. Expansion Rule
+## 16. Expansion Rule
 
 Добавление новой территории:
 
 ```text
 1. добавить новые location/world objects;
 2. добавить необходимые assets;
-3. соединить новую территорию дорогой/рекой;
-4. пересчитать world bounds.
+3. добавить terrain patches;
+4. соединить новую территорию дорогой/рекой;
+5. пересчитать world bounds;
+6. автоматически расширить BaseTerrain.
 ```
 
-Не должно требоваться:
+Не должно требоваться перерисовывать существующую карту, масштабировать старые территории, менять `CELL_SIZE` или координаты существующих объектов.
 
-```text
-перерисовывать существующую карту;
-масштабировать старые территории;
-менять CELL_SIZE;
-менять координаты существующих объектов.
-```
-
-## 15. MVP
+## 17. MVP
 
 Сначала реализовать тестовую область примерно `6 × 12 cells`.
 
-Проверить:
-
-```text
-modular assets
-roads
-water
-one landmark
-forest
-Y sorting
-swipe
-zoom
-camera bounds
-mobile performance
-```
-
-После успешного прототипа расширять мир до стартовых `32×24`.
+Проверить base terrain, terrain patches, modular assets, roads, water, one landmark, forest, Y sorting, swipe, zoom, camera bounds и mobile performance.
 
 ## Fixed Rules
 
@@ -304,4 +304,4 @@ MAX_ZOOM = 1.25
 
 Главный принцип:
 
-> Мир должен расширяться добавлением новых территорий, а не увеличением или пересборкой существующей карты.
+> Мир расширяется добавлением новых территорий и ассетов, а не увеличением или пересборкой существующей карты.

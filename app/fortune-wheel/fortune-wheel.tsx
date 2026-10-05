@@ -13,18 +13,17 @@ import { useIsInIframe } from "../hooks/use-is-in-iframe";
 type Locale = "en" | "fr";
 
 const rewards = [
-  { value: "5", unit: "spins" },
-  { value: "10", unit: "cad" },
-  { value: "10", unit: "spins" },
-  { value: "20", unit: "cad" },
-  { value: "15", unit: "spins" },
-  { value: "MYSTERY", unit: "prize" },
-  { value: "25", unit: "spins" },
-  { value: "JACKPOT", unit: "bonus" },
+  { value: "100% +", label: "100 FS" },
+  { value: "BONUS", label: "GAME" },
+  { value: "75%", label: "" },
+  { value: "50% +", label: "50 FS" },
+  { value: "100", label: "FS" },
+  { value: "50%", label: "" },
+  { value: "25% +", label: "25 FS" },
+  { value: "50", label: "FS" },
 ] as const;
 
 const WINNING_REWARD_INDEX = 0;
-const PRIZE_URL = "/";
 
 const backgroundImageProps = {
   alt: "",
@@ -47,13 +46,6 @@ const copy = {
     claim: "CLAIM NOW",
     redirecting: "CLAIM IN",
     wheelLabel: "Fortune wheel with eight rewards",
-    mystery: "MYSTERY",
-    units: {
-      spins: "FREE SPINS",
-      cad: "CAD",
-      prize: "PRIZE",
-      bonus: "BONUS",
-    },
   },
   fr: {
     action: "Tourner la roue",
@@ -62,13 +54,6 @@ const copy = {
     claim: "RÉCLAMER MAINTENANT",
     redirecting: "RÉCLAMEZ DANS",
     wheelLabel: "Roue de la fortune avec huit récompenses",
-    mystery: "MYSTÈRE",
-    units: {
-      spins: "TOURS",
-      cad: "CAD",
-      prize: "PRIX",
-      bonus: "BONUS",
-    },
   },
 } as const;
 
@@ -81,7 +66,8 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
   const [showPrize, setShowPrize] = useState(false);
   const [countdown, setCountdown] = useState(3);
   const prize = rewards[WINNING_REWARD_INDEX];
-  const prizeLabel = `${prize.value} ${text.units[prize.unit]}`;
+  const prizeLabel = `${prize.value} ${prize.label}`.trim();
+  const prizeUrl = `https://1mlnbet.com/${locale}/registration/7`;
 
   useEffect(() => {
     if (!showPrize) return;
@@ -92,11 +78,11 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
         return;
       }
 
-      window.location.href = new URL(PRIZE_URL, window.location.origin).href;
+      window.location.href = prizeUrl;
     }, 1000);
 
     return () => window.clearTimeout(timer);
-  }, [countdown, showPrize]);
+  }, [countdown, prizeUrl, showPrize]);
 
   const spin = () => {
     if (spinning) return;
@@ -107,7 +93,7 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
     const overshootAngle = sectorAngle / 2 + 3.5;
     const currentAngle = rotation % 360;
     const alignment = (360 - targetAngle - currentAngle + 360) % 360;
-    const nextRotation = rotation + 360 * 6 + alignment;
+    const nextRotation = rotation + 360 * 4 + alignment;
     const finalRotation = nextRotation + (returnsFromEdge ? 0 : 360);
     const rotor = rotorRef.current;
 
@@ -128,7 +114,7 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
     const start = {
       transform: `rotate(${rotation}deg)`,
       offset: 0,
-      easing: "cubic-bezier(0.1, 0.72, 0.15, 1)",
+      easing: "cubic-bezier(0.32, 0, 0.16, 1)",
     };
     const settle = [
       {
@@ -163,7 +149,7 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
     const animation = rotor.animate(
       keyframes,
       {
-        duration: returnsFromEdge ? 7800 : 8600,
+        duration: returnsFromEdge ? 9000 : 9800,
         fill: "forwards",
       },
     );
@@ -214,17 +200,13 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
                       className="fortune-prize"
                       key={index}
                       style={{
-                        left: `${50 + Math.cos(radians) * 28}%`,
-                        top: `${50 + Math.sin(radians) * 28}%`,
+                        left: `${50 + Math.cos(radians) * 29}%`,
+                        top: `${50 + Math.sin(radians) * 29}%`,
                         transform: `translate(-50%, -50%) rotate(${angle}deg)`,
                       }}
                     >
-                      <strong>
-                        {reward.value === "MYSTERY"
-                          ? text.mystery
-                          : reward.value}
-                      </strong>
-                      <small>{text.units[reward.unit]}</small>
+                      <strong>{reward.value}</strong>
+                      {reward.label && <small>{reward.label}</small>}
                     </span>
                   );
                 })}
@@ -274,7 +256,7 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
           <div className="fortune-win-card">
             <p>{text.won}</p>
             <h2 id="fortune-win-title">{prizeLabel}</h2>
-            <a className="fortune-win-action" href={PRIZE_URL}>
+            <a className="fortune-win-action" href={prizeUrl}>
               {text.claim}
             </a>
             <span className="fortune-countdown" aria-live="polite">
