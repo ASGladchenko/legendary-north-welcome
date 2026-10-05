@@ -7,7 +7,9 @@ import Image, { getImageProps } from "next/image";
 import wheelBackgroundPortrait from "../../public/images/fortune-wheel/fw-bg-portrait.webp";
 import wheelBackground from "../../public/images/fortune-wheel/fw-bg.webp";
 import wheelButton from "../../public/images/fortune-wheel/fw-btn.webp";
+import wheelChip from "../../public/images/fortune-wheel/fw-chip.webp";
 import wheelDisk from "../../public/images/fortune-wheel/fw-disk.webp";
+import wheelFrame from "../../public/images/fortune-wheel/fw-frame.webp";
 
 type Locale = "en" | "fr";
 
@@ -29,6 +31,7 @@ const backgroundImageProps = {
   alt: "",
   fill: true,
   sizes: "100vw",
+  quality: 60,
   fetchPriority: "high" as const,
 };
 const {
@@ -184,7 +187,8 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
                 src={wheelDisk}
                 alt=""
                 fill
-                sizes="(max-width: 760px) 88vw, 48vw"
+                sizes="(max-width: 520px) min(89vw, 66svh), (orientation: portrait) min(82vw, 728px), min(73svh, 728px)"
+                quality={70}
                 loading="eager"
               />
               <div className="fortune-prizes" aria-hidden="true">
@@ -212,19 +216,19 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
 
             <Image
               className="fortune-frame"
-              src="/images/fortune-wheel/fw-frame.webp"
+              src={wheelFrame}
               alt=""
               fill
-              sizes="(max-width: 760px) 94vw, 52vw"
+              sizes="(max-width: 520px) min(100vw, 74svh), (orientation: portrait) min(92vw, 820px), min(82svh, 820px)"
+              quality={70}
               loading="eager"
             />
             <Image
               className="fortune-pointer"
-              src="/images/fortune-wheel/fw-chip.webp"
+              src={wheelChip}
               alt=""
-              width={1536}
-              height={1024}
-              sizes="220px"
+              sizes="(max-width: 520px) min(42vw, 31svh), (orientation: portrait) min(39vw, 344px), min(35svh, 344px)"
+              quality={70}
             />
           <button
             className="fortune-spin-button"
@@ -237,7 +241,8 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
               src={wheelButton}
               alt=""
               fill
-              sizes="160px"
+              sizes="(max-width: 520px) min(21vw, 16svh), (orientation: portrait) min(20vw, 172px), min(18svh, 172px)"
+              quality={70}
             />
           </button>
         </div>
