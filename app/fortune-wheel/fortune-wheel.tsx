@@ -42,7 +42,7 @@ const copy = {
   en: {
     action: "Spin the wheel",
     spinning: "Finding your fortune...",
-    won: "CONGRATULATIONS !",
+    won: "CONGRATULATIONS!",
     wonLabel: "YOU WON",
     claim: "GET BONUS",
     redirecting: "CLAIM IN",
@@ -51,7 +51,7 @@ const copy = {
   fr: {
     action: "Tourner la roue",
     spinning: "Votre fortune se dessine...",
-    won: "FÉLICITATIONS !",
+    won: "FÉLICITATIONS!",
     wonLabel: "VOUS AVEZ GAGNÉ",
     claim: "OBTENIR LE BONUS",
     redirecting: "DÉCLARER UN SINISTRE",
