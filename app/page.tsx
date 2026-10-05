@@ -24,10 +24,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
         />
       </section>
 
-      <OfferModal
-        locale={locale}
-        actionHref={showSignup ? signupHref : `${destination}/deposit`}
-      />
+      {showSignup && <OfferModal locale={locale} actionHref={signupHref} />}
     </main>
   );
 }

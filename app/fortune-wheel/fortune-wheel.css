@@ -15,10 +15,6 @@
   background: #000;
 }
 
-.fortune-page--iframe {
-  min-height: calc(100svh - 110px);
-}
-
 .fortune-background {
   z-index: -3;
 
@@ -254,6 +250,20 @@
   text-shadow: 0 5px 22px rgb(0 0 0 / 58%);
 }
 
+.fortune-win-percentage {
+  color: #f5c45e;
+  text-shadow:
+    0 2px 2px #5a2d00,
+    0 0 18px rgb(255 178 55 / 42%);
+}
+
+.fortune-win-spins {
+  color: #b9def2;
+  text-shadow:
+    0 2px 2px #062b42,
+    0 0 18px rgb(65 174 232 / 42%);
+}
+
 .fortune-win-label {
   margin-bottom: 8px;
 
@@ -363,12 +373,6 @@
         rgb(0 0 0 / 82%) 95%,
         #000 100%
       );
-  }
-}
-
-@media (min-width: 1280px) {
-  .fortune-page--iframe {
-    min-height: calc(100svh - 56px);
   }
 }
 

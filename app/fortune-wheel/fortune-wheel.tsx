@@ -1,14 +1,13 @@
-"use client";
+'use client';
 
 import { useEffect, useRef, useState } from "react";
 
 import Image, { getImageProps } from "next/image";
 
-import wheelBackground from "../../public/images/fortune-wheel/fw-bg.webp";
 import wheelBackgroundPortrait from "../../public/images/fortune-wheel/fw-bg-portrait.webp";
+import wheelBackground from "../../public/images/fortune-wheel/fw-bg.webp";
 import wheelButton from "../../public/images/fortune-wheel/fw-btn.webp";
 import wheelDisk from "../../public/images/fortune-wheel/fw-disk.webp";
-import { useIsInIframe } from "../hooks/use-is-in-iframe";
 
 type Locale = "en" | "fr";
 
@@ -24,6 +23,7 @@ const rewards = [
 ] as const;
 
 const WINNING_REWARD_INDEX = 0;
+const REDIRECT_COUNTDOWN_SECONDS = 10;
 
 const backgroundImageProps = {
   alt: "",
@@ -42,33 +42,31 @@ const copy = {
   en: {
     action: "Spin the wheel",
     spinning: "Finding your fortune...",
-    won: "CONGRATULATIONS",
+    won: "CONGRATULATIONS !",
     wonLabel: "YOU WON",
     claim: "GET BONUS",
-    redirecting: "GET BONUS IN",
+    redirecting: "CLAIM IN",
     wheelLabel: "Fortune wheel with eight rewards",
   },
   fr: {
     action: "Tourner la roue",
     spinning: "Votre fortune se dessine...",
-    won: "FÉLICITATIONS",
+    won: "FÉLICITATIONS !",
     wonLabel: "VOUS AVEZ GAGNÉ",
     claim: "OBTENIR LE BONUS",
-    redirecting: "BONUS DANS",
+    redirecting: "DÉCLARER UN SINISTRE",
     wheelLabel: "Roue de la fortune avec huit récompenses",
   },
 } as const;
 
 export function FortuneWheel({ locale }: { locale: Locale }) {
-  const isInIframe = useIsInIframe();
   const text = copy[locale];
   const rotorRef = useRef<HTMLDivElement>(null);
   const [rotation, setRotation] = useState(0);
   const [spinning, setSpinning] = useState(false);
   const [showPrize, setShowPrize] = useState(false);
-  const [countdown, setCountdown] = useState(3);
+  const [countdown, setCountdown] = useState(REDIRECT_COUNTDOWN_SECONDS);
   const prize = rewards[WINNING_REWARD_INDEX];
-  const prizeLabel = `${prize.value} ${prize.label}`.trim();
   const prizeUrl = `https://1mlnbet.com/${locale}/registration/7`;
 
   useEffect(() => {
@@ -101,7 +99,7 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
 
     setSpinning(true);
     setShowPrize(false);
-    setCountdown(3);
+    setCountdown(REDIRECT_COUNTDOWN_SECONDS);
 
     if (
       !rotor ||
@@ -166,10 +164,7 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
   };
 
   return (
-    <main
-      className={`fortune-page${isInIframe ? " fortune-page--iframe" : ""}`}
-      lang={locale}
-    >
+    <main className="fortune-page" lang={locale}>
       <picture>
         <source media="(orientation: landscape)" srcSet={landscapeBackground} />
         <source media="(orientation: portrait)" srcSet={portraitBackground} />
@@ -258,7 +253,10 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
           <div className="fortune-win-card">
             <p>{text.won}</p>
             <span className="fortune-win-label">{text.wonLabel}</span>
-            <h2 id="fortune-win-title">{prizeLabel}</h2>
+            <h2 id="fortune-win-title">
+              <span className="fortune-win-percentage">{prize.value}</span>{" "}
+              <span className="fortune-win-spins">{prize.label}</span>
+            </h2>
             <a className="fortune-win-action" href={prizeUrl} target="_top">
               {text.claim}
             </a>
