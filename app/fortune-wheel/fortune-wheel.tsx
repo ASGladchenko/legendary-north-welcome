@@ -42,17 +42,19 @@ const copy = {
   en: {
     action: "Spin the wheel",
     spinning: "Finding your fortune...",
-    won: "You won",
-    claim: "CLAIM NOW",
-    redirecting: "CLAIM IN",
+    won: "CONGRATULATIONS",
+    wonLabel: "YOU WON",
+    claim: "GET BONUS",
+    redirecting: "GET BONUS IN",
     wheelLabel: "Fortune wheel with eight rewards",
   },
   fr: {
     action: "Tourner la roue",
     spinning: "Votre fortune se dessine...",
-    won: "Vous avez gagné",
-    claim: "RÉCLAMER MAINTENANT",
-    redirecting: "RÉCLAMEZ DANS",
+    won: "FÉLICITATIONS",
+    wonLabel: "VOUS AVEZ GAGNÉ",
+    claim: "OBTENIR LE BONUS",
+    redirecting: "BONUS DANS",
     wheelLabel: "Roue de la fortune avec huit récompenses",
   },
 } as const;
@@ -78,7 +80,7 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
         return;
       }
 
-      window.location.href = prizeUrl;
+      window.top!.location.href = prizeUrl;
     }, 1000);
 
     return () => window.clearTimeout(timer);
@@ -255,8 +257,9 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
         >
           <div className="fortune-win-card">
             <p>{text.won}</p>
+            <span className="fortune-win-label">{text.wonLabel}</span>
             <h2 id="fortune-win-title">{prizeLabel}</h2>
-            <a className="fortune-win-action" href={prizeUrl}>
+            <a className="fortune-win-action" href={prizeUrl} target="_top">
               {text.claim}
             </a>
             <span className="fortune-countdown" aria-live="polite">
