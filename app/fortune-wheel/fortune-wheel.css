@@ -1,7 +1,7 @@
 .fortune-page {
   position: relative;
 
-  height: calc(100dvh - 110px);
+  height: 100dvh;
 
   padding: 20px;
 
@@ -31,8 +31,8 @@
   inset: 0;
 
   background-position: center;
-  background-repeat: no-repeat;
   background-size: cover;
+  background-repeat: no-repeat;
 
   object-fit: cover;
   object-position: center;
@@ -40,7 +40,6 @@
 
 .fortune-background-preview {
   background-image: url("/images/fortune-wheel/previews/fw-bg-portrait.webp");
-
   filter: blur(18px);
 
   transform: scale(1.05);
@@ -78,32 +77,32 @@
   inset: 0;
 
   background:
-          linear-gradient(
-            90deg,
-            #000 0%,
-            rgb(0 0 0 / 92%) 3%,
-            rgb(0 0 0 / 60%) 10%,
-            rgb(0 0 0 / 24%) 17%,
-            transparent 24%,
-            transparent 76%,
-            rgb(0 0 0 / 24%) 83%,
-            rgb(0 0 0 / 60%) 90%,
-            rgb(0 0 0 / 92%) 97%,
-            #000 100%
-          ),
-          linear-gradient(
-            180deg,
-            #000 0%,
-            rgb(0 0 0 / 90%) 3%,
-            rgb(0 0 0 / 56%) 9%,
-            rgb(0 0 0 / 22%) 16%,
-            transparent 23%,
-            transparent 77%,
-            rgb(0 0 0 / 22%) 84%,
-            rgb(0 0 0 / 56%) 91%,
-            rgb(0 0 0 / 90%) 97%,
-            #000 100%
-          );
+            linear-gradient(
+              90deg,
+              #000 0%,
+              rgb(0 0 0 / 92%) 3%,
+              rgb(0 0 0 / 60%) 10%,
+              rgb(0 0 0 / 24%) 17%,
+              transparent 24%,
+              transparent 76%,
+              rgb(0 0 0 / 24%) 83%,
+              rgb(0 0 0 / 60%) 90%,
+              rgb(0 0 0 / 92%) 97%,
+              #000 100%
+            ),
+            linear-gradient(
+              180deg,
+              #000 0%,
+              rgb(0 0 0 / 90%) 3%,
+              rgb(0 0 0 / 56%) 9%,
+              rgb(0 0 0 / 22%) 16%,
+              transparent 23%,
+              transparent 77%,
+              rgb(0 0 0 / 22%) 84%,
+              rgb(0 0 0 / 56%) 91%,
+              rgb(0 0 0 / 90%) 97%,
+              #000 100%
+            );
 
   pointer-events: none;
 }
@@ -124,10 +123,10 @@
   width: 100%;
 
   filter:
-          drop-shadow(0 4px 1px rgb(74 39 10 / 82%))
-          drop-shadow(0 12px 10px rgb(0 0 0 / 72%))
-          drop-shadow(0 30px 34px rgb(0 0 0 / 64%))
-          drop-shadow(0 0 12px rgb(229 166 55 / 18%));
+            drop-shadow(0 4px 1px rgb(74 39 10 / 82%))
+            drop-shadow(0 12px 10px rgb(0 0 0 / 72%))
+            drop-shadow(0 30px 34px rgb(0 0 0 / 64%))
+            drop-shadow(0 0 12px rgb(229 166 55 / 18%));
 
   transform: translate(-50%, -50%);
 
@@ -163,8 +162,8 @@
 
   text-align: center;
   text-shadow:
-          0 2px 2px #000,
-          0 0 8px #000;
+            0 2px 2px #000,
+            0 0 8px #000;
 
   color: #f1dfbd;
 }
@@ -213,8 +212,9 @@
 
   width: 30%;
 
-  filter: drop-shadow(0 8px 12px rgb(0 0 0 / 58%));
   opacity: 1;
+  filter: drop-shadow(0 8px 12px rgb(0 0 0 / 58%));
+
   transition: opacity 300ms ease;
 
   pointer-events: none;
@@ -232,8 +232,8 @@
 
 .fortune-hint span {
   position: absolute;
-  inset: 21% 16% 35%;
   z-index: 1;
+  inset: 21% 16% 35%;
 
   display: grid;
   place-items: center;
@@ -336,14 +336,14 @@
   text-align: center;
 
   background:
-          radial-gradient(circle at 18% 26%, rgb(28 111 158 / 25%), transparent 42%),
-          linear-gradient(135deg, #07141f, #02080d 72%);
+            radial-gradient(circle at 18% 26%, rgb(28 111 158 / 25%), transparent 42%),
+            linear-gradient(135deg, #07141f, #02080d 72%);
   border: 1px solid rgb(70 179 235 / 72%);
   border-radius: 24px;
   box-shadow:
-          0 0 0 4px rgb(22 91 132 / 16%),
-          0 28px 90px rgb(0 0 0 / 78%),
-          0 0 44px rgb(25 142 217 / 20%);
+            0 0 0 4px rgb(22 91 132 / 16%),
+            0 28px 90px rgb(0 0 0 / 78%),
+            0 0 44px rgb(25 142 217 / 20%);
 
   animation: fortune-card-in 420ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
 }
@@ -359,8 +359,8 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   text-shadow:
-          0 2px 2px rgb(0 0 0 / 70%),
-          0 0 20px rgb(255 101 32 / 48%);
+            0 2px 2px rgb(0 0 0 / 70%),
+            0 0 20px rgb(255 101 32 / 48%);
 
   color: #ffb34e;
 }
@@ -382,16 +382,16 @@
 
 .fortune-win-percentage {
   text-shadow:
-          0 2px 2px #5a2d00,
-          0 0 18px rgb(255 178 55 / 42%);
+            0 2px 2px #5a2d00,
+            0 0 18px rgb(255 178 55 / 42%);
 
   color: #f5c45e;
 }
 
 .fortune-win-spins {
   text-shadow:
-          0 2px 2px #062b42,
-          0 0 18px rgb(65 174 232 / 42%);
+            0 2px 2px #062b42,
+            0 0 18px rgb(65 174 232 / 42%);
 
   color: #b9def2;
 }
@@ -506,28 +506,28 @@
 
   .fortune-vignette {
     background:
-                  linear-gradient(
-                    90deg,
-                    #000 0%,
-                    rgb(0 0 0 / 78%) 5%,
-                    rgb(0 0 0 / 38%) 15%,
-                    transparent 27%,
-                    transparent 73%,
-                    rgb(0 0 0 / 38%) 85%,
-                    rgb(0 0 0 / 78%) 95%,
-                    #000 100%
-                  ),
-                  linear-gradient(
-                    180deg,
-                    #000 0%,
-                    rgb(0 0 0 / 82%) 5%,
-                    rgb(0 0 0 / 40%) 14%,
-                    transparent 25%,
-                    transparent 75%,
-                    rgb(0 0 0 / 40%) 86%,
-                    rgb(0 0 0 / 82%) 95%,
-                    #000 100%
-                  );
+                      linear-gradient(
+                        90deg,
+                        #000 0%,
+                        rgb(0 0 0 / 78%) 5%,
+                        rgb(0 0 0 / 38%) 15%,
+                        transparent 27%,
+                        transparent 73%,
+                        rgb(0 0 0 / 38%) 85%,
+                        rgb(0 0 0 / 78%) 95%,
+                        #000 100%
+                      ),
+                      linear-gradient(
+                        180deg,
+                        #000 0%,
+                        rgb(0 0 0 / 82%) 5%,
+                        rgb(0 0 0 / 40%) 14%,
+                        transparent 25%,
+                        transparent 75%,
+                        rgb(0 0 0 / 40%) 86%,
+                        rgb(0 0 0 / 82%) 95%,
+                        #000 100%
+                      );
   }
 }
 
