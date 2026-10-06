@@ -75,7 +75,7 @@ const copy = {
     won: "FÉLICITATIONS!",
     wonLabel: "VOUS AVEZ GAGNÉ",
     claim: "OBTENIR LE BONUS",
-    redirecting: "DÉCLARER UN SINISTRE",
+    redirecting: "RÉCLAMER LE BONUS",
     loading: "Chargement de la roue de la fortune",
     wheelLabel: "Roue de la fortune avec huit récompenses",
   },
