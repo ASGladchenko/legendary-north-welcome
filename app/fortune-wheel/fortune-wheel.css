@@ -18,10 +18,58 @@
 }
 
 .fortune-background {
+  position: absolute;
   z-index: -3;
+  inset: 0;
+
+  overflow: hidden;
+}
+
+.fortune-background-preview,
+.fortune-background-full {
+  position: absolute;
+  inset: 0;
+
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 
   object-fit: cover;
   object-position: center;
+}
+
+.fortune-background-preview {
+  background-image: url("/images/fortune-wheel/previews/fw-bg-portrait.webp");
+
+  filter: blur(18px);
+
+  transform: scale(1.05);
+}
+
+.fortune-background-full {
+  opacity: 0;
+
+  transition: opacity 700ms ease;
+}
+
+.fortune-background-full.is-loaded {
+  opacity: 1;
+}
+
+.fortune-background-full img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+  object-position: center;
+}
+
+@media (orientation: landscape) {
+  .fortune-background-preview {
+    background-image: url("/images/fortune-wheel/previews/fw-bg.webp");
+  }
 }
 
 .fortune-vignette {
@@ -157,6 +205,49 @@
   pointer-events: none;
 }
 
+.fortune-hint {
+  position: absolute;
+  top: 40%;
+  left: 20%;
+  z-index: 7;
+
+  width: 30%;
+
+  filter: drop-shadow(0 8px 12px rgb(0 0 0 / 58%));
+  opacity: 1;
+  transition: opacity 300ms ease;
+
+  pointer-events: none;
+
+  aspect-ratio: 2172 / 724;
+}
+
+.fortune-hint.is-hiding {
+  opacity: 0;
+}
+
+.fortune-hint img {
+  object-fit: contain;
+}
+
+.fortune-hint span {
+  position: absolute;
+  inset: 21% 16% 35%;
+  z-index: 1;
+
+  display: grid;
+  place-items: center;
+
+  font-family: var(--font-montserrat), sans-serif;
+  font-size: clamp(8px, 1.25vmin, 13px);
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+  text-shadow: 0 2px 4px #000;
+
+  color: #fff0c5;
+}
+
 .fortune-spin-button {
   position: absolute;
   top: 50%;
@@ -201,6 +292,24 @@
 .fortune-spin-button:focus-visible {
   outline: 3px solid #fff0ad;
   outline-offset: 5px;
+}
+
+.fortune-loader {
+  position: fixed;
+  z-index: 30;
+  inset: 0;
+
+  display: grid;
+  place-items: center;
+
+  background: #000;
+}
+
+.fortune-loader-logo {
+  width: min(56vw, 228px);
+  height: auto;
+
+  animation: fortune-loader-pulse 1.5s ease-in-out infinite;
 }
 
 .fortune-win-overlay {
@@ -371,6 +480,17 @@
   }
 }
 
+@keyframes fortune-loader-pulse {
+  0%,
+  100% {
+    filter: brightness(0.35);
+  }
+
+  50% {
+    filter: brightness(1.2);
+  }
+}
+
 @media (max-width: 520px) {
   .fortune-page {
     padding: 10px;
@@ -378,6 +498,10 @@
 
   .fortune-stage {
     width: min(100%, 74svh);
+  }
+
+  .fortune-hint span {
+    transform: translateX(3px);
   }
 
   .fortune-vignette {
@@ -408,7 +532,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .fortune-hint {
+    transition: none;
+  }
+
   .fortune-spin-button img,
+  .fortune-loader-logo,
   .fortune-win-overlay,
   .fortune-win-card {
     animation: none;
