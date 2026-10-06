@@ -9,6 +9,7 @@
             "aurora-core"
           ],
           "src": [
+            "aurora-core@0.64x.webp",
             "aurora-core.webp"
           ],
           "data": {
@@ -23,6 +24,7 @@
             "face-a"
           ],
           "src": [
+            "faces/face-a@0.64x.webp",
             "faces/face-a.webp"
           ],
           "data": {
@@ -37,6 +39,7 @@
             "face-b"
           ],
           "src": [
+            "faces/face-b@0.64x.webp",
             "faces/face-b.webp"
           ],
           "data": {
@@ -52,7 +55,9 @@
             "oracle-background.webp"
           ],
           "data": {
-            "tags": {}
+            "tags": {
+              "fix": true
+            }
           }
         },
         {

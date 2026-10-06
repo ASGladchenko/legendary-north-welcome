@@ -7,9 +7,9 @@ import {
 const base = "/assets/northern-oracle";
 
 export const oracleAssetUrls = [
-  `${base}/faces/face-a.webp`,
-  `${base}/faces/face-b.webp`,
-  `${base}/aurora-core.webp`,
+  `${base}/faces/face-a@0.64x.webp`,
+  `${base}/faces/face-b@0.64x.webp`,
+  `${base}/aurora-core@0.64x.webp`,
   `${base}/runes@0.32x.webp.json`,
 ] as const;
 

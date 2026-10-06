@@ -34,3 +34,14 @@ await Promise.all(
     console.log(`Generated ${output}`);
   }),
 );
+
+const oracleBackground = "public/assets/northern-oracle/oracle-background.webp";
+const oraclePreview = "public/assets/northern-oracle/previews/oracle-background.webp";
+
+await mkdir(parse(oraclePreview).dir, { recursive: true });
+await sharp(oracleBackground)
+  .resize({ width: 80, withoutEnlargement: true })
+  .webp({ quality: 30 })
+  .toFile(oraclePreview);
+
+console.log(`Generated ${oraclePreview}`);

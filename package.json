@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run generate:bg-previews && npm run generate:oracle-assets && next build",
+    "build": "npm run generate:oracle-assets && npm run generate:bg-previews && next build",
     "generate:bg-previews": "node scripts/generate-bg-previews.mjs",
     "generate:oracle-assets": "assetpack --config assetpack.config.mjs",
     "start": "next start",

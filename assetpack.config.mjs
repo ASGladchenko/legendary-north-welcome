@@ -7,7 +7,7 @@ const config = {
   cacheLocation: "./.assetpack/northern-oracle",
   pipes: pixiPipes({
     cacheBust: false,
-    resolutions: { default: 1 },
+    resolutions: { default: 1, cube: 0.64 },
     compression: {
       png: "skip",
       jpg: "skip",

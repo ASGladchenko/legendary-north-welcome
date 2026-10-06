@@ -200,19 +200,22 @@ export class CubeController {
     this.root.position.set(width / 2, height * this.centerRatio);
   }
 
+  rotateBy(deltaX: number, deltaY: number) {
+    if (this.spinning || this.destroyed) return;
+
+    this.motion.rotationX += deltaY;
+    this.motion.rotationY += deltaX;
+  }
+
   async reveal(prediction: Prediction, faceIndex: number) {
     if (this.spinning || this.destroyed) return;
 
+    this.commitVisibleRotation();
     this.spinning = true;
     this.selectedFace = faceIndex;
     this.timeline?.kill();
     this.title.text = prediction.title.toUpperCase();
     this.title.alpha = 0;
-    gsap.to(this.revealState, {
-      blend: 0,
-      duration: 0.28,
-      ease: "sine.out",
-    });
     this.faces.forEach((face) => {
       face.rune.alpha = 0.88;
       face.glow.alpha = 0.04;
@@ -263,6 +266,31 @@ export class CubeController {
     this.app.ticker.remove(this.update);
   }
 
+  private commitVisibleRotation() {
+    const { x, y } = this.getIdleRotation();
+
+    this.motion.rotationX += x;
+    this.motion.rotationY += y;
+    this.revealState.blend = 0;
+  }
+
+  private getIdleRotation() {
+    const revealBlend = this.revealState.blend;
+
+    return {
+      x: revealBlend
+        ? (-0.32 + Math.sin(this.elapsed * 0.00052) * 0.08) * revealBlend
+        : this.spinning
+          ? 0
+          : Math.sin(this.elapsed * 0.00052) * 0.045,
+      y: revealBlend
+        ? (0.5 + Math.cos(this.elapsed * 0.00041) * 0.1) * revealBlend
+        : this.spinning
+          ? 0
+          : Math.cos(this.elapsed * 0.00041) * 0.06,
+    };
+  }
+
   private revealResult(faceIndex: number, resolve: () => void) {
     const face = this.faces[faceIndex];
 
@@ -279,7 +307,6 @@ export class CubeController {
         ease: "power2.out",
       })
       .to(face.glow, { alpha: 0.64, duration: 0.3 }, 0)
-      .to(face.rune, { alpha: 0, duration: 0.46, ease: "power2.in" }, 0.2)
       .to(this.title, { alpha: 1, duration: 0.42, ease: "power2.out" }, 0.25)
       .to(
         this.revealState,
@@ -301,17 +328,7 @@ export class CubeController {
 
   private readonly update = (ticker: Ticker) => {
     this.elapsed += ticker.deltaMS;
-    const revealBlend = this.revealState.blend;
-    const idleX = revealBlend
-      ? (-0.32 + Math.sin(this.elapsed * 0.00052) * 0.08) * revealBlend
-      : this.spinning
-        ? 0
-        : Math.sin(this.elapsed * 0.00052) * 0.045;
-    const idleY = revealBlend
-      ? (0.5 + Math.cos(this.elapsed * 0.00041) * 0.1) * revealBlend
-      : this.spinning
-        ? 0
-        : Math.cos(this.elapsed * 0.00041) * 0.06;
+    const { x: idleX, y: idleY } = this.getIdleRotation();
     const floatY = Math.sin(this.elapsed * 0.00115) * this.size * 0.035;
     const rx = this.motion.rotationX + idleX;
     const ry = this.motion.rotationY + idleY;

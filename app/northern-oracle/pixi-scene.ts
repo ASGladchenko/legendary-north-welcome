@@ -6,6 +6,7 @@ import type { Prediction } from "./predictions";
 
 export type OracleScene = {
   reveal: (prediction: Prediction, faceIndex: number) => Promise<void>;
+  rotateBy: (deltaX: number, deltaY: number) => void;
   destroy: () => Promise<void>;
 };
 
@@ -49,6 +50,7 @@ export async function createOracleScene(
     return {
       reveal: (prediction, faceIndex) =>
         controller!.reveal(prediction, faceIndex),
+      rotateBy: (deltaX, deltaY) => controller!.rotateBy(deltaX, deltaY),
       destroy: async () => {
         resizeObserver.disconnect();
         document.removeEventListener("visibilitychange", handleVisibility);
