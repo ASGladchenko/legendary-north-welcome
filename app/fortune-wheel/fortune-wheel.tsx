@@ -27,7 +27,8 @@ const rewards = [
 
 const WINNING_REWARD_INDEX = 0;
 const REDIRECT_COUNTDOWN_SECONDS = 10;
-const CRITICAL_ASSET_COUNT = 5;
+const SPIN_HINT_ENABLED = false;
+const CRITICAL_ASSET_COUNT = SPIN_HINT_ENABLED ? 5 : 4;
 const HINT_FADE_DURATION_MS = 300;
 
 function FortuneHint({
@@ -332,7 +333,7 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
               onLoad={() => markAssetLoaded("chip")}
               onError={() => markAssetLoaded("chip")}
             />
-          {showHint && (
+          {SPIN_HINT_ENABLED && showHint && (
             <FortuneHint
               hiding={hintHiding}
               onReady={() => markAssetLoaded("hint")}

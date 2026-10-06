@@ -269,6 +269,31 @@
   aspect-ratio: 1;
 }
 
+.fortune-spin-button::before,
+.fortune-spin-button::after {
+  position: absolute;
+  z-index: 0;
+  inset: 8%;
+
+  opacity: 0;
+  border: 2px solid rgb(255 194 73 / 82%);
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgb(255 174 38 / 72%);
+
+  pointer-events: none;
+
+  content: "";
+}
+
+.fortune-spin-button:not(:disabled)::before,
+.fortune-spin-button:not(:disabled)::after {
+  animation: fortune-button-wave 2.4s ease-out infinite;
+}
+
+.fortune-spin-button:not(:disabled)::after {
+  animation-delay: 1.2s;
+}
+
 .fortune-spin-button img {
   z-index: 1;
 
@@ -480,6 +505,21 @@
   }
 }
 
+@keyframes fortune-button-wave {
+  0% {
+    opacity: 0.85;
+
+    transform: scale(0.9);
+  }
+
+  75%,
+  100% {
+    opacity: 0;
+
+    transform: scale(2);
+  }
+}
+
 @keyframes fortune-loader-pulse {
   0%,
   100% {
@@ -488,6 +528,16 @@
 
   50% {
     filter: brightness(1.2);
+  }
+}
+
+@media (orientation: landscape) and (max-height: 520px) {
+  .fortune-page {
+    padding: 0;
+  }
+
+  .fortune-stage {
+    width: min(58vw, 150svh, 620px);
   }
 }
 
@@ -536,6 +586,8 @@
     transition: none;
   }
 
+  .fortune-spin-button::before,
+  .fortune-spin-button::after,
   .fortune-spin-button img,
   .fortune-loader-logo,
   .fortune-win-overlay,
