@@ -19,6 +19,7 @@
 
 # production
 /build
+/.assetpack/
 
 # misc
 .DS_Store

@@ -1,0 +1,75 @@
+{
+  "bundles": [
+    {
+      "name": "default",
+      "assets": [
+        {
+          "alias": [
+            "aurora-core.png",
+            "aurora-core"
+          ],
+          "src": [
+            "aurora-core.webp"
+          ],
+          "data": {
+            "tags": {}
+          }
+        },
+        {
+          "alias": [
+            "faces/face-a.png",
+            "faces/face-a",
+            "face-a.png",
+            "face-a"
+          ],
+          "src": [
+            "faces/face-a.webp"
+          ],
+          "data": {
+            "tags": {}
+          }
+        },
+        {
+          "alias": [
+            "faces/face-b.png",
+            "faces/face-b",
+            "face-b.png",
+            "face-b"
+          ],
+          "src": [
+            "faces/face-b.webp"
+          ],
+          "data": {
+            "tags": {}
+          }
+        },
+        {
+          "alias": [
+            "oracle-background.png",
+            "oracle-background"
+          ],
+          "src": [
+            "oracle-background.webp"
+          ],
+          "data": {
+            "tags": {}
+          }
+        },
+        {
+          "alias": [
+            "runes"
+          ],
+          "src": [
+            "runes@0.32x.webp.json"
+          ],
+          "data": {
+            "tags": {
+              "tps": true,
+              "fix": true
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

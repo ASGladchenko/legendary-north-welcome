@@ -1,0 +1,349 @@
+.oracle-page {
+  position: relative;
+
+  min-height: 100dvh;
+  padding: clamp(22px, 4vw, 48px) 18px 0;
+
+  display: block;
+
+  overflow: hidden;
+
+  color: #edfdfb;
+  background: #02080c url("/assets/northern-oracle/oracle-background.webp") center / cover no-repeat;
+
+  isolation: isolate;
+}
+
+.oracle-shade {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      90deg,
+      #000 0%,
+      rgb(0 2 4 / 72%) 5%,
+      transparent 19%,
+      transparent 81%,
+      rgb(0 2 4 / 72%) 95%,
+      #000 100%
+    ),
+    linear-gradient(
+      180deg,
+      rgb(0 2 4 / 68%) 0%,
+      transparent 17%,
+      transparent 72%,
+      rgb(0 2 4 / 76%) 100%
+    ),
+    radial-gradient(
+      ellipse at 50% 46%,
+      transparent 0 42%,
+      rgb(0 4 7 / 30%) 68%,
+      rgb(0 1 3 / 74%) 100%
+    );
+
+  pointer-events: none;
+}
+
+.oracle-heading {
+  position: relative;
+  z-index: 2;
+
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.oracle-heading span {
+  display: block;
+
+  font-size: clamp(9px, 1.2vw, 12px);
+  font-weight: 700;
+  letter-spacing: 0.2em;
+
+  color: #80dcd7;
+}
+
+.oracle-heading h1 {
+  margin: 7px 0 0;
+
+  font-family: var(--font-montserrat), sans-serif;
+  font-size: clamp(24px, 4.2vw, 48px);
+  font-weight: 760;
+  line-height: 1;
+  letter-spacing: 0;
+  text-shadow:
+    0 2px 20px rgb(55 227 220 / 20%),
+    0 3px 4px rgb(0 0 0 / 76%);
+
+  color: #f7fbf5;
+}
+
+.oracle-stage {
+  position: absolute;
+  inset: 0;
+
+  width: min(100%, 960px);
+  height: 100%;
+  min-height: 0;
+  margin: 0 auto;
+}
+
+.oracle-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.oracle-canvas canvas {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+}
+
+.oracle-cube-trigger {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 4;
+
+  width: min(72vw, 520px, 68dvh);
+
+  padding: 0;
+
+  display: grid;
+  place-items: center;
+
+  background: transparent;
+  border: 0;
+  border-radius: 18%;
+
+  transform: translate(-50%, -50%);
+
+  cursor: pointer;
+
+  aspect-ratio: 1;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.oracle-cube-trigger span {
+  position: relative;
+  z-index: 1;
+
+  font-size: clamp(15px, 2vw, 20px);
+  font-weight: 900;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+
+  color: #fff0bd;
+  text-shadow:
+    0 2px 0 #071419,
+    0 4px 8px rgb(0 0 0 / 96%),
+    0 0 10px rgb(86 255 239 / 76%),
+    0 0 24px rgb(44 221 210 / 48%);
+
+  animation: oracle-tap-pulse 1.8s ease-in-out infinite;
+
+  transition:
+    opacity 250ms ease,
+    transform 250ms ease;
+}
+
+.oracle-cube-trigger::before,
+.oracle-cube-trigger::after {
+  position: absolute;
+  inset: 13%;
+
+  opacity: 0;
+  border: 1px solid rgb(99 243 232 / 38%);
+  border-radius: 50%;
+  box-shadow:
+    0 0 14px rgb(64 226 218 / 20%),
+    inset 0 0 14px rgb(64 226 218 / 12%);
+
+  pointer-events: none;
+
+  content: "";
+}
+
+.oracle-cube-trigger:not(:disabled)::before,
+.oracle-cube-trigger:not(:disabled)::after {
+  animation: oracle-wave 3.2s ease-out infinite;
+}
+
+.oracle-cube-trigger:not(:disabled)::after {
+  animation-delay: 1.6s;
+}
+
+.oracle-cube-trigger:disabled {
+  cursor: wait;
+}
+
+.oracle-cube-trigger:disabled span {
+  animation: none;
+  opacity: 0;
+  transform: scale(0.92);
+}
+
+.oracle-cube-trigger:focus-visible {
+  outline: 2px solid #bafff7;
+  outline-offset: -10px;
+}
+
+.oracle-result {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 6;
+
+  width: 100%;
+  min-height: 0;
+  padding: 18px 32px 22px;
+
+  text-align: center;
+
+  background: rgb(1 9 13 / 78%);
+  border-top: 1px solid rgb(104 229 220 / 20%);
+  opacity: 0;
+  backdrop-filter: blur(14px);
+  transform: translateY(100%);
+  transition:
+    opacity 500ms ease,
+    transform 650ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.oracle-result.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.oracle-result span {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+
+  color: #76d7d2;
+}
+
+.oracle-result h2 {
+  margin: 5px 0 8px;
+
+  font-size: clamp(20px, 3.2vw, 32px);
+  line-height: 1;
+  letter-spacing: 0;
+
+  color: #fff0b9;
+}
+
+.oracle-result p,
+.oracle-error {
+  max-width: 600px;
+  margin: 0 auto;
+
+  font-size: clamp(12px, 1.7vw, 15px);
+  line-height: 1.55;
+
+  color: rgb(222 240 239 / 82%);
+}
+
+.oracle-error {
+  align-self: center;
+
+  text-align: center;
+}
+
+.oracle-loader {
+  position: fixed;
+  z-index: 30;
+  inset: 0;
+
+  display: grid;
+  place-items: center;
+
+  background: #000;
+}
+
+.oracle-loader-logo {
+  width: min(56vw, 228px);
+  height: auto;
+
+  animation: oracle-loader-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes oracle-loader-pulse {
+  0%,
+  100% {
+    filter: brightness(0.32);
+  }
+
+  50% {
+    filter: brightness(1.18) drop-shadow(0 0 16px rgb(80 230 221 / 24%));
+  }
+}
+
+@keyframes oracle-wave {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.65);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes oracle-tap-pulse {
+  0%,
+  100% {
+    filter: brightness(0.92);
+    transform: translateY(1px) scale(0.97);
+  }
+
+  50% {
+    filter: brightness(1.24) drop-shadow(0 0 7px rgb(107 255 242 / 54%));
+    transform: translateY(-2px) scale(1.04);
+  }
+}
+
+@media (orientation: landscape) and (max-height: 540px) {
+  .oracle-page {
+    min-height: 100dvh;
+    padding: 12px 18px;
+
+  }
+
+  .oracle-heading h1 {
+    margin-top: 4px;
+
+    font-size: 24px;
+  }
+
+}
+
+@media (max-width: 600px) {
+  .oracle-page {
+    padding-inline: 0;
+  }
+
+  .oracle-heading,
+  .oracle-result,
+  .oracle-error {
+    padding-inline: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .oracle-loader-logo,
+  .oracle-cube-trigger span,
+  .oracle-cube-trigger::before,
+  .oracle-cube-trigger::after {
+    animation: none;
+  }
+
+  .oracle-result {
+    transition: none;
+  }
+}
