@@ -7,61 +7,62 @@ export type CubeMotionState = {
 };
 
 const TAU = Math.PI * 2;
+const SPIN_SPEED = TAU * 0.52;
 
 const spinVariants = [
   {
-    xTurns: 0.7,
-    yTurns: 1.35,
-    xKick: -0.08,
-    yKick: -0.12,
+    route: "x-first",
+    xTurns: -1.55,
+    yTurns: 0.18,
+    xKick: 0.18,
+    yKick: -0.04,
     zKick: -0.035,
     zSpin: 0.045,
-    duration: 3.15,
   },
   {
-    xTurns: -1.15,
-    yTurns: -0.75,
-    xKick: 0.1,
-    yKick: 0.08,
+    route: "x-first",
+    xTurns: 1.55,
+    yTurns: -0.18,
+    xKick: -0.18,
+    yKick: 0.04,
     zKick: 0.04,
     zSpin: -0.06,
-    duration: 3,
   },
   {
-    xTurns: 1.45,
-    yTurns: -0.85,
-    xKick: -0.12,
-    yKick: 0.1,
+    route: "y-first",
+    xTurns: 0.18,
+    yTurns: -1.55,
+    xKick: -0.04,
+    yKick: 0.18,
     zKick: 0.055,
     zSpin: -0.035,
-    duration: 3.3,
   },
   {
-    xTurns: -0.8,
+    route: "y-first",
+    xTurns: -0.18,
     yTurns: 1.55,
-    xKick: 0.08,
-    yKick: -0.14,
+    xKick: 0.04,
+    yKick: -0.18,
     zKick: -0.05,
     zSpin: 0.07,
-    duration: 3.2,
   },
   {
-    xTurns: 1.8,
-    yTurns: 0.65,
-    xKick: -0.14,
-    yKick: -0.06,
+    route: "arc",
+    xTurns: -1.15,
+    yTurns: -1.15,
+    xKick: 0.14,
+    yKick: 0.14,
     zKick: 0.035,
     zSpin: 0.08,
-    duration: 3.4,
   },
   {
-    xTurns: -1.55,
-    yTurns: -1.25,
-    xKick: 0.12,
-    yKick: 0.14,
-    zKick: -0.06,
-    zSpin: -0.045,
-    duration: 2.9,
+    route: "spiral",
+    xTurns: 1.1,
+    yTurns: -0.75,
+    xKick: -0.12,
+    yKick: 0.08,
+    zKick: -0.12,
+    zSpin: TAU,
   },
 ] as const;
 
@@ -102,6 +103,40 @@ export function createRevealTimeline(
   const startY = state.rotationY;
   const targetX = nextRotation(startX, finalX, variant.xTurns);
   const targetY = nextRotation(startY, finalY, variant.yTurns);
+  const spinStartX = startX + variant.xKick;
+  const spinStartY = startY + variant.yKick;
+  const deltaX = targetX - spinStartX;
+  const deltaY = targetY - spinStartY;
+  let waypointX = spinStartX + deltaX * 0.5;
+  let waypointY = spinStartY + deltaY * 0.5;
+
+  if (variant.route === "x-first") {
+    waypointX = targetX;
+    waypointY = spinStartY + deltaY * 0.22;
+  } else if (variant.route === "y-first") {
+    waypointX = spinStartX + deltaX * 0.22;
+    waypointY = targetY;
+  } else if (variant.route === "arc") {
+    waypointX -= Math.sign(deltaY) * 0.42;
+    waypointY += Math.sign(deltaX) * 0.42;
+  }
+
+  const waypointZ =
+    variant.route === "spiral" ? variant.zSpin * 0.5 : variant.zSpin;
+  const targetZ =
+    variant.route === "spiral" ? variant.zSpin : variant.zSpin * 0.35;
+  const firstDuration =
+    Math.hypot(
+      waypointX - spinStartX,
+      waypointY - spinStartY,
+      waypointZ - variant.zKick,
+    ) / SPIN_SPEED;
+  const secondDuration =
+    Math.hypot(
+      targetX - waypointX,
+      targetY - waypointY,
+      targetZ - waypointZ,
+    ) / SPIN_SPEED;
   const timeline = gsap.timeline();
 
   timeline
@@ -113,20 +148,30 @@ export function createRevealTimeline(
       ease: "sine.out",
     })
     .to(state, {
-      rotationX: targetX - variant.xKick * 2,
-      rotationY: targetY - variant.yKick * 2,
-      rotationZ: variant.zSpin,
-      duration: variant.duration,
-      ease: "power2.inOut",
+      rotationX: waypointX,
+      rotationY: waypointY,
+      rotationZ: waypointZ,
+      duration: firstDuration,
+      ease: "power1.in",
     })
     .to(state, {
       rotationX: targetX,
       rotationY: targetY,
+      rotationZ: targetZ,
+      duration: secondDuration,
+      ease: "power1.out",
+    });
+
+  if (variant.route === "spiral") {
+    timeline.set(state, { rotationZ: 0 }).call(onReveal);
+  } else {
+    timeline.to(state, {
       rotationZ: 0,
-      duration: 0.9,
-      ease: "power3.out",
+      duration: 0.4,
+      ease: "sine.out",
       onComplete: onReveal,
     });
+  }
 
   return timeline;
 }

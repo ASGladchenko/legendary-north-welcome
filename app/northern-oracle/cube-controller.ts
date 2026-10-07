@@ -3,8 +3,9 @@ import {
   Application,
   Container,
   PerspectiveMesh,
+  Rectangle,
   Text,
-  type Texture,
+  Texture,
   type Ticker,
 } from "pixi.js";
 
@@ -17,11 +18,22 @@ import type { Prediction } from "./predictions";
 
 type Vec3 = [number, number, number];
 
+type MistView = {
+  mesh: PerspectiveMesh;
+  texture: Texture;
+  phase: number;
+  speed: number;
+  alpha: number;
+  revealAlpha: number;
+};
+
 type FaceView = {
   container: Container;
   surface: PerspectiveMesh;
+  mistBack: MistView;
   glow: PerspectiveMesh;
   rune: PerspectiveMesh;
+  mistFront: MistView;
   glowState: { scale: number };
   runeState: { scale: number };
   vertices: [Vec3, Vec3, Vec3, Vec3];
@@ -114,6 +126,28 @@ function mesh(texture: Texture) {
   return new PerspectiveMesh({ texture, verticesX: 6, verticesY: 6 });
 }
 
+function mist(texture: Texture, phase: number, front = false): MistView {
+  const frame = texture.frame;
+  const mistTexture = new Texture({
+    source: texture.source,
+    frame: new Rectangle(frame.x, frame.y, frame.width * 0.62, frame.height),
+    dynamic: true,
+  });
+  const mistMesh = mesh(mistTexture);
+
+  mistMesh.alpha = front ? 0.12 : 0.2;
+  mistMesh.blendMode = "screen";
+
+  return {
+    mesh: mistMesh,
+    texture: mistTexture,
+    phase,
+    speed: front ? -0.00027 : 0.00018,
+    alpha: mistMesh.alpha,
+    revealAlpha: front ? 0.12 : 0.18,
+  };
+}
+
 export class CubeController {
   readonly motion: CubeMotionState = {
     rotationX: -0.54,
@@ -127,9 +161,11 @@ export class CubeController {
   private readonly app: Application;
   private readonly reducedMotion: boolean;
   private readonly revealState = { blend: 0 };
+  private readonly mistState = { boost: 0 };
   private timeline: gsap.core.Timeline | null = null;
   private selectedFace = 0;
   private elapsed = 0;
+  private mistTime = 0;
   private size = 180;
   private centerRatio = 0.57;
   private spinning = false;
@@ -143,21 +179,31 @@ export class CubeController {
     this.faces = faceGeometry.map((geometry, index) => {
       const container = new Container();
       const surface = mesh(assets.faces[geometry.texture]);
+      const mistBack = mist(assets.aurora, index * 0.83);
       const glow = mesh(assets.aurora);
       const runeTexture = assets.atlas.textures[`rune-0${index + 1}.png`];
       const rune = mesh(runeTexture);
+      const mistFront = mist(assets.aurora, index * 0.83 + Math.PI, true);
 
       glow.alpha = 0.04;
       glow.blendMode = "add";
       rune.alpha = 0.88;
       rune.blendMode = "screen";
-      container.addChild(surface, glow, rune);
+      container.addChild(
+        surface,
+        mistBack.mesh,
+        glow,
+        rune,
+        mistFront.mesh,
+      );
 
       return {
         container,
         surface,
+        mistBack,
         glow,
         rune,
+        mistFront,
         glowState: { scale: 0.55 },
         runeState: { scale: 0.52 },
         vertices: geometry.vertices,
@@ -214,6 +260,12 @@ export class CubeController {
     this.spinning = true;
     this.selectedFace = faceIndex;
     this.timeline?.kill();
+    gsap.killTweensOf(this.mistState);
+    gsap.to(this.mistState, {
+      boost: 1,
+      duration: this.reducedMotion ? 0.2 : 0.65,
+      ease: "sine.out",
+    });
     this.title.text = prediction.title.toUpperCase();
     this.title.alpha = 0;
     this.faces.forEach((face) => {
@@ -257,10 +309,13 @@ export class CubeController {
     this.timeline?.kill();
     gsap.killTweensOf(this.motion);
     gsap.killTweensOf(this.revealState);
+    gsap.killTweensOf(this.mistState);
     this.faces.forEach((face) => {
       gsap.killTweensOf(face.glowState);
       gsap.killTweensOf(face.glow);
       gsap.killTweensOf(face.rune);
+      face.mistBack.texture.destroy(false);
+      face.mistFront.texture.destroy(false);
     });
     gsap.killTweensOf(this.title);
     this.app.ticker.remove(this.update);
@@ -309,6 +364,11 @@ export class CubeController {
       .to(face.glow, { alpha: 0.64, duration: 0.3 }, 0)
       .to(this.title, { alpha: 1, duration: 0.42, ease: "power2.out" }, 0.25)
       .to(
+        this.mistState,
+        { boost: 0, duration: 1.15, ease: "sine.inOut" },
+        0.55,
+      )
+      .to(
         this.revealState,
         {
           blend: this.reducedMotion ? 0 : 1,
@@ -328,6 +388,9 @@ export class CubeController {
 
   private readonly update = (ticker: Ticker) => {
     this.elapsed += ticker.deltaMS;
+    if (!this.reducedMotion) {
+      this.mistTime += ticker.deltaMS * (1 + this.mistState.boost * 2.2);
+    }
     const { x: idleX, y: idleY } = this.getIdleRotation();
     const floatY = Math.sin(this.elapsed * 0.00115) * this.size * 0.035;
     const rx = this.motion.rotationX + idleX;
@@ -374,9 +437,29 @@ export class CubeController {
         y: centerY + (point.y - centerY) * face.runeState.scale,
       }));
 
+      [face.mistBack, face.mistFront].forEach((mistLayer) => {
+        const frame = mistLayer.texture.frame;
+        const travel = mistLayer.texture.source.width - frame.width;
+
+        if (face.container.visible) {
+          frame.x =
+            travel *
+            (0.5 +
+              Math.sin(this.mistTime * mistLayer.speed + mistLayer.phase) *
+                0.5);
+          mistLayer.texture.updateUvs();
+        }
+        mistLayer.mesh.alpha =
+          mistLayer.alpha +
+          (faceIndex === this.selectedFace ? this.mistState.boost : 0) *
+            mistLayer.revealAlpha;
+      });
+
       [
+        [face.mistBack.mesh, points],
         [face.glow, glowPoints],
         [face.rune, runePoints],
+        [face.mistFront.mesh, points],
       ].forEach(([layer, corners]) => {
         const meshLayer = layer as PerspectiveMesh;
         const meshCorners = corners as Array<{ x: number; y: number }>;
