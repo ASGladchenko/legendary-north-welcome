@@ -11,8 +11,8 @@ import {
 import { OracleLoader } from "./oracle-loader";
 import type { OracleScene } from "./pixi-scene";
 import {
-  getRandomPrediction,
-  predictions,
+  getNextPrediction,
+  getPredictionFaceIndex,
   type Prediction,
 } from "./predictions";
 import { ResultUi } from "./result-ui";
@@ -95,10 +95,8 @@ export default function CubeExperience() {
   const reveal = async () => {
     if (!ready || spinning || !sceneRef.current) return;
 
-    const nextPrediction = getRandomPrediction();
-    const faceIndex = predictions.findIndex(
-      (item) => item.id === nextPrediction.id,
-    );
+    const nextPrediction = getNextPrediction();
+    const faceIndex = getPredictionFaceIndex(nextPrediction);
 
     setPrediction(null);
     setResultCollapsed(false);

@@ -1,51 +1,75 @@
-export type Prediction = {
-  id: string;
-  title: string;
-  description: string;
-  runeId: string;
+import {
+  exhaustedPrediction,
+  predictions,
+  type Prediction,
+} from "./prediction-config";
+
+export { predictions, type Prediction } from "./prediction-config";
+
+const storageKey = "northern-oracle-predictions";
+let memoryHistory: PredictionHistory | null = null;
+
+type PredictionHistory = {
+  date: string;
+  usedIds: string[];
 };
 
-export const predictions: Prediction[] = [
-  {
-    id: "lucky-day",
-    title: "Lucky Day",
-    description: "Today is a good moment to trust your instinct.",
-    runeId: "rune-01",
-  },
-  {
-    id: "bold-path",
-    title: "Bold Path",
-    description: "The road that asks for courage carries the richest reward.",
-    runeId: "rune-02",
-  },
-  {
-    id: "hidden-gift",
-    title: "Hidden Gift",
-    description: "Look twice at what seems ordinary. Fortune is concealed there.",
-    runeId: "rune-03",
-  },
-  {
-    id: "clear-signal",
-    title: "Clear Signal",
-    description: "A small sign will confirm the choice you already understand.",
-    runeId: "rune-04",
-  },
-  {
-    id: "rising-tide",
-    title: "Rising Tide",
-    description: "Momentum is building. Move with it before the moment passes.",
-    runeId: "rune-05",
-  },
-  {
-    id: "north-star",
-    title: "North Star",
-    description: "Keep your direction steady. The outcome is closer than it appears.",
-    runeId: "rune-06",
-  },
-];
+function getLocalDate() {
+  const now = new Date();
 
-export function getRandomPrediction() {
+  return [
+    now.getFullYear(),
+    String(now.getMonth() + 1).padStart(2, "0"),
+    String(now.getDate()).padStart(2, "0"),
+  ].join("-");
+}
+
+function readHistory(date: string): PredictionHistory {
+  try {
+    const saved = JSON.parse(
+      window.localStorage.getItem(storageKey) ?? "null",
+    ) as Partial<PredictionHistory> | null;
+
+    if (saved?.date === date && Array.isArray(saved.usedIds)) {
+      return { date, usedIds: saved.usedIds };
+    }
+  } catch {
+    // The in-memory fallback still prevents repeats while this page is open.
+  }
+
+  return memoryHistory?.date === date
+    ? memoryHistory
+    : { date, usedIds: [] };
+}
+
+function saveHistory(history: PredictionHistory) {
+  memoryHistory = history;
+
+  try {
+    window.localStorage.setItem(storageKey, JSON.stringify(history));
+  } catch {
+    // localStorage can be unavailable in privacy mode; memoryHistory is enough.
+  }
+}
+
+export function getNextPrediction() {
+  const date = getLocalDate();
+  const history = readHistory(date);
+  const usedIds = new Set(history.usedIds);
+  const available = predictions.filter(({ id }) => !usedIds.has(id));
+
+  if (available.length === 0) return exhaustedPrediction;
+
   const random = crypto.getRandomValues(new Uint32Array(1))[0];
+  const prediction = available[random % available.length];
 
-  return predictions[random % predictions.length];
+  saveHistory({ date, usedIds: [...usedIds, prediction.id] });
+
+  return prediction;
+}
+
+export function getPredictionFaceIndex(prediction: Prediction) {
+  const index = predictions.findIndex(({ id }) => id === prediction.id);
+
+  return index < 0 ? predictions.length % 6 : index % 6;
 }
