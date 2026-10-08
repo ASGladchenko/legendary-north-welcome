@@ -19,7 +19,6 @@ export function ResultUi({ prediction, onClose }: ResultUiProps) {
         ×
       </button>
       <span>Your northern sign</span>
-      <h2>{prediction.title}</h2>
       <p>{prediction.description}</p>
     </div>
   );

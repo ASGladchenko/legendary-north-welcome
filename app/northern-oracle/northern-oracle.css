@@ -343,6 +343,9 @@
 }
 
 .oracle-prediction span {
+  display: block;
+  margin-bottom: 10px;
+
   font-size: 9px;
   font-weight: 800;
   letter-spacing: 0.2em;
@@ -351,31 +354,30 @@
   color: #76d7d2;
 }
 
-.oracle-prediction h2 {
-  margin: 5px 0 8px;
-
-  font-size: clamp(20px, 3.2vw, 32px);
-  line-height: 1;
-  letter-spacing: 0;
-
-  color: #fff0b9;
-}
-
 .oracle-prediction p,
 .oracle-error {
   max-width: 600px;
   margin: 0 auto;
 
-  font-size: clamp(12px, 1.7vw, 15px);
-  line-height: 1.55;
+  font-size: clamp(20px, 3.2vw, 32px);
+  font-weight: 700;
+  line-height: 1.3;
 
-  color: rgb(222 240 239 / 82%);
+  color: #fff0b9;
+  text-shadow:
+    0 2px 4px rgb(0 0 0 / 90%),
+    0 0 18px rgb(76 231 220 / 28%);
 }
 
 .oracle-error {
   align-self: center;
 
+  font-size: clamp(12px, 1.7vw, 15px);
+  font-weight: 400;
   text-align: center;
+
+  color: rgb(222 240 239 / 82%);
+  text-shadow: none;
 }
 
 .oracle-loader {
