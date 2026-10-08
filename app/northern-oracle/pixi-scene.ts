@@ -2,10 +2,9 @@ import { Application } from "pixi.js";
 
 import { CubeController } from "./cube-controller";
 import { loadOracleAssets, unloadOracleAssets } from "./oracle-assets";
-import type { Prediction } from "./predictions";
 
 export type OracleScene = {
-  reveal: (prediction: Prediction, faceIndex: number) => Promise<void>;
+  reveal: (faceIndex: number, onReveal: () => void) => Promise<void>;
   rotateBy: (deltaX: number, deltaY: number) => void;
   destroy: () => Promise<void>;
 };
@@ -48,8 +47,7 @@ export async function createOracleScene(
     document.addEventListener("visibilitychange", handleVisibility);
 
     return {
-      reveal: (prediction, faceIndex) =>
-        controller!.reveal(prediction, faceIndex),
+      reveal: (faceIndex, onReveal) => controller!.reveal(faceIndex, onReveal),
       rotateBy: (deltaX, deltaY) => controller!.rotateBy(deltaX, deltaY),
       destroy: async () => {
         resizeObserver.disconnect();

@@ -4,7 +4,6 @@ import {
   Container,
   PerspectiveMesh,
   Rectangle,
-  Text,
   Texture,
   type Ticker,
 } from "pixi.js";
@@ -14,7 +13,6 @@ import {
   type CubeMotionState,
 } from "./oracle-animation";
 import type { OracleAssets } from "./oracle-assets";
-import type { Prediction } from "./predictions";
 
 type Vec3 = [number, number, number];
 
@@ -157,7 +155,6 @@ export class CubeController {
 
   private readonly root = new Container({ sortableChildren: true });
   private readonly faces: FaceView[];
-  private readonly title: Text;
   private readonly app: Application;
   private readonly reducedMotion: boolean;
   private readonly revealState = { blend: 0 };
@@ -210,26 +207,7 @@ export class CubeController {
         normal: geometry.normal,
       };
     });
-    this.title = new Text({
-      text: "",
-      anchor: 0.5,
-      style: {
-        align: "center",
-        fill: "#fff0bd",
-        fontFamily: "Montserrat, Arial, sans-serif",
-        fontSize: 44,
-        fontWeight: "900",
-        letterSpacing: 1,
-        lineHeight: 42,
-        stroke: { color: "#03131a", width: 7 },
-        wordWrap: true,
-        wordWrapWidth: 260,
-      },
-    });
-    this.title.alpha = 0;
-    this.title.zIndex = 100;
-
-    this.root.addChild(...this.faces.map((face) => face.container), this.title);
+    this.root.addChild(...this.faces.map((face) => face.container));
     this.app.stage.addChild(this.root);
     this.app.ticker.add(this.update);
     this.resize();
@@ -253,7 +231,7 @@ export class CubeController {
     this.motion.rotationY += deltaX;
   }
 
-  async reveal(prediction: Prediction, faceIndex: number) {
+  async reveal(faceIndex: number, onReveal: () => void) {
     if (this.spinning || this.destroyed) return;
 
     this.commitVisibleRotation();
@@ -266,8 +244,6 @@ export class CubeController {
       duration: this.reducedMotion ? 0.2 : 0.65,
       ease: "sine.out",
     });
-    this.title.text = prediction.title.toUpperCase();
-    this.title.alpha = 0;
     this.faces.forEach((face) => {
       face.rune.alpha = 0.88;
       face.glow.alpha = 0.04;
@@ -276,7 +252,7 @@ export class CubeController {
     });
 
     await new Promise<void>((resolve) => {
-      const reveal = () => this.revealResult(faceIndex, resolve);
+      const reveal = () => this.revealResult(faceIndex, onReveal, resolve);
 
       if (this.reducedMotion) {
         const targets = [
@@ -317,7 +293,6 @@ export class CubeController {
       face.mistBack.texture.destroy(false);
       face.mistFront.texture.destroy(false);
     });
-    gsap.killTweensOf(this.title);
     this.app.ticker.remove(this.update);
   }
 
@@ -346,7 +321,11 @@ export class CubeController {
     };
   }
 
-  private revealResult(faceIndex: number, resolve: () => void) {
+  private revealResult(
+    faceIndex: number,
+    onReveal: () => void,
+    resolve: () => void,
+  ) {
     const face = this.faces[faceIndex];
 
     this.timeline = gsap
@@ -362,7 +341,7 @@ export class CubeController {
         ease: "power2.out",
       })
       .to(face.glow, { alpha: 0.64, duration: 0.3 }, 0)
-      .to(this.title, { alpha: 1, duration: 0.42, ease: "power2.out" }, 0.25)
+      .call(onReveal, [], 0.2)
       .to(
         this.mistState,
         { boost: 0, duration: 1.15, ease: "sine.inOut" },
@@ -382,8 +361,7 @@ export class CubeController {
         { alpha: 0, duration: 0.7, ease: "sine.inOut" },
         1,
       )
-      .to(face.glowState, { scale: 0.65, duration: 0.7 }, 1)
-      .to(this.title, { alpha: 0, duration: 0.5, ease: "sine.inOut" }, 1.2);
+      .to(face.glowState, { scale: 0.65, duration: 0.7 }, 1);
   }
 
   private readonly update = (ticker: Ticker) => {
@@ -475,22 +453,6 @@ export class CubeController {
           meshCorners[3].y,
         );
       });
-
-      if (faceIndex === this.selectedFace) {
-        const edgeWidth = Math.hypot(
-          points[1].x - points[0].x,
-          points[1].y - points[0].y,
-        );
-
-        this.title.position.set(centerX, centerY);
-        this.title.rotation = Math.atan2(
-          points[1].y - points[0].y,
-          points[1].x - points[0].x,
-        );
-        this.title.scale.set(Math.min(1, edgeWidth / 330));
-        this.title.visible = face.container.visible;
-      }
     });
-
   };
 }

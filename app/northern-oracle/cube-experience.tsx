@@ -29,10 +29,10 @@ export default function CubeExperience() {
     y: number;
   } | null>(null);
   const joystickFrameRef = useRef<number | null>(null);
+  const predictionTimerRef = useRef<number | null>(null);
   const [ready, setReady] = useState(false);
   const [spinning, setSpinning] = useState(false);
   const [prediction, setPrediction] = useState<Prediction | null>(null);
-  const [resultCollapsed, setResultCollapsed] = useState(false);
   const [backgroundLoaded, setBackgroundLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
   const [joystickPosition, setJoystickPosition] = useState({ x: 0, y: 0 });
@@ -85,6 +85,9 @@ export default function CubeExperience() {
       if (joystickFrameRef.current !== null) {
         window.cancelAnimationFrame(joystickFrameRef.current);
       }
+      if (predictionTimerRef.current !== null) {
+        window.clearTimeout(predictionTimerRef.current);
+      }
       const scene = sceneRef.current;
 
       sceneRef.current = null;
@@ -99,14 +102,27 @@ export default function CubeExperience() {
     const faceIndex = getPredictionFaceIndex(nextPrediction);
 
     setPrediction(null);
-    setResultCollapsed(false);
     setSpinning(true);
-    await sceneRef.current.reveal(nextPrediction, faceIndex);
-    await new Promise((resolve) => window.setTimeout(resolve, 300));
+    await sceneRef.current.reveal(faceIndex, () => {
+      if (!mountedRef.current) return;
+
+      setPrediction(nextPrediction);
+      predictionTimerRef.current = window.setTimeout(() => {
+        setPrediction(null);
+        predictionTimerRef.current = null;
+      }, 7000);
+    });
 
     if (!mountedRef.current) return;
-    setPrediction(nextPrediction);
     setSpinning(false);
+  };
+
+  const closePrediction = () => {
+    if (predictionTimerRef.current !== null) {
+      window.clearTimeout(predictionTimerRef.current);
+      predictionTimerRef.current = null;
+    }
+    setPrediction(null);
   };
 
   const moveJoystick = (event: ReactPointerEvent<HTMLButtonElement>) => {
@@ -191,7 +207,7 @@ export default function CubeExperience() {
       <button
         className="oracle-joystick"
         type="button"
-        disabled={!ready || spinning || failed}
+        disabled={!ready || spinning || Boolean(prediction) || failed}
         aria-label="Rotate the oracle cube"
         onPointerDown={(event) => {
           event.currentTarget.setPointerCapture(event.pointerId);
@@ -227,23 +243,18 @@ export default function CubeExperience() {
           className="oracle-cube-trigger"
           type="button"
           onClick={reveal}
-          disabled={!ready || spinning || failed}
+          disabled={!ready || spinning || Boolean(prediction) || failed}
           aria-label={spinning ? "The oracle is turning" : "Awaken the oracle"}
         >
           <span aria-hidden="true">Tap me</span>
         </button>
+        <ResultUi prediction={prediction} onClose={closePrediction} />
       </section>
 
-      {failed ? (
+      {failed && (
         <p className="oracle-error" role="alert">
           The oracle is silent. Please reload the page.
         </p>
-      ) : (
-        <ResultUi
-          prediction={prediction}
-          collapsed={resultCollapsed}
-          onToggle={() => setResultCollapsed((collapsed) => !collapsed)}
-        />
       )}
 
       {!ready && !failed && <OracleLoader />}
