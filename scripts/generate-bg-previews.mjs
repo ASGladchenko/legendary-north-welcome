@@ -45,3 +45,26 @@ await sharp(oracleBackground)
   .toFile(oraclePreview);
 
 console.log(`Generated ${oraclePreview}`);
+
+const runeBackgroundsDirectory = "public/images/rune";
+const runePreviewsDirectory = join(runeBackgroundsDirectory, "previews");
+const runeBackgrounds = [
+  "aurora-lake-desktop.webp",
+  "aurora-lake-mobile.webp",
+  "monolith-landscape-desktop.webp",
+  "monolith-landscape-mobile.webp",
+];
+
+await mkdir(runePreviewsDirectory, { recursive: true });
+await Promise.all(
+  runeBackgrounds.map(async (filename) => {
+    const output = join(runePreviewsDirectory, filename);
+
+    await sharp(join(runeBackgroundsDirectory, filename))
+      .resize({ width: 80, withoutEnlargement: true })
+      .webp({ quality: 30 })
+      .toFile(output);
+
+    console.log(`Generated ${output}`);
+  }),
+);
