@@ -34,7 +34,6 @@ await Promise.all(
     console.log(`Generated ${output}`);
   }),
 );
-
 const oracleBackground = "public/assets/northern-oracle/oracle-background.webp";
 const oraclePreview = "public/assets/northern-oracle/previews/oracle-background.webp";
 
@@ -68,3 +67,77 @@ await Promise.all(
     console.log(`Generated ${output}`);
   }),
 );
+
+const brazilSourceDirectory = "assets/welcome-brazil";
+const brazilPublicDirectory = "public/images/welcome-brazil";
+const brazilPreviewsDirectory = join(brazilPublicDirectory, "previews");
+const brazilSources = (await readdir(brazilSourceDirectory))
+  .filter((filename) => filename.endsWith(".png"));
+const brazilPublishedSources = brazilSources.filter(
+  (filename) => filename !== "map-desktop.png",
+);
+
+await mkdir(brazilPublicDirectory, { recursive: true });
+await Promise.all(
+  brazilPublishedSources.flatMap((filename) => {
+    const name = parse(filename).name;
+    const source = join(brazilSourceDirectory, filename);
+    const avifOutput = join(brazilPublicDirectory, `${name}.avif`);
+    const webpOutput = join(brazilPublicDirectory, `${name}.webp`);
+
+    return [
+      sharp(source)
+        .avif({ quality: 55, effort: 4 })
+        .toFile(avifOutput)
+        .then(() => console.log(`Generated ${avifOutput}`)),
+      sharp(source)
+        .webp({ quality: 78, effort: 5 })
+        .toFile(webpOutput)
+        .then(() => console.log(`Generated ${webpOutput}`)),
+    ];
+  }),
+);
+
+await mkdir(brazilPreviewsDirectory, { recursive: true });
+await Promise.all(
+  brazilPublishedSources.map(
+    async (filename) => {
+      const output = join(
+        brazilPreviewsDirectory,
+        `${parse(filename).name}.webp`,
+      );
+
+      await sharp(join(brazilSourceDirectory, filename))
+        .resize({ width: 80, withoutEnlargement: true })
+        .webp({ quality: 30 })
+        .toFile(output);
+
+      console.log(`Generated ${output}`);
+    },
+  ),
+);
+
+const brazilMapSources = Array.from(
+  { length: 5 },
+  (_, index) => `map-${index + 1}.webp`,
+);
+
+await Promise.all(
+  brazilMapSources.flatMap((filename) => {
+    const name = parse(filename).name;
+    const source = join(brazilPublicDirectory, filename);
+
+    return [
+      sharp(source)
+        .avif({ quality: 52, effort: 4 })
+        .toFile(join(brazilPublicDirectory, `${name}.avif`))
+        .then(() => console.log(`Generated ${join(brazilPublicDirectory, `${name}.avif`)}`)),
+      sharp(source)
+        .resize(80, 80, { fit: "contain" })
+        .webp({ quality: 28 })
+        .toFile(join(brazilPreviewsDirectory, `${name}.webp`))
+        .then(() => console.log(`Generated ${join(brazilPreviewsDirectory, `${name}.webp`)}`)),
+    ];
+  }),
+);
+
