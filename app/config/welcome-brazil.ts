@@ -12,6 +12,7 @@ export const welcomeBrazilConfig = {
       src: "/images/welcome-brazil/modal-girl.webp",
       width: 1040,
       height: 1512,
+      blurDataURL: "data:image/webp;base64,UklGRhABAABXRUJQVlA4WAoAAAAQAAAADwAAFgAAQUxQSHMAAAARN6CgbRs2VDJnfxER4Gfr4aiRJEfKGQRr/+4OgAXg/2sRbBd/Dt3SUYjo/wRA8fpWAL3pDBSz9EvQmbRneEpSA7M7UxzukTpzv3yR3+tnoHaOzv89o+Zibs/F4h6Ji0XFImnPMEtSQ3G4MxeLJvmWOagBAFZQOCB2AAAAMAQAnQEqEAAXAD9FirtUsCkmIzAIAgAoiWgAnTKAAmzIXRQgVf95YlcAAP7L97xiJ6G0PnJL2chFA0pXsZiA20w9Lfixq1MpT4OfUVTY5x+fEXZwKpimqLmJorQHmPIwMD40awRqXMhVezVfbo9owvS1HgAAAA==",
     },
   },
   hero: {

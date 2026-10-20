@@ -1126,6 +1126,15 @@
 }
 
 @media (max-width: 700px) {
+  .brazil-person > .brazil-progressive-preview,
+  .brazil-vibe > .brazil-progressive-preview {
+    inset: -8%;
+
+    filter: blur(24px);
+
+    transform: scale(1.08);
+  }
+
   .brazil-hero {
     aspect-ratio: 12 / 5;
   }

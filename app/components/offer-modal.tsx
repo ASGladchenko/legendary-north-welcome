@@ -12,6 +12,7 @@ import {
 } from "../config/offer-modal";
 
 type OfferModalImage = {
+  blurDataURL?: string;
   height: number;
   src: string;
   width: number;
@@ -88,6 +89,8 @@ export function OfferModal({
           width={image.width}
           height={image.height}
           sizes="(max-width: 768px) 72vw, 430px"
+          placeholder={image.blurDataURL ? "blur" : "empty"}
+          blurDataURL={image.blurDataURL}
         />
       </div>
 
