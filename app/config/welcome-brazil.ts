@@ -2,7 +2,18 @@ export type WelcomeBrazilVariant = "standard" | "vip";
 
 export const welcomeBrazilConfig = {
   locale: "pt-BR",
-  destination: "https://1mlnbet.com/pt/registration/7",
+  cta: {
+    action: "COMEÇAR AGORA",
+    promoUrl: "https://1mlnbet.com/pt/promo",
+    signupUrl: "https://1mlnbet.com/pt/registration/7",
+  },
+  modal: {
+    image: {
+      src: "/images/welcome-brazil/modal-girl.webp",
+      width: 1040,
+      height: 1512,
+    },
+  },
   hero: {
     label: "Oferta de boas-vindas do Brasil",
     vipWelcome: {

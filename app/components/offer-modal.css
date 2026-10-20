@@ -27,6 +27,18 @@
     0 0 44px rgb(25 142 217 / 20%);
 }
 
+.offer-modal--brazil {
+  background:
+    radial-gradient(circle at 18% 24%, rgb(255 197 28 / 16%), transparent 38%),
+    radial-gradient(circle at 86% 78%, rgb(8 122 67 / 28%), transparent 44%),
+    linear-gradient(135deg, #063f31, #01251c 68%, #00150f);
+  border-color: rgb(216 185 46 / 88%);
+  box-shadow:
+    0 0 0 4px rgb(8 122 67 / 20%),
+    0 28px 90px rgb(0 18 12 / 82%),
+    0 0 46px rgb(255 197 28 / 18%);
+}
+
 .offer-modal[open] {
   display: grid;
   grid-template-columns: minmax(300px, 43%) minmax(0, 1fr);
@@ -37,6 +49,10 @@
 .offer-modal::backdrop {
   background: rgb(0 5 9 / 82%);
   backdrop-filter: blur(8px);
+}
+
+.offer-modal--brazil::backdrop {
+  background: rgb(0 20 14 / 84%);
 }
 
 .offer-modal-close {
@@ -59,6 +75,13 @@
   border-radius: 50%;
 
   cursor: pointer;
+}
+
+.offer-modal--brazil .offer-modal-close {
+  color: #fff7c4;
+  background: rgb(0 61 47 / 88%);
+  border-color: rgb(255 211 37 / 68%);
+  box-shadow: 0 0 18px rgb(255 197 28 / 16%);
 }
 
 .offer-modal-visual {
@@ -184,11 +207,37 @@
   cursor: pointer;
 }
 
+.offer-modal--brazil .offer-modal-action {
+  color: #fff;
+  background: linear-gradient(120deg, #ff4b16, var(--color-accent-bright));
+  border-color: rgb(255 186 121 / 64%);
+  box-shadow: 0 9px 26px rgb(255 82 24 / 38%);
+
+  transition: filter 160ms ease, transform 160ms ease;
+  animation: offer-modal-brazil-cta-pulse 3.2s ease-in-out infinite;
+}
+
+.offer-modal--brazil .offer-modal-action:hover {
+  filter: brightness(1.1);
+  transform: scale(1.025);
+  animation: none;
+}
+
+.offer-modal--brazil .offer-modal-action:focus-visible {
+  outline-color: #9cddff;
+  animation: none;
+}
+
 .offer-modal-close:focus-visible,
 .offer-modal-action:focus-visible,
 .offer-modal-dismiss:focus-visible {
   outline: 2px solid #9cddff;
   outline-offset: 3px;
+}
+
+.offer-modal--brazil .offer-modal-close:focus-visible,
+.offer-modal--brazil .offer-modal-dismiss:focus-visible {
+  outline-color: #fff28b;
 }
 
 .offer-modal-dismiss {
@@ -210,6 +259,13 @@
   box-shadow: 0 8px 22px rgb(18 129 190 / 24%);
 
   cursor: pointer;
+}
+
+.offer-modal--brazil .offer-modal-dismiss {
+  color: #fff7c4;
+  background: linear-gradient(120deg, #07563e, #0a7a48);
+  border-color: rgb(255 211 37 / 50%);
+  box-shadow: 0 8px 22px rgb(0 48 34 / 34%);
 }
 
 @media (max-width: 680px) {
@@ -235,6 +291,13 @@
     left: 0;
 
     height: 62%;
+  }
+
+  .offer-modal--brazil .offer-modal-character {
+    bottom: -11%;
+    left: 50%;
+
+    transform: translateX(-50%);
   }
 
   .offer-modal-copy {
@@ -270,6 +333,11 @@
     backdrop-filter: blur(7px);
   }
 
+  .offer-modal--brazil .offer-modal-description {
+    background: linear-gradient(135deg, rgb(0 55 41 / 90%), rgb(0 28 21 / 84%));
+    border-color: rgb(255 211 37 / 28%);
+  }
+
   .offer-modal-copy {
     height: 100%;
     padding-bottom: 90px;
@@ -298,8 +366,28 @@
   }
 }
 
+@keyframes offer-modal-brazil-cta-pulse {
+  0%,
+  100% {
+    box-shadow: 0 9px 26px rgb(255 82 24 / 34%);
+    transform: scale(1);
+  }
+
+  50% {
+    box-shadow:
+      0 10px 30px rgb(255 82 24 / 52%),
+      0 0 0 6px rgb(255 106 36 / 8%);
+    transform: scale(1.04);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .offer-modal[open] {
+    animation: none;
+  }
+
+  .offer-modal--brazil .offer-modal-action {
+    transition: none;
     animation: none;
   }
 }

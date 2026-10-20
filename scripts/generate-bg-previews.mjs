@@ -34,6 +34,24 @@ await Promise.all(
     console.log(`Generated ${output}`);
   }),
 );
+
+const brazilWheelDirectory = "public/images/fortune-wheel-brazil";
+const brazilWheelPreviewsDirectory = join(brazilWheelDirectory, "previews");
+const brazilWheelBackgrounds = ["bg-desktop.webp", "bg-mob.webp"];
+
+await mkdir(brazilWheelPreviewsDirectory, { recursive: true });
+await Promise.all(
+  brazilWheelBackgrounds.map(async (filename) => {
+    const output = join(brazilWheelPreviewsDirectory, filename);
+
+    await sharp(join(brazilWheelDirectory, filename))
+      .resize({ width: 80, withoutEnlargement: true })
+      .webp({ quality: 30 })
+      .toFile(output);
+
+    console.log(`Generated ${output}`);
+  }),
+);
 const oracleBackground = "public/assets/northern-oracle/oracle-background.webp";
 const oraclePreview = "public/assets/northern-oracle/previews/oracle-background.webp";
 
@@ -84,6 +102,18 @@ await Promise.all(
     const source = join(brazilSourceDirectory, filename);
     const avifOutput = join(brazilPublicDirectory, `${name}.avif`);
     const webpOutput = join(brazilPublicDirectory, `${name}.webp`);
+    const mobileOutputs = name.startsWith("step-")
+      ? [
+          sharp(source)
+            .resize({ width: 320, withoutEnlargement: true })
+            .avif({ quality: 45, effort: 4 })
+            .toFile(join(brazilPublicDirectory, `${name}-mobile.avif`)),
+          sharp(source)
+            .resize({ width: 320, withoutEnlargement: true })
+            .webp({ quality: 65, effort: 5 })
+            .toFile(join(brazilPublicDirectory, `${name}-mobile.webp`)),
+        ]
+      : [];
 
     return [
       sharp(source)
@@ -94,6 +124,7 @@ await Promise.all(
         .webp({ quality: 78, effort: 5 })
         .toFile(webpOutput)
         .then(() => console.log(`Generated ${webpOutput}`)),
+      ...mobileOutputs,
     ];
   }),
 );
@@ -132,6 +163,14 @@ await Promise.all(
         .avif({ quality: 52, effort: 4 })
         .toFile(join(brazilPublicDirectory, `${name}.avif`))
         .then(() => console.log(`Generated ${join(brazilPublicDirectory, `${name}.avif`)}`)),
+      sharp(source)
+        .resize(128, 128, { fit: "cover" })
+        .avif({ quality: 45, effort: 4 })
+        .toFile(join(brazilPublicDirectory, `${name}-mobile.avif`)),
+      sharp(source)
+        .resize(128, 128, { fit: "cover" })
+        .webp({ quality: 65, effort: 5 })
+        .toFile(join(brazilPublicDirectory, `${name}-mobile.webp`)),
       sharp(source)
         .resize(80, 80, { fit: "contain" })
         .webp({ quality: 28 })

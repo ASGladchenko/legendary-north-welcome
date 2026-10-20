@@ -6,15 +6,28 @@ import Image from "next/image";
 
 import "./offer-modal.css";
 
-import { offerModalConfig } from "../config/offer-modal";
-import type { HeroLocale } from "../config/hero-banner";
+import {
+  offerModalConfig,
+  type OfferModalLocale,
+} from "../config/offer-modal";
+
+type OfferModalImage = {
+  height: number;
+  src: string;
+  width: number;
+};
 
 type OfferModalProps = {
   actionHref: string;
-  locale: HeroLocale;
+  image?: OfferModalImage;
+  locale: OfferModalLocale;
 };
 
-export function OfferModal({ actionHref, locale }: OfferModalProps) {
+export function OfferModal({
+  actionHref,
+  image = offerModalConfig.image,
+  locale,
+}: OfferModalProps) {
   const dialogRef = useRef<HTMLDialogElement>(null);
   const copy = offerModalConfig.copy[locale];
 
@@ -44,7 +57,8 @@ export function OfferModal({ actionHref, locale }: OfferModalProps) {
   return (
     <dialog
       ref={dialogRef}
-      className="offer-modal"
+      className={`offer-modal${locale === "pt-BR" ? " offer-modal--brazil" : ""}`}
+      lang={locale}
       aria-labelledby="offer-modal-title"
       onClick={(event) => {
         const rect = event.currentTarget.getBoundingClientRect();
@@ -69,10 +83,10 @@ export function OfferModal({ actionHref, locale }: OfferModalProps) {
       <div className="offer-modal-visual" aria-hidden="true">
         <Image
           className="offer-modal-character"
-          src={offerModalConfig.image.src}
+          src={image.src}
           alt=""
-          width={offerModalConfig.image.width}
-          height={offerModalConfig.image.height}
+          width={image.width}
+          height={image.height}
           sizes="(max-width: 768px) 72vw, 430px"
         />
       </div>

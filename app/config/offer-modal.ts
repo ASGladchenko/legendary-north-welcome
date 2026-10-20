@@ -1,5 +1,7 @@
 import type { HeroLocale } from "./hero-banner";
 
+export type OfferModalLocale = HeroLocale | "pt-BR";
+
 export const offerModalConfig = {
   delayMs: 12000,
   dismissCookie: {
@@ -36,5 +38,17 @@ export const offerModalConfig = {
       dismissAction: "NE PLUS AFFICHER",
       closeLabel: "Fermer l’offre",
     },
-  } satisfies Record<HeroLocale, Record<string, string>>,
+    "pt-BR": {
+      eyebrow: "",
+      titleLead: "OPA...",
+      titleAccent: "NÃO ACREDITO QUE ESTOU TE CONTANDO ISSO",
+      descriptionLead: "Faça seu primeiro depósito de",
+      amount: "200 BRL ou mais, ",
+      descriptionTail:
+        "e desbloqueie uma jornada incrível cheia de recompensas épicas!",
+      action: "VAMOS LÁ",
+      dismissAction: "NÃO MOSTRAR NOVAMENTE",
+      closeLabel: "Fechar oferta",
+    },
+  } satisfies Record<OfferModalLocale, Record<string, string>>,
 } as const;

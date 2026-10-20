@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 import Image from "next/image";
 
@@ -11,10 +11,14 @@ import wheelChip from "../../public/images/fortune-wheel/fw-chip.webp";
 import wheelDisk from "../../public/images/fortune-wheel/fw-disk.webp";
 import wheelFrame from "../../public/images/fortune-wheel/fw-frame.webp";
 import wheelHint from "../../public/images/fortune-wheel/fw-hint.webp";
+import {
+  brazilFortuneWheelConfig,
+  type FortuneWheelConfig,
+} from "../config/fortune-wheel-brazil";
 
-type Locale = "en" | "fr";
+type DefaultLocale = "en" | "fr";
 
-const rewards = [
+const defaultRewards = [
   { value: "100% +", label: "100 FS" },
   { value: "BONUS", label: "GAME" },
   { value: "75%", label: "" },
@@ -28,7 +32,6 @@ const rewards = [
 const WINNING_REWARD_INDEX = 0;
 const REDIRECT_COUNTDOWN_SECONDS = 10;
 const SPIN_HINT_ENABLED = false;
-const CRITICAL_ASSET_COUNT = SPIN_HINT_ENABLED ? 5 : 4;
 const HINT_FADE_DURATION_MS = 300;
 
 function FortuneHint({
@@ -58,7 +61,7 @@ function FortuneHint({
   );
 }
 
-const copy = {
+const defaultCopy = {
   en: {
     action: "Spin the wheel",
     spinning: "Finding your fortune...",
@@ -81,8 +84,35 @@ const copy = {
   },
 } as const;
 
-export function FortuneWheel({ locale }: { locale: Locale }) {
-  const text = copy[locale];
+type FortuneWheelProps =
+  | { market: "brazil"; locale?: never }
+  | { market?: "default"; locale: DefaultLocale };
+
+export function FortuneWheel(props: FortuneWheelProps) {
+  const config: FortuneWheelConfig = props.market === "brazil"
+    ? brazilFortuneWheelConfig
+    : {
+        id: "default",
+        locale: props.locale,
+        prizeUrl: `https://1mlnbet.com/${props.locale}/registration/7`,
+        rewards: defaultRewards,
+        winningRewardIndex: WINNING_REWARD_INDEX,
+        assets: {
+          backgroundLandscape: wheelBackground,
+          backgroundPortrait: wheelBackgroundPortrait,
+          backgroundPreviewLandscape: "/images/fortune-wheel/previews/fw-bg.webp",
+          backgroundPreviewPortrait: "/images/fortune-wheel/previews/fw-bg-portrait.webp",
+          button: wheelButton,
+          disk: wheelDisk,
+          frame: wheelFrame,
+          pointer: wheelChip,
+        },
+        copy: defaultCopy[props.locale],
+      };
+  const { assets, copy: text, locale, rewards } = config;
+  const criticalAssetCount = 3 + Number(Boolean(assets.pointer)) + Number(SPIN_HINT_ENABLED);
+  const backgroundLandscapeSrc = assets.backgroundLandscape.src;
+  const backgroundPortraitSrc = assets.backgroundPortrait.src;
   const backgroundHostRef = useRef<HTMLDivElement>(null);
   const rotorRef = useRef<HTMLDivElement>(null);
   const loadedAssetsRef = useRef(new Set<string>());
@@ -94,12 +124,12 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
   const [hintHiding, setHintHiding] = useState(false);
   const [showPrize, setShowPrize] = useState(false);
   const [countdown, setCountdown] = useState(REDIRECT_COUNTDOWN_SECONDS);
-  const prize = rewards[WINNING_REWARD_INDEX];
-  const prizeUrl = `https://1mlnbet.com/${locale}/registration/7`;
+  const prize = rewards[config.winningRewardIndex];
+  const prizeUrl = config.prizeUrl;
 
   const markAssetLoaded = (asset: string) => {
     loadedAssetsRef.current.add(asset);
-    setAssetsReady(loadedAssetsRef.current.size === CRITICAL_ASSET_COUNT);
+    setAssetsReady(loadedAssetsRef.current.size >= criticalAssetCount);
   };
 
   useEffect(() => {
@@ -123,8 +153,8 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
     const loadBackground = () => {
       const currentRequest = ++requestId;
       const src = portraitQuery.matches
-        ? wheelBackgroundPortrait.src
-        : wheelBackground.src;
+        ? backgroundPortraitSrc
+        : backgroundLandscapeSrc;
       const image = new window.Image();
       const backgroundHost = backgroundHostRef.current;
 
@@ -161,7 +191,7 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
       window.clearTimeout(revealTimer);
       portraitQuery.removeEventListener("change", loadBackground);
     };
-  }, [assetsReady]);
+  }, [assetsReady, backgroundLandscapeSrc, backgroundPortraitSrc]);
 
   useEffect(() => {
     if (!showPrize) return;
@@ -185,7 +215,7 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
 
     const returnsFromEdge = crypto.getRandomValues(new Uint8Array(1))[0] % 2 === 0;
     const sectorAngle = 360 / rewards.length;
-    const targetAngle = (WINNING_REWARD_INDEX + 0.5) * sectorAngle;
+    const targetAngle = (config.winningRewardIndex + 0.5) * sectorAngle;
     const overshootAngle = sectorAngle / 2 + 3.5;
     const currentAngle = rotation % 360;
     const alignment = (360 - targetAngle - currentAngle + 360) % 360;
@@ -261,7 +291,15 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
 
   return (
     <>
-      <main className="fortune-page" lang={locale} aria-busy={!assetsReady}>
+      <main
+        className={`fortune-page fortune-page--${config.id}`}
+        lang={locale}
+        aria-busy={!assetsReady}
+        style={{
+          "--fortune-bg-preview-landscape": `url("${assets.backgroundPreviewLandscape}")`,
+          "--fortune-bg-preview-portrait": `url("${assets.backgroundPreviewPortrait}")`,
+        } as CSSProperties}
+      >
       <div className="fortune-background" aria-hidden="true">
         <div className="fortune-background-preview" />
         <div
@@ -280,7 +318,7 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
             >
               <Image
                 className="fortune-disk"
-                src={wheelDisk}
+                src={assets.disk}
                 alt=""
                 fill
                 sizes="(max-width: 520px) min(89vw, 66svh), (orientation: portrait) min(82vw, 728px), min(73svh, 728px)"
@@ -293,14 +331,16 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
                 {rewards.map((reward, index) => {
                   const angle = (index + 0.5) * (360 / rewards.length);
                   const radians = ((angle - 90) * Math.PI) / 180;
+                  const left = (50 + Math.cos(radians) * 29).toFixed(4);
+                  const top = (50 + Math.sin(radians) * 29).toFixed(4);
 
                   return (
                     <span
                       className="fortune-prize"
                       key={index}
                       style={{
-                        left: `${50 + Math.cos(radians) * 29}%`,
-                        top: `${50 + Math.sin(radians) * 29}%`,
+                        left: `${left}%`,
+                        top: `${top}%`,
                         transform: `translate(-50%, -50%) rotate(${angle}deg)`,
                       }}
                     >
@@ -314,7 +354,7 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
 
             <Image
               className="fortune-frame"
-              src={wheelFrame}
+              src={assets.frame}
               alt=""
               fill
               sizes="(max-width: 520px) min(100vw, 74svh), (orientation: portrait) min(92vw, 820px), min(82svh, 820px)"
@@ -323,16 +363,18 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
               onLoad={() => markAssetLoaded("frame")}
               onError={() => markAssetLoaded("frame")}
             />
-            <Image
-              className="fortune-pointer"
-              src={wheelChip}
-              alt=""
-              sizes="(max-width: 520px) min(42vw, 31svh), (orientation: portrait) min(39vw, 344px), min(35svh, 344px)"
-              quality={70}
-              loading="eager"
-              onLoad={() => markAssetLoaded("chip")}
-              onError={() => markAssetLoaded("chip")}
-            />
+            {assets.pointer && (
+              <Image
+                className="fortune-pointer"
+                src={assets.pointer}
+                alt=""
+                sizes="(max-width: 520px) min(42vw, 31svh), (orientation: portrait) min(39vw, 344px), min(35svh, 344px)"
+                quality={70}
+                loading="eager"
+                onLoad={() => markAssetLoaded("chip")}
+                onError={() => markAssetLoaded("chip")}
+              />
+            )}
           {SPIN_HINT_ENABLED && showHint && (
             <FortuneHint
               hiding={hintHiding}
@@ -347,7 +389,7 @@ export function FortuneWheel({ locale }: { locale: Locale }) {
             aria-label={spinning ? text.spinning : text.action}
           >
             <Image
-              src={wheelButton}
+              src={assets.button}
               alt=""
               fill
               sizes="(max-width: 520px) min(21vw, 16svh), (orientation: portrait) min(20vw, 172px), min(18svh, 172px)"

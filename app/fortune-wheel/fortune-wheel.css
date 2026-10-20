@@ -39,7 +39,10 @@
 }
 
 .fortune-background-preview {
-  background-image: url("/images/fortune-wheel/previews/fw-bg-portrait.webp");
+  background-image: var(
+    --fortune-bg-preview-portrait,
+    url("/images/fortune-wheel/previews/fw-bg-portrait.webp")
+  );
   filter: blur(18px);
 
   transform: scale(1.05);
@@ -67,7 +70,10 @@
 
 @media (orientation: landscape) {
   .fortune-background-preview {
-    background-image: url("/images/fortune-wheel/previews/fw-bg.webp");
+    background-image: var(
+      --fortune-bg-preview-landscape,
+      url("/images/fortune-wheel/previews/fw-bg.webp")
+    );
   }
 }
 
@@ -131,6 +137,131 @@
   transform: translate(-50%, -50%);
 
   aspect-ratio: 1;
+}
+
+@property --brazil-chaos-x {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@property --brazil-chaos-y {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@property --brazil-chaos-turn {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.fortune-page--brazil .fortune-stage::before,
+.fortune-page--brazil .fortune-stage::after,
+.fortune-page--brazil .fortune-wheel::before,
+.fortune-page--brazil .fortune-wheel::after {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  content: "";
+}
+
+.fortune-page--brazil .fortune-stage::before,
+.fortune-page--brazil .fortune-stage::after,
+.fortune-page--brazil .fortune-wheel::before {
+  transform:
+    translate3d(
+      calc(sin(var(--brazil-chaos-x)) * var(--brazil-drift-x)),
+      calc(cos(var(--brazil-chaos-y)) * var(--brazil-drift-y)),
+      0
+    )
+    rotate(calc(sin(var(--brazil-chaos-turn)) * var(--brazil-turn)))
+    scale(
+      calc(1 + sin(var(--brazil-chaos-y)) * 0.06),
+      calc(1 + cos(var(--brazil-chaos-x)) * 0.05)
+    );
+}
+
+.fortune-page--brazil .fortune-stage::before {
+  --brazil-drift-x: 4.5%;
+  --brazil-drift-y: 3.5%;
+  --brazil-turn: 24deg;
+
+  z-index: 0;
+  inset: -10%;
+
+  opacity: 0.5;
+  background:
+    radial-gradient(ellipse 39% 24% at 5% 31%, rgb(65 185 255 / 96%), transparent 72%),
+    radial-gradient(ellipse 27% 41% at 95% 34%, rgb(89 215 255 / 90%), transparent 74%),
+    radial-gradient(ellipse 43% 22% at 62% 97%, rgb(44 151 255 / 88%), transparent 72%);
+  filter: blur(30px) saturate(1.22);
+  mix-blend-mode: screen;
+
+  animation:
+    brazil-chaos-x 6.7s linear -1.4s infinite normal,
+    brazil-chaos-y 8.3s linear -4.2s infinite reverse,
+    brazil-chaos-turn 10.1s linear -6.1s infinite normal,
+    brazil-wheel-breathe 3.8s ease-in-out infinite alternate;
+  will-change: opacity, transform;
+}
+
+.fortune-page--brazil .fortune-stage::after {
+  --brazil-drift-x: 3.8%;
+  --brazil-drift-y: 4.8%;
+  --brazil-turn: 27deg;
+
+  z-index: 0;
+  inset: -18%;
+
+  opacity: 0.46;
+  background:
+    radial-gradient(ellipse 43% 22% at 32% 2%, rgb(150 82 255 / 96%), transparent 73%),
+    radial-gradient(ellipse 23% 43% at 98% 65%, rgb(207 91 255 / 90%), transparent 74%),
+    radial-gradient(ellipse 42% 24% at 38% 99%, rgb(115 67 235 / 92%), transparent 72%);
+  filter: blur(36px) saturate(1.2);
+  mix-blend-mode: screen;
+
+  animation:
+    brazil-chaos-x 8.9s linear -5.3s infinite reverse,
+    brazil-chaos-y 6.1s linear -2.7s infinite normal,
+    brazil-chaos-turn 11.3s linear -8.6s infinite reverse,
+    brazil-wheel-mist 4.3s ease-in-out infinite alternate;
+  will-change: opacity, transform;
+}
+
+.fortune-page--brazil .fortune-wheel {
+  z-index: 1;
+}
+
+.fortune-page--brazil .fortune-wheel::before {
+  --brazil-drift-x: 3.2%;
+  --brazil-drift-y: 4%;
+  --brazil-turn: 20deg;
+
+  z-index: 0;
+  inset: -6%;
+
+  opacity: 0.22;
+  background:
+    radial-gradient(ellipse 37% 20% at 68% 1%, rgb(255 190 43 / 98%), transparent 72%),
+    radial-gradient(ellipse 22% 39% at 99% 54%, rgb(255 225 112 / 94%), transparent 73%),
+    radial-gradient(ellipse 41% 21% at 56% 99%, rgb(255 169 31 / 94%), transparent 72%),
+    radial-gradient(ellipse 21% 35% at 1% 45%, rgb(255 213 89 / 88%), transparent 73%);
+  filter: blur(26px) saturate(1.16);
+  mix-blend-mode: screen;
+
+  animation:
+    brazil-chaos-x 7.7s linear -3.2s infinite normal,
+    brazil-chaos-y 10.9s linear -7.4s infinite reverse,
+    brazil-chaos-turn 6.3s linear -1.9s infinite reverse,
+    brazil-wheel-halo 3.4s ease-in-out infinite alternate;
+  will-change: opacity, transform;
+}
+
+.fortune-page--brazil .fortune-wheel::after {
+  display: none;
 }
 
 .fortune-rotor {
@@ -317,6 +448,23 @@
 .fortune-spin-button:focus-visible {
   outline: 3px solid #fff0ad;
   outline-offset: 5px;
+}
+
+.fortune-page--brazil .fortune-rotor {
+  transform-origin: 50% 48.2%;
+}
+
+.fortune-page--brazil .fortune-prizes {
+  transform: translateY(-3%);
+}
+
+.fortune-page--brazil .fortune-prize strong,
+.fortune-page--brazil .fortune-prize small {
+  font-size: clamp(13px, 2.2vmin, 22px);
+}
+
+.fortune-page--brazil .fortune-spin-button {
+  top: 48.2%;
 }
 
 .fortune-loader {
@@ -531,6 +679,60 @@
   }
 }
 
+@keyframes brazil-chaos-x {
+  to {
+    --brazil-chaos-x: 360deg;
+  }
+}
+
+@keyframes brazil-chaos-y {
+  to {
+    --brazil-chaos-y: 360deg;
+  }
+}
+
+@keyframes brazil-chaos-turn {
+  to {
+    --brazil-chaos-turn: 360deg;
+  }
+}
+
+@keyframes brazil-wheel-breathe {
+  from {
+    opacity: 0.44;
+    border-radius: 39% 61% 44% 56% / 58% 37% 63% 42%;
+  }
+
+  to {
+    opacity: 0.72;
+    border-radius: 58% 42% 63% 37% / 41% 62% 38% 59%;
+  }
+}
+
+@keyframes brazil-wheel-mist {
+  from {
+    opacity: 0.4;
+    border-radius: 63% 37% 51% 49% / 36% 59% 41% 64%;
+  }
+
+  to {
+    opacity: 0.68;
+    border-radius: 35% 65% 43% 57% / 64% 39% 61% 36%;
+  }
+}
+
+@keyframes brazil-wheel-halo {
+  from {
+    opacity: 0.16;
+    border-radius: 43% 57% 36% 64% / 61% 42% 58% 39%;
+  }
+
+  to {
+    opacity: 0.34;
+    border-radius: 61% 39% 59% 41% / 38% 63% 37% 62%;
+  }
+}
+
 @media (orientation: landscape) and (max-height: 520px) {
   .fortune-page {
     padding: 0;
@@ -548,6 +750,16 @@
 
   .fortune-stage {
     width: min(100%, 74svh);
+  }
+
+  .fortune-page--brazil .fortune-stage::before {
+    inset: -9%;
+    filter: blur(25px) saturate(1.18);
+  }
+
+  .fortune-page--brazil .fortune-stage::after {
+    inset: -14%;
+    filter: blur(31px) saturate(1.16);
   }
 
   .fortune-hint span {
@@ -591,7 +803,11 @@
   .fortune-spin-button img,
   .fortune-loader-logo,
   .fortune-win-overlay,
-  .fortune-win-card {
+  .fortune-win-card,
+  .fortune-page--brazil .fortune-stage::before,
+  .fortune-page--brazil .fortune-stage::after,
+  .fortune-page--brazil .fortune-wheel::before,
+  .fortune-page--brazil .fortune-wheel::after {
     animation: none;
   }
 }

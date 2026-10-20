@@ -21,6 +21,7 @@ const assetRoot = "/images/welcome-brazil";
 type ProgressiveImageProps = {
   alt: string;
   eager?: boolean;
+  mobileSrc?: string;
   preview: string;
   src: string;
   wrapperClassName: string;
@@ -29,16 +30,18 @@ type ProgressiveImageProps = {
 function ProgressiveImage({
   alt,
   eager = false,
+  mobileSrc,
   preview,
   src,
   wrapperClassName,
 }: ProgressiveImageProps) {
   const fallbackSrc = src.replace(/\.avif$/, ".webp");
+  const mobileFallbackSrc = mobileSrc?.replace(/\.avif$/, ".webp");
 
   const reveal = (event: SyntheticEvent<HTMLImageElement>) => {
     const imageHost = event.currentTarget.parentElement;
     imageHost?.classList.add("is-loaded");
-    window.setTimeout(() => imageHost?.parentElement?.classList.add("is-loaded"), 300);
+    imageHost?.parentElement?.classList.add("is-loaded");
   };
 
   return (
@@ -48,6 +51,12 @@ function ProgressiveImage({
     >
       <span className="brazil-progressive-preview" aria-hidden="true" />
       <picture className="brazil-progressive-full">
+        {mobileSrc?.endsWith(".avif") && (
+          <source media="(max-width: 700px)" srcSet={mobileSrc} type="image/avif" />
+        )}
+        {mobileFallbackSrc && (
+          <source media="(max-width: 700px)" srcSet={mobileFallbackSrc} type="image/webp" />
+        )}
         {src.endsWith(".avif") && <source srcSet={src} type="image/avif" />}
         <img
           src={fallbackSrc}
@@ -67,7 +76,17 @@ function previewFor(src: string) {
   return src.replace(`${assetRoot}/`, `${assetRoot}/previews/`).replace(".avif", ".webp");
 }
 
-export function WelcomeBrazil({ variant }: { variant: WelcomeBrazilVariant }) {
+function mobileFor(src: string) {
+  return src.replace(".avif", "-mobile.avif");
+}
+
+export function WelcomeBrazil({
+  actionHref,
+  variant,
+}: {
+  actionHref: string;
+  variant: WelcomeBrazilVariant;
+}) {
   const [activeStep, setActiveStep] = useState(0);
   const rewardSwiperRef = useRef<SwiperInstance | null>(null);
   const steps = getWelcomeBrazilSteps(variant);
@@ -126,7 +145,7 @@ export function WelcomeBrazil({ variant }: { variant: WelcomeBrazilVariant }) {
                   src={slide.src}
                   preview={previewFor(slide.src)}
                   alt={slide.alt}
-                  eager={index < 2}
+                  eager={index === 0}
                 />
 
                 {isOffer && variant === "standard" && (
@@ -135,7 +154,6 @@ export function WelcomeBrazil({ variant }: { variant: WelcomeBrazilVariant }) {
                     src={`${assetRoot}/vibe-text.avif`}
                     preview={`${assetRoot}/previews/vibe-text.webp`}
                     alt="Good vibes, bigger wins"
-                    eager
                   />
                 )}
 
@@ -198,9 +216,10 @@ export function WelcomeBrazil({ variant }: { variant: WelcomeBrazilVariant }) {
                     <ProgressiveImage
                       wrapperClassName="brazil-map-thumb"
                       src={`${assetRoot}/map-${index + 1}.avif`}
+                      mobileSrc={`${assetRoot}/map-${index + 1}-mobile.avif`}
                       preview={`${assetRoot}/previews/map-${index + 1}.webp`}
                       alt=""
-                      eager
+                      eager={index === 0}
                     />
                     <span className="brazil-map-step-number">{index + 1}</span>
                   </button>
@@ -210,6 +229,12 @@ export function WelcomeBrazil({ variant }: { variant: WelcomeBrazilVariant }) {
               ))}
             </ol>
           </div>
+        </div>
+
+        <div className="brazil-cta-anchor">
+          <a className="brazil-cta" href={actionHref} target="_top">
+            {config.cta.action}
+          </a>
         </div>
 
         <section className="brazil-rewards-carousel" aria-label="Recompensas de boas-vindas">
@@ -236,9 +261,9 @@ export function WelcomeBrazil({ variant }: { variant: WelcomeBrazilVariant }) {
                     <ProgressiveImage wrapperClassName="brazil-card-background-image" src={`${assetRoot}/card-bg.avif`} preview={`${assetRoot}/previews/card-bg.webp`} alt="" />
                   </div>
                   <div className="brazil-step-image">
-                    <ProgressiveImage wrapperClassName="brazil-step-visual" src={item.image} preview={previewFor(item.image)} alt="" eager={index === 0} />
-                    <span className="brazil-step-label">{config.labels.step} {index + 1}/{steps.length}</span>
+                    <ProgressiveImage wrapperClassName="brazil-step-visual" src={item.image} mobileSrc={mobileFor(item.image)} preview={previewFor(item.image)} alt="" eager={index === 0} />
                   </div>
+                  <span className="brazil-step-label">{config.labels.step} {index + 1}/{steps.length}</span>
 
                   <div className="brazil-reward-copy">
                     <h2>{item.title}</h2>
