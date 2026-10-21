@@ -482,7 +482,7 @@
   padding: 0;
 
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(var(--brazil-step-count), 1fr);
 
   list-style: none;
 }

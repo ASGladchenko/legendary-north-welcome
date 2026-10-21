@@ -90,6 +90,13 @@ export function WelcomeBrazil({
   const [activeStep, setActiveStep] = useState(0);
   const rewardSwiperRef = useRef<SwiperInstance | null>(null);
   const steps = getWelcomeBrazilSteps(variant);
+  const isFourStepJourney = steps.length === 4;
+  const desktopMapPath = isFourStepJourney
+    ? "M125 90 C210 70 285 180 375 160 C465 140 535 70 625 90 C715 110 785 180 875 160"
+    : "M100 90 C130 72 150 112 180 101 C205 92 215 151 250 143 C270 139 280 158 300 160 C338 174 356 188 389 172 C425 155 448 121 467 105 C480 94 488 91 500 90 C535 70 545 125 575 112 C605 98 598 160 635 145 C662 132 670 174 700 160 C735 178 748 132 780 145 C808 158 820 105 850 118 C872 128 880 92 900 90";
+  const mobileMapPath = isFourStepJourney
+    ? "M113 52 C155 30 210 72 250 50 C270 39 282 38 300 52 C330 70 365 28 405 48 C430 62 452 70 478 52 C535 74 548 112 520 132 C500 150 455 143 446 165 C438 181 420 190 400 187"
+    : "M113 52 C155 30 210 72 250 50 C270 39 282 38 300 52 C330 70 365 28 405 48 C430 62 452 70 478 52 C535 74 548 112 520 132 C500 150 455 143 446 165 C438 181 420 190 400 187 C360 165 330 215 285 192 C250 174 230 205 200 187";
 
   const selectStep = (index: number) => {
     rewardSwiperRef.current?.slideTo(index);
@@ -172,6 +179,7 @@ export function WelcomeBrazil({
             width={2032}
             height={232}
             sizes="(max-width: 700px) 104vw, 1240px"
+            loading="eager"
             draggable={false}
           />
         </div>
@@ -187,8 +195,8 @@ export function WelcomeBrazil({
                   <stop offset="1" stopColor="#f5a900" />
                 </linearGradient>
               </defs>
-              <path className="brazil-map-line-glow" d="M100 90 C130 72 150 112 180 101 C205 92 215 151 250 143 C270 139 280 158 300 160 C338 174 356 188 389 172 C425 155 448 121 467 105 C480 94 488 91 500 90 C535 70 545 125 575 112 C605 98 598 160 635 145 C662 132 670 174 700 160 C735 178 748 132 780 145 C808 158 820 105 850 118 C872 128 880 92 900 90" />
-              <path className="brazil-map-line-core" d="M100 90 C130 72 150 112 180 101 C205 92 215 151 250 143 C270 139 280 158 300 160 C338 174 356 188 389 172 C425 155 448 121 467 105 C480 94 488 91 500 90 C535 70 545 125 575 112 C605 98 598 160 635 145 C662 132 670 174 700 160 C735 178 748 132 780 145 C808 158 820 105 850 118 C872 128 880 92 900 90" />
+              <path className="brazil-map-line-glow" d={desktopMapPath} />
+              <path className="brazil-map-line-core" d={desktopMapPath} />
             </svg>
 
             <svg className="brazil-map-line brazil-map-line--mobile" viewBox="0 0 600 270" preserveAspectRatio="none" aria-hidden="true">
@@ -199,34 +207,38 @@ export function WelcomeBrazil({
                   <stop offset="1" stopColor="#f5a900" />
                 </linearGradient>
               </defs>
-              <path className="brazil-map-line-glow" d="M113 52 C155 30 210 72 250 50 C270 39 282 38 300 52 C330 70 365 28 405 48 C430 62 452 70 478 52 C535 74 548 112 520 132 C500 150 455 143 446 165 C438 181 420 190 400 187 C360 165 330 215 285 192 C250 174 230 205 200 187" />
-              <path className="brazil-map-line-core brazil-map-line-core--mobile" d="M113 52 C155 30 210 72 250 50 C270 39 282 38 300 52 C330 70 365 28 405 48 C430 62 452 70 478 52 C535 74 548 112 520 132 C500 150 455 143 446 165 C438 181 420 190 400 187 C360 165 330 215 285 192 C250 174 230 205 200 187" />
+              <path className="brazil-map-line-glow" d={mobileMapPath} />
+              <path className="brazil-map-line-core brazil-map-line-core--mobile" d={mobileMapPath} />
             </svg>
 
-            <ol>
-              {steps.map((item, index) => (
-                <li key={item.id}>
-                  <button
-                    type="button"
-                    className="brazil-map-link"
-                    aria-label={`${config.labels.step} ${index + 1}: ${item.title}`}
-                    aria-pressed={activeStep === index}
-                    onClick={() => selectStep(index)}
-                  >
-                    <ProgressiveImage
-                      wrapperClassName="brazil-map-thumb"
-                      src={`${assetRoot}/map-${index + 1}.avif`}
-                      mobileSrc={`${assetRoot}/map-${index + 1}-mobile.avif`}
-                      preview={`${assetRoot}/previews/map-${index + 1}.webp`}
-                      alt=""
-                      eager={index === 0}
-                    />
-                    <span className="brazil-map-step-number">{index + 1}</span>
-                  </button>
-                  <strong>{item.shortTitle}</strong>
-                  <small>{item.caption}</small>
-                </li>
-              ))}
+            <ol style={{ "--brazil-step-count": steps.length } as CSSProperties}>
+              {steps.map((item, index) => {
+                const mapImageIndex = "mapImageIndex" in item ? item.mapImageIndex : index + 1;
+
+                return (
+                  <li key={item.id}>
+                    <button
+                      type="button"
+                      className="brazil-map-link"
+                      aria-label={`${config.labels.step} ${index + 1}: ${item.title}`}
+                      aria-pressed={activeStep === index}
+                      onClick={() => selectStep(index)}
+                    >
+                      <ProgressiveImage
+                        wrapperClassName="brazil-map-thumb"
+                        src={`${assetRoot}/map-${mapImageIndex}.avif`}
+                        mobileSrc={`${assetRoot}/map-${mapImageIndex}-mobile.avif`}
+                        preview={`${assetRoot}/previews/map-${mapImageIndex}.webp`}
+                        alt=""
+                        eager={index === 0}
+                      />
+                      <span className="brazil-map-step-number">{index + 1}</span>
+                    </button>
+                    <strong>{item.shortTitle}</strong>
+                    <small>{item.caption}</small>
+                  </li>
+                );
+              })}
             </ol>
           </div>
         </div>
