@@ -1,0 +1,63 @@
+.viewport {
+  position: fixed;
+  top: clamp(220px, 34svh, 300px);
+  left: 0;
+  z-index: 20;
+
+  width: var(--capybara-size);
+
+  overflow: hidden;
+  visibility: hidden;
+
+  pointer-events: none;
+  contain: layout paint;
+
+  aspect-ratio: 656 / 600;
+}
+
+.mascot {
+  position: absolute;
+  inset: 0;
+
+  transform: translate3d(-72%, 6%, 0) rotate(-7deg);
+  transform-origin: 22% 58%;
+  will-change: transform;
+}
+
+.image {
+  object-fit: contain;
+  user-select: none;
+
+  -webkit-user-drag: none;
+}
+
+.wink {
+  opacity: 0;
+  will-change: opacity;
+}
+
+.speech {
+  position: absolute;
+  top: 3%;
+  left: 34%;
+
+  width: 64%;
+  height: auto;
+
+  opacity: 0;
+  filter: drop-shadow(0 6px 8px rgb(0 0 0 / 28%));
+  transform-origin: 8% 92%;
+  will-change: opacity, transform;
+}
+
+@media (max-width: 700px) {
+  .viewport {
+    top: clamp(92px, 16svh, 150px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .viewport {
+    display: none;
+  }
+}

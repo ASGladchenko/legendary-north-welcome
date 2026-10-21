@@ -10,6 +10,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/effect-fade";
 
+import { CapybaraPeekMascot } from "../components/capybara-peek-mascot";
 import {
   getWelcomeBrazilSteps,
   welcomeBrazilConfig as config,
@@ -82,9 +83,11 @@ function mobileFor(src: string) {
 
 export function WelcomeBrazil({
   actionHref,
+  mascotDelay,
   variant,
 }: {
   actionHref: string;
+  mascotDelay: number | null;
   variant: WelcomeBrazilVariant;
 }) {
   const [activeStep, setActiveStep] = useState(0);
@@ -104,6 +107,7 @@ export function WelcomeBrazil({
 
   return (
     <main className="brazil-page" lang={config.locale}>
+      {mascotDelay !== null && <CapybaraPeekMascot delay={mascotDelay} />}
       <div className="brazil-banner">
         <section className="brazil-hero" aria-label={config.hero.label}>
           <ProgressiveImage

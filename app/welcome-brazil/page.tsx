@@ -14,16 +14,19 @@ export const metadata: Metadata = {
 export default async function WelcomeBrazilPage({
   searchParams,
 }: PageProps<"/welcome-brazil">) {
-  const { login, welcome } = await searchParams;
+  const { login, maskot, welcome } = await searchParams;
   const variant = welcome === "vip" ? "vip" : "standard";
   const showSignup = login === "no";
+  const mascotDelay = typeof maskot === "string" && /^\d+$/.test(maskot)
+    ? Math.min(Number(maskot), 2_147_483_647)
+    : null;
   const actionHref = showSignup
     ? welcomeBrazilConfig.cta.signupUrl
     : welcomeBrazilConfig.cta.promoUrl;
 
   return (
     <>
-      <WelcomeBrazil actionHref={actionHref} variant={variant} />
+      <WelcomeBrazil actionHref={actionHref} mascotDelay={mascotDelay} variant={variant} />
       {showSignup && (
         <OfferModal
           actionHref={welcomeBrazilConfig.cta.signupUrl}
