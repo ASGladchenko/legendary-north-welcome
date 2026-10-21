@@ -37,7 +37,7 @@ export type FortuneWheelConfig = {
 export const brazilFortuneWheelConfig = {
   id: "brazil",
   locale: "pt-BR",
-  prizeUrl: "https://1mlnbet.com/pt-br/registration/7",
+  prizeUrl: "https://1mlnbet.com/pt/registration/7",
   rewards: [
     { value: "100% +", label: "100 FS" },
     { value: "BONUS", label: "GAME" },

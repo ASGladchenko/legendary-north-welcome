@@ -15,6 +15,10 @@ import {
   brazilFortuneWheelConfig,
   type FortuneWheelConfig,
 } from "../config/fortune-wheel-brazil";
+import {
+  getParentSiteHref,
+  ParentSiteLink,
+} from "../components/parent-site-link";
 
 type DefaultLocale = "en" | "fr";
 
@@ -202,7 +206,7 @@ export function FortuneWheel(props: FortuneWheelProps) {
         return;
       }
 
-      window.top!.location.href = prizeUrl;
+      window.top!.location.href = getParentSiteHref(prizeUrl);
     }, 1000);
 
     return () => window.clearTimeout(timer);
@@ -416,9 +420,9 @@ export function FortuneWheel(props: FortuneWheelProps) {
                 <span className="fortune-win-percentage">{prize.value}</span>{" "}
                 <span className="fortune-win-spins">{prize.label}</span>
               </h2>
-              <a className="fortune-win-action" href={prizeUrl} target="_top">
+              <ParentSiteLink className="fortune-win-action" href={prizeUrl}>
                 {text.claim}
-              </a>
+              </ParentSiteLink>
               <span className="fortune-countdown" aria-live="polite">
                 {text.redirecting} <strong>{countdown}</strong>
               </span>
