@@ -6,6 +6,7 @@ import Image from "next/image";
 
 import "./offer-modal.css";
 
+import { ParentSiteLink } from "./parent-site-link";
 import {
   offerModalConfig,
   type OfferModalLocale,
@@ -105,14 +106,13 @@ export function OfferModal({
           {copy.descriptionTail}
         </p>
         <div className="offer-modal-actions">
-          <a
+          <ParentSiteLink
             className="offer-modal-action"
             href={actionHref}
-            target="_top"
             onClick={close}
           >
             {copy.action}
-          </a>
+          </ParentSiteLink>
           <button className="offer-modal-dismiss" type="button" onClick={dismiss}>
             {copy.dismissAction}
           </button>

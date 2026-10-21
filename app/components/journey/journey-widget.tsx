@@ -11,6 +11,7 @@ import {
   type JourneyLocale,
   type JourneyVariant,
 } from "../../config/journey";
+import { ParentSiteLink } from "../parent-site-link";
 import { JourneyMap } from "./journey-map";
 import { RewardsSlider } from "./rewards-slider";
 
@@ -38,9 +39,9 @@ export function JourneyWidget({
       />
 
       <div className="journey-cta-anchor">
-        <a className="journey-cta" href={actionHref} target="_top">
+        <ParentSiteLink className="journey-cta" href={actionHref}>
           {journeyConfig.copy[locale].signupAction}
-        </a>
+        </ParentSiteLink>
       </div>
 
       <RewardsSlider

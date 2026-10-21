@@ -11,6 +11,7 @@ import "swiper/css";
 import "swiper/css/effect-fade";
 
 import { CapybaraPeekMascot } from "../components/capybara-peek-mascot";
+import { ParentSiteLink } from "../components/parent-site-link";
 import {
   getWelcomeBrazilSteps,
   welcomeBrazilConfig as config,
@@ -248,9 +249,9 @@ export function WelcomeBrazil({
         </div>
 
         <div className="brazil-cta-anchor">
-          <a className="brazil-cta" href={actionHref} target="_top">
+          <ParentSiteLink className="brazil-cta" href={actionHref}>
             {config.cta.action}
-          </a>
+          </ParentSiteLink>
         </div>
 
         <section className="brazil-rewards-carousel" aria-label="Recompensas de boas-vindas">
