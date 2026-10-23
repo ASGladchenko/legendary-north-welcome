@@ -1,0 +1,197 @@
+.pumpkin-page {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow: hidden;
+  color: #fff5df;
+  background:
+    radial-gradient(circle at 50% 48%, rgb(98 24 68 / 35%), transparent 34%),
+    radial-gradient(circle at 50% 100%, rgb(237 65 9 / 18%), transparent 38%),
+    linear-gradient(180deg, #16091f 0%, #07020c 72%);
+  isolation: isolate;
+}
+
+.pumpkin-page::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(rgb(255 255 255 / 2%) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 2%) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(to bottom, transparent, #000 45%, transparent);
+  content: "";
+}
+
+.pumpkin-embers {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(circle at 20% 78%, #ff7b00 0 1px, transparent 2px),
+    radial-gradient(circle at 72% 68%, #ffb02e 0 1px, transparent 2px),
+    radial-gradient(circle at 84% 88%, #f15c19 0 2px, transparent 3px),
+    radial-gradient(circle at 34% 92%, #f7a52d 0 1px, transparent 2px);
+  background-size: 180px 220px;
+  opacity: 0.5;
+  animation: pumpkin-embers-rise 12s linear infinite;
+}
+
+.pumpkin-spider-field {
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.pumpkin-content {
+  min-height: 100vh;
+  min-height: 100dvh;
+  min-width: 0;
+  padding: clamp(28px, 5vw, 54px) 18px 24px;
+  display: grid;
+  grid-template-rows: auto minmax(360px, 1fr);
+}
+
+.pumpkin-heading {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.pumpkin-heading span {
+  font-size: clamp(10px, 1.4vw, 13px);
+  font-weight: 800;
+  letter-spacing: 0.3em;
+  color: #f68a32;
+}
+
+.pumpkin-heading h1 {
+  margin: 5px 0 0;
+  font-size: clamp(30px, 5vw, 58px);
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-shadow: 0 4px 28px rgb(255 79 0 / 28%);
+}
+
+.pumpkin-heading p {
+  margin: 12px 0 0;
+  font-size: clamp(11px, 1.5vw, 14px);
+  letter-spacing: 0.06em;
+  text-transform: none;
+  color: rgb(255 240 219 / 62%);
+}
+
+.pumpkin-stage {
+  position: relative;
+  width: calc(100vw - 36px);
+  max-width: 820px;
+  min-width: 0;
+  min-height: 0;
+  margin: 0 auto;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.pumpkin-stage::after {
+  position: absolute;
+  top: calc(50% + clamp(125px, 21vw, 220px));
+  left: 50%;
+  z-index: -1;
+  width: clamp(180px, 34vw, 360px);
+  height: clamp(24px, 5vw, 48px);
+  background: radial-gradient(ellipse, rgb(0 0 0 / 72%), transparent 68%);
+  filter: blur(6px);
+  transform: translateX(-50%);
+  content: "";
+  pointer-events: none;
+}
+
+.pumpkin-stage:active {
+  cursor: grabbing;
+}
+
+.pumpkin-stage:focus-visible {
+  outline: 2px solid #ff9d45;
+  outline-offset: -8px;
+  border-radius: 24px;
+}
+
+.pumpkin-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.pumpkin-canvas canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.pumpkin-loader,
+.pumpkin-error {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  text-align: center;
+}
+
+.pumpkin-loader span {
+  width: 48px;
+  border: 2px solid rgb(255 157 69 / 24%);
+  border-top-color: #ff9d45;
+  border-radius: 50%;
+  animation: pumpkin-spin 850ms linear infinite;
+  aspect-ratio: 1;
+}
+
+.pumpkin-loader p,
+.pumpkin-error p {
+  margin: 14px 0 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(255 237 216 / 70%);
+}
+
+.pumpkin-error button {
+  margin-top: 18px;
+  padding: 10px 18px;
+  color: #1b0713;
+  background: #ff9d45;
+  border: 0;
+  border-radius: 999px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+@keyframes pumpkin-spin { to { transform: rotate(1turn); } }
+@keyframes pumpkin-embers-rise { to { background-position-y: -220px; } }
+
+@media (max-width: 600px) {
+  .pumpkin-content {
+    grid-template-rows: auto minmax(300px, 1fr);
+  }
+
+  .pumpkin-heading p {
+    margin-top: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pumpkin-embers,
+  .pumpkin-loader span {
+    animation: none;
+  }
+
+}

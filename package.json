@@ -4,9 +4,13 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "npm run generate:oracle-assets && npm run generate:bg-previews && next build",
+    "build": "npm run generate:assets && npm run generate:bg-previews && next build",
+    "generate:assets": "npm run generate:oracle-assets && npm run generate:pumpkin-assets && npm run generate:spider-assets && npm run generate:halloween-canada-assets",
     "generate:bg-previews": "node scripts/generate-bg-previews.mjs",
     "generate:oracle-assets": "assetpack --config assetpack.config.mjs",
+    "generate:pumpkin-assets": "assetpack --config assetpack.pumpkin-cube.config.mjs",
+    "generate:spider-assets": "node scripts/generate-spider-spritesheet.mjs",
+    "generate:halloween-canada-assets": "node scripts/generate-halloween-canada-assets.mjs",
     "start": "next start",
     "lint": "eslint"
   },

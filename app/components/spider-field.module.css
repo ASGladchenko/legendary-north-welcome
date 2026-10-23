@@ -1,0 +1,161 @@
+.field {
+  position: relative;
+  isolation: isolate;
+}
+
+.layer {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.back {
+  z-index: 0;
+}
+
+.content {
+  position: relative;
+  z-index: 1;
+}
+
+.front {
+  z-index: 2;
+}
+
+.toggle {
+  position: fixed;
+  right: max(14px, env(safe-area-inset-right));
+  bottom: max(14px, env(safe-area-inset-bottom));
+  z-index: 10;
+  width: 56px;
+  height: 56px;
+  padding: 6px;
+  border: 2px solid #ffad4d;
+  border-radius: 50%;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 35% 28%, #ff9c3f, #d74a0e 76%);
+  box-shadow:
+    0 7px 22px rgb(0 0 0 / 35%),
+    0 0 18px rgb(255 111 24 / 24%);
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+}
+
+.toggle:hover {
+  transform: scale(1.06);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid #ff9d45;
+  outline-offset: 2px;
+}
+
+.toggleIcon {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  display: block;
+}
+
+.toggleSlash {
+  position: absolute;
+  top: 18px;
+  left: -8px;
+  width: 56px;
+  height: 4px;
+  border: 0;
+  border-radius: 999px;
+  opacity: 0;
+  background: #ffad4d;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 45%);
+  transform: rotate(-45deg);
+  transition: opacity 160ms ease;
+}
+
+.toggle[aria-checked="false"] {
+  background: rgb(35 21 24 / 88%);
+  box-shadow: 0 7px 22px rgb(0 0 0 / 35%);
+}
+
+.toggle[aria-checked="false"] .toggleIcon > :first-child {
+  filter: grayscale(0.65) brightness(0.75);
+}
+
+.toggle[aria-checked="false"] .toggleSlash {
+  opacity: 1;
+}
+
+.mover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transform-origin: 50% 50%;
+  will-change: transform;
+}
+
+.fleeing {
+  --spider-speed: 0.45;
+}
+
+.dragging {
+  --spider-speed: 0.7;
+
+  z-index: 3;
+  filter: drop-shadow(0 12px 10px rgb(0 0 0 / 45%));
+}
+
+.mover::after {
+  position: absolute;
+  inset: -35%;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    #fff 0 5%,
+    #ffd65a 12%,
+    #ff6a00 30%,
+    rgb(255 37 20 / 65%) 42%,
+    transparent 70%
+  );
+  opacity: 0;
+  content: "";
+  pointer-events: none;
+}
+
+.exploding::after {
+  animation: spider-burst 560ms ease-out both;
+}
+
+@keyframes spider-burst {
+  0% {
+    opacity: 0;
+    transform: scale(0.15);
+  }
+
+  24% {
+    opacity: 1;
+    transform: scale(0.72);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.55);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layer {
+    display: none;
+  }
+
+  .toggle,
+  .toggleSlash {
+    transition: none;
+  }
+}

@@ -1,0 +1,117 @@
+{
+  "bundles": [
+    {
+      "name": "default",
+      "assets": [
+        {
+          "alias": [
+            "01-pumpkin.webp",
+            "01-pumpkin"
+          ],
+          "src": [
+            "01-pumpkin.webp"
+          ],
+          "data": {
+            "tags": {}
+          }
+        },
+        {
+          "alias": [
+            "02-ghost.webp",
+            "02-ghost"
+          ],
+          "src": [
+            "02-ghost.webp"
+          ],
+          "data": {
+            "tags": {}
+          }
+        },
+        {
+          "alias": [
+            "03-witch-hat.webp",
+            "03-witch-hat"
+          ],
+          "src": [
+            "03-witch-hat.webp"
+          ],
+          "data": {
+            "tags": {}
+          }
+        },
+        {
+          "alias": [
+            "04-moon.webp",
+            "04-moon"
+          ],
+          "src": [
+            "04-moon.webp"
+          ],
+          "data": {
+            "tags": {}
+          }
+        },
+        {
+          "alias": [
+            "05-bat.webp",
+            "05-bat"
+          ],
+          "src": [
+            "05-bat.webp"
+          ],
+          "data": {
+            "tags": {}
+          }
+        },
+        {
+          "alias": [
+            "06-spider.webp",
+            "06-spider"
+          ],
+          "src": [
+            "06-spider.webp"
+          ],
+          "data": {
+            "tags": {}
+          }
+        },
+        {
+          "alias": [
+            "cube-face-neutral.webp",
+            "cube-face-neutral"
+          ],
+          "src": [
+            "cube-face-neutral.webp"
+          ],
+          "data": {
+            "tags": {}
+          }
+        },
+        {
+          "alias": [
+            "pumpkin-circle.webp",
+            "pumpkin-circle"
+          ],
+          "src": [
+            "pumpkin-circle.webp"
+          ],
+          "data": {
+            "tags": {}
+          }
+        },
+        {
+          "alias": [
+            "pumpkin-face.webp",
+            "pumpkin-face"
+          ],
+          "src": [
+            "pumpkin-face.webp"
+          ],
+          "data": {
+            "tags": {}
+          }
+        }
+      ]
+    }
+  ]
+}

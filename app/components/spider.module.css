@@ -1,0 +1,35 @@
+.spider {
+  display: block;
+  width: var(--spider-size);
+  height: var(--spider-size);
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.frames {
+  display: block;
+  width: 1000%;
+  height: 100%;
+  background: url("/assets/spider/spider-walk.webp") 0 0 / 100% 100% no-repeat;
+  animation: spider-frames calc(var(--spider-cycle) * var(--spider-speed, 1))
+    steps(10) infinite;
+  will-change: transform;
+}
+
+.paused .frames {
+  animation-play-state: paused;
+}
+
+@keyframes spider-frames {
+  to {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frames {
+    animation: none;
+  }
+}
