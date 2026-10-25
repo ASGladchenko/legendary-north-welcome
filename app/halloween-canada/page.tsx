@@ -1,30 +1,20 @@
 import type { Metadata } from "next";
 
 import { SpiderField } from "../components/spider-field";
+import { HalloweenCanadaBanner, type HalloweenLocale } from "./halloween-canada-banner";
+import { type HalloweenSlide, HalloweenSlider } from "./halloween-slider";
+import { HalloweenCasperMascot, HalloweenTournamentMascot } from "./halloween-tournament-mascot";
 
 import "./halloween-canada.css";
 
-import {
-  HalloweenCanadaBanner,
-  type HalloweenLocale,
-} from "./halloween-canada-banner";
-import {
-  HalloweenSlider,
-  type HalloweenSlide,
-} from "./halloween-slider";
-import {
-  HalloweenCasperMascot,
-  HalloweenTournamentMascot,
-} from "./halloween-tournament-mascot";
-
 type HalloweenCanadaPageProps = {
   searchParams: Promise<{
-    delay?: string | string[];
-    frequency?: string | string[];
     casperD?: string | string[];
     casperF?: string | string[];
+    delay?: string | string[];
+    frequency?: string | string[];
     lang?: string | string[];
-  }>;
+}>;
 };
 
 const getLocale = (lang: string | string[] | undefined): HalloweenLocale =>
@@ -86,7 +76,7 @@ const cards = [
     id: "frightening-frankie",
     accent: "#88f151",
     title: { en: "Frightening Frankie", fr: "Frightening Frankie" },
-    href: "/slots/game/pragmatic-frightening-frankie",
+    href: "/casino/slots/game/pragmatic-frightening-frankie",
   },
   {
     id: "le-vampire",
