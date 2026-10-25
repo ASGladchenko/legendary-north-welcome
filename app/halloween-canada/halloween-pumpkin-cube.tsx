@@ -106,7 +106,10 @@ export function HalloweenPumpkinCube({
 
   return (
     <>
-      <div className={styles.pumpkinCube}>
+      <div
+        className={styles.pumpkinCube}
+        data-pumpkin-cube-busy={spinning || selectedGame ? "true" : undefined}
+      >
         <span
           aria-hidden="true"
           className={styles.pumpkinCanvas}

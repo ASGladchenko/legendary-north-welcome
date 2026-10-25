@@ -3,7 +3,7 @@
 import type { CSSProperties } from "react";
 import { useCallback, useRef, useState } from "react";
 import type { Swiper as SwiperInstance } from "swiper";
-import { A11y } from "swiper/modules";
+import { A11y, Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import "swiper/css";
@@ -52,13 +52,9 @@ export function HalloweenSlider({
   const swiperRef = useRef<SwiperInstance | null>(null);
   const initialSlide = Math.min(2, Math.max(items.length - 1, 0));
   const [activeIndex, setActiveIndex] = useState(initialSlide);
-  const [atStart, setAtStart] = useState(initialSlide === 0);
-  const [atEnd, setAtEnd] = useState(initialSlide === items.length - 1);
 
   const sync = useCallback((swiper: SwiperInstance) => {
-    setActiveIndex(swiper.activeIndex);
-    setAtStart(swiper.isBeginning);
-    setAtEnd(swiper.isEnd);
+    setActiveIndex(swiper.realIndex);
   }, []);
 
   if (items.length === 0) return null;
@@ -92,7 +88,6 @@ export function HalloweenSlider({
         <button
           aria-label={labels.previous}
           className={`${styles.arrow} ${styles.previous}`}
-          disabled={atStart}
           onClick={() => swiperRef.current?.slidePrev()}
           type="button"
         >
@@ -103,12 +98,18 @@ export function HalloweenSlider({
 
         <div className={styles.window}>
           <Swiper
+            autoplay={{
+              delay: 2_000,
+              disableOnInteraction: false,
+              pauseOnMouseEnter: true,
+            }}
             centerInsufficientSlides
             centeredSlides
             className={styles.swiper}
             grabCursor={items.length > 1}
             initialSlide={initialSlide}
-            modules={[A11y]}
+            loop={items.length > 1}
+            modules={[A11y, Autoplay]}
             onSlideChange={sync}
             onSwiper={(swiper) => {
               swiperRef.current = swiper;
@@ -116,34 +117,54 @@ export function HalloweenSlider({
             }}
             slidesPerView="auto"
             spaceBetween={18}
-            speed={420}
+            speed={1_000}
             threshold={6}
             watchSlidesProgress
           >
             {items.map((item, index) => (
               <SwiperSlide className={styles.slide} key={item.id}>
-                <ParentSiteLink
-                  aria-label={item.title}
+                <div
                   className={styles.card}
-                  href={item.href}
                   style={
                     {
                       "--halloween-card-accent": item.accent ?? "#ff8a35",
                     } as CardStyle
                   }
                 >
-                  <HalloweenProgressiveImage
-                    alt={item.title}
-                    className={styles.cardMedia}
-                    eager={index < 5}
-                    imageClassName={styles.image}
-                    preview={item.preview}
-                    quality={70}
-                    sizes="(max-width: 620px) 158px, (min-width: 1000px) 222px, 182px"
-                    src={item.image}
-                  />
+                  <button
+                    aria-label={`${labels.goTo} ${item.title}`}
+                    className={styles.cardSelect}
+                    onClick={() => {
+                      swiperRef.current?.autoplay.stop();
+                      swiperRef.current?.slideToLoop(index);
+                    }}
+                    tabIndex={activeIndex === index ? -1 : 0}
+                    type="button"
+                  >
+                    <HalloweenProgressiveImage
+                      alt={item.title}
+                      className={styles.cardMedia}
+                      eager={index < 5}
+                      imageClassName={styles.image}
+                      preview={item.preview}
+                      quality={70}
+                      sizes="(max-width: 620px) 158px, (min-width: 1000px) 222px, 182px"
+                      src={item.image}
+                    />
+                  </button>
+                  <span aria-hidden="true" className={styles.cardOverlay} />
+                  <ParentSiteLink
+                    aria-hidden={activeIndex !== index}
+                    aria-label={`${labels.cubePlay}: ${item.title}`}
+                    className={styles.cardPlay}
+                    href={item.href}
+                    tabIndex={activeIndex === index ? 0 : -1}
+                  >
+                    <span aria-hidden="true" className={styles.playIcon} />
+                    {labels.cubePlay}
+                  </ParentSiteLink>
                   <span aria-hidden="true" className={styles.insideBorder} />
-                </ParentSiteLink>
+                </div>
               </SwiperSlide>
             ))}
           </Swiper>
@@ -152,7 +173,6 @@ export function HalloweenSlider({
         <button
           aria-label={labels.next}
           className={`${styles.arrow} ${styles.next}`}
-          disabled={atEnd}
           onClick={() => swiperRef.current?.slideNext()}
           type="button"
         >
@@ -168,7 +188,7 @@ export function HalloweenSlider({
               aria-pressed={index === activeIndex}
               className={styles.bullet}
               key={item.id}
-              onClick={() => swiperRef.current?.slideTo(index)}
+              onClick={() => swiperRef.current?.slideToLoop(index)}
               type="button"
             />
           ))}

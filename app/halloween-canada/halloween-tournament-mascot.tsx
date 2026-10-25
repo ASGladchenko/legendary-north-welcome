@@ -1,11 +1,28 @@
-"use client";
+'use client';
+
+import { useEffect, useRef, useState } from "react";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
 
 import { ParentSiteLink } from "../components/parent-site-link";
 import type { HalloweenLocale } from "./halloween-canada-banner";
+
 import styles from "./halloween-tournament-mascot.module.css";
+
+type SideMascotProps = {
+  delay: number;
+  frequency: number;
+  locale: HalloweenLocale;
+};
+type SideMascotContentProps = SideMascotProps & {
+  characterClassName?: string;
+  height: number;
+  href: string;
+  labels: (typeof tournamentCopy)[HalloweenLocale] | (typeof casperCopy)[HalloweenLocale];
+  sizes: string;
+  src: string;
+  width: number;
+};
 
 const VISIBLE_DURATION = 9_000;
 
@@ -29,31 +46,15 @@ const casperCopy = {
     close: "Close sticker pack invitation",
     eyebrow: "Boo!",
     title: "Your spooky sticker pack is waiting!",
-    action: "Open sticker pack",
+    action: "DISCOVER",
   },
   fr: {
     close: "Fermer l’invitation au pack de stickers",
     eyebrow: "Bouh !",
-    title: "Ton pack de stickers hanté t’attend !",
-    action: "Voir le pack",
+    title: "Ton pack de stickers d’Halloween t’attend !",
+    action: "DÉCOUVRIR",
   },
 } as const;
-
-type SideMascotProps = {
-  delay: number;
-  frequency: number;
-  locale: HalloweenLocale;
-};
-
-type SideMascotContentProps = SideMascotProps & {
-  characterClassName?: string;
-  height: number;
-  href: string;
-  labels: (typeof tournamentCopy)[HalloweenLocale] | (typeof casperCopy)[HalloweenLocale];
-  sizes: string;
-  src: string;
-  width: number;
-};
 
 function HalloweenSideMascot({
   delay,
@@ -83,7 +84,11 @@ function HalloweenSideMascot({
     let hideTimer: ReturnType<typeof setTimeout> | undefined;
 
     const show = () => {
-      if (document.querySelector('[data-side-mascot-visible="true"]')) {
+      if (
+        document.querySelector(
+          '[data-side-mascot-visible="true"], [data-pumpkin-cube-busy="true"]',
+        )
+      ) {
         showTimer = setTimeout(show, 250);
         return;
       }
