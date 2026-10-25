@@ -461,6 +461,89 @@ export function SpiderField({
     moveDragRef.current = moveDrag;
     releaseDragRef.current = releaseDrag;
 
+    let touchGesture: Gesture | null = null;
+
+    const findTouchedSpider = (clientX: number, clientY: number) =>
+      [...movers.entries()].reverse().find(([, mover]) => {
+        const rect = mover.getBoundingClientRect();
+        return (
+          !mover.classList.contains(styles.exploding) &&
+          clientX >= rect.left &&
+          clientX <= rect.right &&
+          clientY >= rect.top &&
+          clientY <= rect.bottom
+        );
+      });
+
+    const onTouchStart = (event: TouchEvent) => {
+      if (
+        touchGesture ||
+        event.touches.length !== 1 ||
+        (event.target as Element).closest(`.${styles.toggle}`)
+      )
+        return;
+
+      const touch = event.touches[0];
+      const hit = findTouchedSpider(touch.clientX, touch.clientY);
+      if (!hit) return;
+
+      event.preventDefault();
+      touchGesture = {
+        pointerId: touch.identifier,
+        index: hit[0],
+        startX: touch.clientX,
+        startY: touch.clientY,
+        dragging: false,
+      };
+      beginDrag(hit[0], touch.clientX, touch.clientY);
+    };
+
+    const onTouchMove = (event: TouchEvent) => {
+      if (!touchGesture) return;
+      const touch = [...event.touches].find(
+        (candidate) => candidate.identifier === touchGesture?.pointerId,
+      );
+      if (!touch) return;
+
+      event.preventDefault();
+      if (
+        !touchGesture.dragging &&
+        Math.hypot(
+          touch.clientX - touchGesture.startX,
+          touch.clientY - touchGesture.startY,
+        ) >= 7
+      ) {
+        touchGesture.dragging = true;
+      }
+      if (touchGesture.dragging) {
+        moveDrag(touchGesture.index, touch.clientX, touch.clientY);
+      }
+    };
+
+    const finishTouch = (event: TouchEvent, cancelled = false) => {
+      if (!touchGesture) return;
+      const touch = [...event.changedTouches].find(
+        (candidate) => candidate.identifier === touchGesture?.pointerId,
+      );
+      if (!touch) return;
+
+      event.preventDefault();
+      const gesture = touchGesture;
+      touchGesture = null;
+      if (gesture.dragging || cancelled) {
+        releaseDrag(gesture.index, true);
+      } else {
+        releaseDrag(gesture.index, false);
+        explode(gesture.index);
+      }
+    };
+    const onTouchCancel = (event: TouchEvent) => finishTouch(event, true);
+
+    host.addEventListener("touchstart", onTouchStart, { passive: false });
+    host.addEventListener("touchmove", onTouchMove, { passive: false });
+    host.addEventListener("touchend", finishTouch, { passive: false });
+    host.addEventListener("touchcancel", onTouchCancel, { passive: false });
+
     const restart = () => {
       generation += 1;
       dragged = null;
@@ -508,6 +591,10 @@ export function SpiderField({
       intersectionObserver.disconnect();
       resizeObserver.disconnect();
       document.removeEventListener("visibilitychange", onVisibilityChange);
+      host.removeEventListener("touchstart", onTouchStart);
+      host.removeEventListener("touchmove", onTouchMove);
+      host.removeEventListener("touchend", finishTouch);
+      host.removeEventListener("touchcancel", onTouchCancel);
       clearTimeout(resizeTimer);
       timers.forEach(clearTimeout);
       animations.forEach((animation) => animation.cancel());
@@ -533,6 +620,7 @@ export function SpiderField({
   ) => {
     if (
       !spidersEnabled ||
+      event.pointerType === "touch" ||
       !event.isPrimary ||
       gestureRef.current ||
       event.currentTarget.classList.contains(styles.exploding)
@@ -581,8 +669,9 @@ export function SpiderField({
 
     event.preventDefault();
     event.stopPropagation();
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
+    const mover = moversRef.current.get(gesture.index);
+    if (mover?.hasPointerCapture(event.pointerId)) {
+      mover.releasePointerCapture(event.pointerId);
     }
     gestureRef.current = null;
 
@@ -599,10 +688,7 @@ export function SpiderField({
     <div
       className={styles.mover}
       key={index}
-      onPointerCancel={(event) => finishPointerGesture(event, true)}
       onPointerDown={(event) => handlePointerDown(event, index)}
-      onPointerMove={handlePointerMove}
-      onPointerUp={finishPointerGesture}
       ref={(node) => {
         if (node) moversRef.current.set(index, node);
         else moversRef.current.delete(index);
@@ -625,6 +711,9 @@ export function SpiderField({
   return (
     <div
       className={[styles.field, className].filter(Boolean).join(" ")}
+      onPointerCancelCapture={(event) => finishPointerGesture(event, true)}
+      onPointerMoveCapture={handlePointerMove}
+      onPointerUpCapture={finishPointerGesture}
       ref={hostRef}
     >
       <div aria-hidden="true" className={`${styles.layer} ${styles.back}`}>

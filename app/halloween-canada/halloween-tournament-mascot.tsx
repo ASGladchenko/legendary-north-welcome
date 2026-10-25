@@ -103,7 +103,7 @@ export function HalloweenTournamentMascot({
         decoding="async"
         draggable={false}
         height={640}
-        loading="lazy"
+        loading="eager"
         onLoad={() => setImageReady(true)}
         sizes="(max-width: 620px) 225px, 300px"
         src="/Hooded Character with Extended Hands.webp"
