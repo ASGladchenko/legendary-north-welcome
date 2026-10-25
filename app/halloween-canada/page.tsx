@@ -179,9 +179,9 @@ export default async function HalloweenCanadaPage({
                     goTo: "Show",
                     cube: "Spin the pumpkin cube",
                     cubeLoading: "Loading the pumpkin cube",
-                    cubeTap: "Tap me",
+                      cubeTap: "Tap me",
                     cubeResult: "The cube chose",
-                    cubePlay: "Play game",
+                    cubePlay: "Play",
                     cubeClose: "Close",
                   }
             }

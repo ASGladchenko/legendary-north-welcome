@@ -1,47 +1,46 @@
-"use client";
+'use client';
 
 import type { CSSProperties } from "react";
 import { useCallback, useRef, useState } from "react";
+
 import type { Swiper as SwiperInstance } from "swiper";
 import { A11y, Autoplay } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
-import "swiper/css";
-
 import { ParentSiteLink } from "../components/parent-site-link";
 import { HalloweenProgressiveImage } from "./halloween-progressive-image";
 import { HalloweenPumpkinCube } from "./halloween-pumpkin-cube";
+
+import "swiper/css";
+
 import styles from "./halloween-slider.module.css";
 
 export type HalloweenSlide = {
+  accent?: string;
+  href: string;
   id: string;
   image: string;
   preview: string;
   title: string;
-  href: string;
-  accent?: string;
 };
-
 type HalloweenSliderLabels = {
   carousel: string;
-  previous: string;
+  cube: string;
+  cubeClose: string;
+  cubeLoading: string;
+  cubePlay: string;
+  cubeResult: string;
+  cubeTap: string;
+  goTo: string;
   next: string;
   position: string;
-  goTo: string;
-  cube: string;
-  cubeLoading: string;
-  cubeTap: string;
-  cubeResult: string;
-  cubePlay: string;
-  cubeClose: string;
+  previous: string;
 };
-
 type HalloweenSliderProps = {
+  className?: string;
   items: HalloweenSlide[];
   labels: HalloweenSliderLabels;
-  className?: string;
 };
-
 type CardStyle = CSSProperties & { "--halloween-card-accent": string };
 
 export function HalloweenSlider({
@@ -99,7 +98,7 @@ export function HalloweenSlider({
         <div className={styles.window}>
           <Swiper
             autoplay={{
-              delay: 2_000,
+              delay: 5_000,
               disableOnInteraction: false,
               pauseOnMouseEnter: true,
             }}
@@ -160,8 +159,9 @@ export function HalloweenSlider({
                     href={item.href}
                     tabIndex={activeIndex === index ? 0 : -1}
                   >
-                    <span aria-hidden="true" className={styles.playIcon} />
-                    {labels.cubePlay}
+                    <span aria-hidden="true" className={styles.playButton}>
+                      <span aria-hidden="true" className={styles.playIcon} />
+                    </span>
                   </ParentSiteLink>
                   <span aria-hidden="true" className={styles.insideBorder} />
                 </div>
