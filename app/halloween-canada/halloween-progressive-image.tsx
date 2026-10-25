@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import type { CSSProperties } from "react";
+import { useCallback, useState, type CSSProperties } from "react";
 
 import styles from "./halloween-slider.module.css";
 
@@ -26,9 +26,25 @@ export function HalloweenProgressiveImage({
   sizes,
   src,
 }: HalloweenProgressiveImageProps) {
+  const [loaded, setLoaded] = useState(false);
+  const reveal = useCallback((image: HTMLImageElement) => {
+    void image
+      .decode()
+      .catch(() => undefined)
+      .then(() => setLoaded(true));
+  }, []);
+  const catchCachedImage = useCallback(
+    (image: HTMLImageElement | null) => {
+      if (image?.complete && image.naturalWidth > 0) reveal(image);
+    },
+    [reveal],
+  );
+
   return (
     <span
-      className={[styles.progressive, className].filter(Boolean).join(" ")}
+      className={[styles.progressive, loaded && styles.loaded, className]
+        .filter(Boolean)
+        .join(" ")}
       style={{ "--halloween-preview": `url("${preview}")` } as CSSProperties}
     >
       <span aria-hidden="true" className={styles.progressivePreview} />
@@ -42,10 +58,9 @@ export function HalloweenProgressiveImage({
         fill
         fetchPriority={eager ? "high" : "auto"}
         loading={eager ? "eager" : "lazy"}
-        onLoad={(event) => {
-          event.currentTarget.parentElement?.classList.add(styles.loaded);
-        }}
+        onLoad={(event) => reveal(event.currentTarget)}
         quality={quality}
+        ref={catchCachedImage}
         sizes={sizes}
         src={src}
       />

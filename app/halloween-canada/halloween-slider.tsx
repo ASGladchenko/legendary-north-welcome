@@ -69,6 +69,7 @@ export function HalloweenSlider({
         <HalloweenProgressiveImage
           alt=""
           className={`${styles.webImage} ${styles.webTopLeft}`}
+          eager
           preview="/images/halloween-canada/previews/web-top-left.webp"
           quality={70}
           sizes="(max-width: 620px) 250px, 440px"
@@ -134,11 +135,11 @@ export function HalloweenSlider({
                   <HalloweenProgressiveImage
                     alt={item.title}
                     className={styles.cardMedia}
-                    eager={index === initialSlide}
+                    eager={index < 5}
                     imageClassName={styles.image}
                     preview={item.preview}
                     quality={70}
-                    sizes="(max-width: 620px) 158px, 182px"
+                    sizes="(max-width: 620px) 158px, (min-width: 1000px) 222px, 182px"
                     src={item.image}
                   />
                   <span aria-hidden="true" className={styles.insideBorder} />

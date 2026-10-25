@@ -31,20 +31,22 @@
   user-select: none;
 }
 
+.casperCharacter {
+  right: clamp(-20px, -2vw, -8px);
+  width: clamp(200px, 22vw, 240px);
+}
+
 .bubble {
   position: absolute;
   left: clamp(8px, 3vw, 38px);
   bottom: 92px;
   z-index: 3;
   width: clamp(230px, 41vw, 320px);
-  padding: 22px 24px 18px;
-  border: 1px solid transparent;
+  padding: 1px;
   border-radius: 24px 24px 30px 24px;
   opacity: 0;
   color: #fff8ef;
-  background: rgb(9 8 18 / 20%);
-  -webkit-backdrop-filter: blur(18px) saturate(1.2);
-  backdrop-filter: blur(18px) saturate(1.2);
+  background: transparent;
   box-shadow:
     0 16px 34px rgb(0 0 0 / 48%),
     0 0 24px rgb(255 67 154 / 22%);
@@ -57,7 +59,7 @@
 
 .bubble::before {
   position: absolute;
-  inset: -1px;
+  inset: 0;
   padding: 1px;
   border-radius: inherit;
   background: linear-gradient(135deg, #ff9b34, #ff4e82 58%, #9c38ff);
@@ -71,6 +73,16 @@
   mask-composite: exclude;
   content: "";
   pointer-events: none;
+}
+
+.bubbleContent {
+  position: relative;
+  z-index: 1;
+  padding: 21px 23px 17px;
+  border-radius: 23px 23px 29px 23px;
+  background: rgb(9 8 18 / 20%);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  backdrop-filter: blur(18px) saturate(1.2);
 }
 
 .visible .character {
@@ -172,12 +184,21 @@
     width: 225px;
   }
 
+  .casperCharacter {
+    right: -20px;
+    width: 190px;
+  }
+
   .bubble {
     left: 8px;
     bottom: 63px;
     width: min(238px, 64vw);
-    padding: 19px 18px 15px;
     border-radius: 20px 20px 26px;
+  }
+
+  .bubbleContent {
+    padding: 18px 17px 14px;
+    border-radius: 19px 19px 25px;
   }
 
   .message {

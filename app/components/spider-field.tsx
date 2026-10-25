@@ -122,6 +122,28 @@ function transformAt(point: Point, angle: number, size: number, mirrored: boolea
   return `translate3d(${point.x - size / 2}px, ${point.y - size / 2}px, 0) rotate(${angle}deg) scaleX(${mirrored ? -1 : 1})`;
 }
 
+function findSpiderAt(
+  movers: Map<number, HTMLDivElement>,
+  clientX: number,
+  clientY: number,
+) {
+  return [...movers.entries()].reverse().find(([, mover]) => {
+    if (
+      mover.style.opacity !== "1" ||
+      mover.classList.contains(styles.exploding)
+    )
+      return false;
+
+    const rect = mover.getBoundingClientRect();
+    return (
+      clientX >= rect.left &&
+      clientX <= rect.right &&
+      clientY >= rect.top &&
+      clientY <= rect.bottom
+    );
+  });
+}
+
 export function SpiderField({
   children,
   className,
@@ -463,18 +485,6 @@ export function SpiderField({
 
     let touchGesture: Gesture | null = null;
 
-    const findTouchedSpider = (clientX: number, clientY: number) =>
-      [...movers.entries()].reverse().find(([, mover]) => {
-        const rect = mover.getBoundingClientRect();
-        return (
-          !mover.classList.contains(styles.exploding) &&
-          clientX >= rect.left &&
-          clientX <= rect.right &&
-          clientY >= rect.top &&
-          clientY <= rect.bottom
-        );
-      });
-
     const onTouchStart = (event: TouchEvent) => {
       if (
         touchGesture ||
@@ -484,7 +494,7 @@ export function SpiderField({
         return;
 
       const touch = event.touches[0];
-      const hit = findTouchedSpider(touch.clientX, touch.clientY);
+      const hit = findSpiderAt(movers, touch.clientX, touch.clientY);
       if (!hit) return;
 
       event.preventDefault();
@@ -614,19 +624,24 @@ export function SpiderField({
   const spidersPaused =
     paused || reducedMotion || !spidersEnabled || !fieldActive;
 
-  const handlePointerDown = (
-    event: ReactPointerEvent<HTMLDivElement>,
-    index: number,
-  ) => {
+  const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (
       !spidersEnabled ||
       event.pointerType === "touch" ||
       !event.isPrimary ||
       gestureRef.current ||
-      event.currentTarget.classList.contains(styles.exploding)
+      (event.target as Element).closest("a, button, dialog[open]")
     )
       return;
 
+    const hit = findSpiderAt(
+      moversRef.current,
+      event.clientX,
+      event.clientY,
+    );
+    if (!hit) return;
+
+    const index = hit[0];
     event.preventDefault();
     event.stopPropagation();
     event.currentTarget.setPointerCapture(event.pointerId);
@@ -669,9 +684,8 @@ export function SpiderField({
 
     event.preventDefault();
     event.stopPropagation();
-    const mover = moversRef.current.get(gesture.index);
-    if (mover?.hasPointerCapture(event.pointerId)) {
-      mover.releasePointerCapture(event.pointerId);
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
     }
     gestureRef.current = null;
 
@@ -688,7 +702,6 @@ export function SpiderField({
     <div
       className={styles.mover}
       key={index}
-      onPointerDown={(event) => handlePointerDown(event, index)}
       ref={(node) => {
         if (node) moversRef.current.set(index, node);
         else moversRef.current.delete(index);
@@ -712,6 +725,7 @@ export function SpiderField({
     <div
       className={[styles.field, className].filter(Boolean).join(" ")}
       onPointerCancelCapture={(event) => finishPointerGesture(event, true)}
+      onPointerDownCapture={handlePointerDown}
       onPointerMoveCapture={handlePointerMove}
       onPointerUpCapture={finishPointerGesture}
       ref={hostRef}

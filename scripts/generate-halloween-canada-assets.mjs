@@ -8,6 +8,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sourceDirectory = path.join(root, "assets/halloween-canada");
 const outputDirectory = path.join(root, "public/images/halloween-canada");
 const previewDirectory = path.join(outputDirectory, "previews");
+const cardDirectory = path.join(outputDirectory, "cards");
 const characters = ["man", "blonde", "redhead"];
 const copies = characters.flatMap((character) =>
   ["en", "fr"].map((locale) => `${character}-${locale}`),
@@ -17,10 +18,27 @@ const sourceNames = [
   ...characters.map((name) => `character-${name}`),
   ...copies.map((name) => `copy-${name}`),
 ];
+const gameCards = [
+  "big-bass-halloween-3",
+  "witch-heart-megaways",
+  "zombie-school-megaways",
+  "big-bass-halloween-2",
+  "forever-split-megaways",
+  "mr-hallow-win",
+  "frightening-frankie",
+  "le-vampire",
+  "gates-of-hades",
+  "ghost-booster-go-guaranteed",
+  "infective-wild",
+].map((name) => ({
+  name,
+  outputName: `${name}-637x336`,
+  source: path.join(sourceDirectory, "generated-cards", `${name}.webp`),
+}));
 const publicPreviewSources = [
-  ...["witch", "pumpkin", "wolf", "wraith", "plague"].map((name) => ({
-    name: `card-${name}`,
-    source: path.join(outputDirectory, "cards", `${name}.webp`),
+  ...gameCards.map(({ outputName }) => ({
+    name: `card-${outputName}`,
+    source: path.join(cardDirectory, `${outputName}.webp`),
   })),
   ...["web-top-left", "web-bottom-right"].map((name) => ({
     name,
@@ -31,6 +49,7 @@ const publicPreviewSources = [
 await Promise.all([
   mkdir(outputDirectory, { recursive: true }),
   mkdir(previewDirectory, { recursive: true }),
+  mkdir(cardDirectory, { recursive: true }),
 ]);
 
 async function validateSource(source, label, requireAlpha = true) {
@@ -69,6 +88,13 @@ async function generateVariants(source, name, resize) {
   );
 }
 
+async function generateGameCard({ outputName, source }) {
+  await sharp(source)
+    .resize(637, 336, { fit: "cover", position: "centre" })
+    .webp({ quality: 76, effort: 5 })
+    .toFile(path.join(cardDirectory, `${outputName}.webp`));
+}
+
 await Promise.all([
   (async () => {
     const source = path.join(sourceDirectory, "background.webp");
@@ -94,6 +120,7 @@ await Promise.all([
       mobile: { width: 680 },
     });
   }),
+  ...gameCards.map(generateGameCard),
 ]);
 
 const previews = [

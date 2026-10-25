@@ -172,7 +172,7 @@ export function HalloweenPumpkinCube({
               imageClassName={styles.gameDialogImage}
               preview={selectedGame.preview}
               quality={70}
-              sizes="(max-width: 620px) 82vw, 380px"
+              sizes="318px"
               src={selectedGame.image}
             />
             <p className={styles.gameDialogEyebrow}>{labels.result}</p>

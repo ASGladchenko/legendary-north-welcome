@@ -12,12 +12,17 @@ import {
   HalloweenSlider,
   type HalloweenSlide,
 } from "./halloween-slider";
-import { HalloweenTournamentMascot } from "./halloween-tournament-mascot";
+import {
+  HalloweenCasperMascot,
+  HalloweenTournamentMascot,
+} from "./halloween-tournament-mascot";
 
 type HalloweenCanadaPageProps = {
   searchParams: Promise<{
     delay?: string | string[];
     frequency?: string | string[];
+    casperD?: string | string[];
+    casperF?: string | string[];
     lang?: string | string[];
   }>;
 };
@@ -34,19 +39,81 @@ const getIntegerParam = (
     ? Math.min(Number(value), maximum)
     : fallback;
 
+const hasIntegerParam = (value: string | string[] | undefined) =>
+  typeof value === "string" && /^\d+$/.test(value);
+
 const cards = [
-  { id: "witch", accent: "#c97ae4", title: { en: "Witch", fr: "Sorcière" } },
   {
-    id: "pumpkin",
-    accent: "#ff9a3d",
-    title: { en: "Pumpkin curse", fr: "Malédiction de la citrouille" },
+    id: "big-bass-halloween-3",
+    accent: "#c9ff41",
+    title: { en: "Big Bass Halloween 3", fr: "Big Bass Halloween 3" },
+    href: "/casino/slots/game/pragmatic-big-bass-halloween-3",
   },
-  { id: "wolf", accent: "#ff7a2f", title: { en: "Werewolf", fr: "Loup-garou" } },
-  { id: "wraith", accent: "#83bdfa", title: { en: "Wraith", fr: "Spectre" } },
   {
-    id: "plague",
-    accent: "#b588eb",
-    title: { en: "Plague doctor", fr: "Médecin de peste" },
+    id: "witch-heart-megaways",
+    accent: "#f05cff",
+    title: { en: "Witch Heart Megaways", fr: "Witch Heart Megaways" },
+    href: "/casino/slots/game/pragmatic-witch-heart-megaways",
+  },
+  {
+    id: "zombie-school-megaways",
+    accent: "#75e65b",
+    title: {
+      en: "Zombie School Megaways",
+      fr: "Zombie School Megaways",
+    },
+    href: "/casino/slots/game/pragmatic-zombie-school-megaways",
+  },
+  {
+    id: "big-bass-halloween-2",
+    accent: "#ff6d35",
+    title: { en: "Big Bass Halloween 2", fr: "Big Bass Halloween 2" },
+    href: "/casino/slots/game/pragmatic-big-bass-halloween-2",
+  },
+  {
+    id: "forever-split-megaways",
+    accent: "#e55bca",
+    title: { en: "Forever Split Megaways", fr: "Forever Split Megaways" },
+    href: "/casino/slots/game/pragmatic-forever-split-megaways",
+  },
+  {
+    id: "mr-hallow-win",
+    accent: "#ff9a2f",
+    title: { en: "Mr. Hallow-Win", fr: "Mr. Hallow-Win" },
+    href: "/casino/slots/game/zth-pgsoft-mr-hallow-win",
+  },
+  {
+    id: "frightening-frankie",
+    accent: "#88f151",
+    title: { en: "Frightening Frankie", fr: "Frightening Frankie" },
+    href: "/slots/game/pragmatic-frightening-frankie",
+  },
+  {
+    id: "le-vampire",
+    accent: "#ef4444",
+    title: { en: "Le Vampire", fr: "Le Vampire" },
+    href: "/casino/slots/game/hacksaw-le-vampire",
+  },
+  {
+    id: "gates-of-hades",
+    accent: "#ff7c32",
+    title: { en: "Gates of Hades", fr: "Gates of Hades" },
+    href: "/casino/slots/game/pragmatic-gates-of-hades",
+  },
+  {
+    id: "ghost-booster-go-guaranteed",
+    accent: "#75ef58",
+    title: {
+      en: "Ghost Booster! GO Guaranteed",
+      fr: "Ghost Booster! GO Guaranteed",
+    },
+    href: "/casino/slots/game/softgamings-playngo-ghost-booster-go-guaranteed",
+  },
+  {
+    id: "infective-wild",
+    accent: "#c653ef",
+    title: { en: "Infective Wild™", fr: "Infective Wild™" },
+    href: "/casino/slots/game/pragmatic-infective-wild",
   },
 ] as const;
 
@@ -55,9 +122,9 @@ const getCards = (locale: HalloweenLocale): HalloweenSlide[] =>
     id: card.id,
     accent: card.accent,
     title: card.title[locale],
-    image: `/images/halloween-canada/cards/${card.id}.webp`,
-    preview: `/images/halloween-canada/previews/card-${card.id}.webp`,
-    href: "/casino",
+    image: `/images/halloween-canada/cards/${card.id}-637x336.webp`,
+    preview: `/images/halloween-canada/previews/card-${card.id}-637x336.webp`,
+    href: card.href,
   }));
 
 export async function generateMetadata({
@@ -80,8 +147,10 @@ export default async function HalloweenCanadaPage({
 }: HalloweenCanadaPageProps) {
   const query = await searchParams;
   const locale = getLocale(query.lang);
-  const mascotDelay = getIntegerParam(query.delay, 2_600, 2_147_483_647);
+  const mascotDelay = getIntegerParam(query.delay, 0, 2_147_483_647);
   const mascotFrequency = getIntegerParam(query.frequency, 1, 20);
+  const casperDelay = getIntegerParam(query.casperD, 0, 2_147_483_647);
+  const casperFrequency = getIntegerParam(query.casperF, 2, 20);
 
   return (
     <>
@@ -129,11 +198,20 @@ export default async function HalloweenCanadaPage({
           />
         </main>
       </SpiderField>
-      <HalloweenTournamentMascot
-        delay={mascotDelay}
-        frequency={mascotFrequency}
-        locale={locale}
-      />
+      {hasIntegerParam(query.delay) && (
+        <HalloweenTournamentMascot
+          delay={mascotDelay}
+          frequency={mascotFrequency}
+          locale={locale}
+        />
+      )}
+      {hasIntegerParam(query.casperD) && (
+        <HalloweenCasperMascot
+          delay={casperDelay}
+          frequency={casperFrequency}
+          locale={locale}
+        />
+      )}
     </>
   );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { ParentSiteLink } from "../components/parent-site-link";
 import type { HalloweenLocale } from "./halloween-canada-banner";
@@ -9,7 +9,7 @@ import styles from "./halloween-tournament-mascot.module.css";
 
 const VISIBLE_DURATION = 9_000;
 
-const copy = {
+const tournamentCopy = {
   en: {
     close: "Close tournament invitation",
     eyebrow: "Psst…",
@@ -24,19 +24,56 @@ const copy = {
   },
 } as const;
 
-export function HalloweenTournamentMascot({
-  delay,
-  frequency,
-  locale,
-}: {
+const casperCopy = {
+  en: {
+    close: "Close sticker pack invitation",
+    eyebrow: "Boo!",
+    title: "Your spooky sticker pack is waiting!",
+    action: "Open sticker pack",
+  },
+  fr: {
+    close: "Fermer l’invitation au pack de stickers",
+    eyebrow: "Bouh !",
+    title: "Ton pack de stickers hanté t’attend !",
+    action: "Voir le pack",
+  },
+} as const;
+
+type SideMascotProps = {
   delay: number;
   frequency: number;
   locale: HalloweenLocale;
-}) {
+};
+
+type SideMascotContentProps = SideMascotProps & {
+  characterClassName?: string;
+  height: number;
+  href: string;
+  labels: (typeof tournamentCopy)[HalloweenLocale] | (typeof casperCopy)[HalloweenLocale];
+  sizes: string;
+  src: string;
+  width: number;
+};
+
+function HalloweenSideMascot({
+  delay,
+  frequency,
+  characterClassName,
+  height,
+  href,
+  labels,
+  sizes,
+  src,
+  width,
+}: SideMascotContentProps) {
   const [imageReady, setImageReady] = useState(false);
   const [visible, setVisible] = useState(false);
   const [dismissed, setDismissed] = useState(false);
-  const labels = copy[locale];
+  const imageRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    if (imageRef.current?.complete) setImageReady(true);
+  }, []);
 
   useEffect(() => {
     if (!imageReady || dismissed || frequency === 0) return;
@@ -45,15 +82,22 @@ export function HalloweenTournamentMascot({
     let showTimer: ReturnType<typeof setTimeout> | undefined;
     let hideTimer: ReturnType<typeof setTimeout> | undefined;
 
+    const show = () => {
+      if (document.querySelector('[data-side-mascot-visible="true"]')) {
+        showTimer = setTimeout(show, 250);
+        return;
+      }
+
+      appearances += 1;
+      setVisible(true);
+      hideTimer = setTimeout(() => {
+        setVisible(false);
+        if (appearances < frequency) schedule();
+      }, VISIBLE_DURATION);
+    };
+
     const schedule = () => {
-      showTimer = setTimeout(() => {
-        appearances += 1;
-        setVisible(true);
-        hideTimer = setTimeout(() => {
-          setVisible(false);
-          if (appearances < frequency) schedule();
-        }, VISIBLE_DURATION);
-      }, delay);
+      showTimer = setTimeout(show, delay);
     };
 
     schedule();
@@ -70,45 +114,78 @@ export function HalloweenTournamentMascot({
     <aside
       aria-hidden={!visible}
       className={`${styles.root}${imageReady ? ` ${styles.ready}` : ""}${visible ? ` ${styles.visible}` : ""}`}
+      data-side-mascot-visible={visible ? "true" : undefined}
     >
       <div className={styles.bubble}>
-        <button
-          aria-label={labels.close}
-          className={styles.close}
-          onClick={() => {
-            setDismissed(true);
-            setVisible(false);
-          }}
-          tabIndex={visible ? 0 : -1}
-          type="button"
-        >
-          ×
-        </button>
-        <p className={styles.message}>
-          <span>{labels.eyebrow}</span>
-          <strong>{labels.title}</strong>
-        </p>
-        <ParentSiteLink
-          className={styles.action}
-          href="/casino"
-          tabIndex={visible ? 0 : -1}
-        >
-          {labels.action}
-        </ParentSiteLink>
+        <div className={styles.bubbleContent}>
+          <button
+            aria-label={labels.close}
+            className={styles.close}
+            onClick={() => {
+              setDismissed(true);
+              setVisible(false);
+            }}
+            tabIndex={visible ? 0 : -1}
+            type="button"
+          >
+            ×
+          </button>
+          <p className={styles.message}>
+            <span>{labels.eyebrow}</span>
+            <strong>{labels.title}</strong>
+          </p>
+          <ParentSiteLink
+            className={styles.action}
+            href={href}
+            tabIndex={visible ? 0 : -1}
+          >
+            {labels.action}
+          </ParentSiteLink>
+        </div>
       </div>
 
       <Image
         alt=""
-        className={styles.character}
+        className={`${styles.character}${characterClassName ? ` ${characterClassName}` : ""}`}
         decoding="async"
         draggable={false}
-        height={640}
+        height={height}
         loading="eager"
         onLoad={() => setImageReady(true)}
-        sizes="(max-width: 620px) 225px, 300px"
-        src="/Hooded Character with Extended Hands.webp"
-        width={615}
+        ref={imageRef}
+        sizes={sizes}
+        src={src}
+        width={width}
       />
     </aside>
+  );
+}
+
+export function HalloweenTournamentMascot(props: SideMascotProps) {
+  return (
+    <HalloweenSideMascot
+      {...props}
+      height={640}
+      href="/casino"
+      labels={tournamentCopy[props.locale]}
+      sizes="(max-width: 620px) 225px, 300px"
+      src="/Hooded Character with Extended Hands.webp"
+      width={615}
+    />
+  );
+}
+
+export function HalloweenCasperMascot(props: SideMascotProps) {
+  return (
+    <HalloweenSideMascot
+      {...props}
+      characterClassName={styles.casperCharacter}
+      height={360}
+      href={`/${props.locale}/gamification/stickerbooks/912`}
+      labels={casperCopy[props.locale]}
+      sizes="(max-width: 620px) 190px, 240px"
+      src="/images/halloween-canada/friendly-phantom.webp"
+      width={360}
+    />
   );
 }
