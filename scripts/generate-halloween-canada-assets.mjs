@@ -7,12 +7,31 @@ import sharp from "sharp";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sourceDirectory = path.join(root, "assets/halloween-canada");
 const outputDirectory = path.join(root, "public/images/halloween-canada");
+const previewDirectory = path.join(outputDirectory, "previews");
 const characters = ["man", "blonde", "redhead"];
 const copies = characters.flatMap((character) =>
   ["en", "fr"].map((locale) => `${character}-${locale}`),
 );
+const sourceNames = [
+  "background",
+  ...characters.map((name) => `character-${name}`),
+  ...copies.map((name) => `copy-${name}`),
+];
+const publicPreviewSources = [
+  ...["witch", "pumpkin", "wolf", "wraith", "plague"].map((name) => ({
+    name: `card-${name}`,
+    source: path.join(outputDirectory, "cards", `${name}.webp`),
+  })),
+  ...["web-top-left", "web-bottom-right"].map((name) => ({
+    name,
+    source: path.join(outputDirectory, "decor", `${name}.webp`),
+  })),
+];
 
-await mkdir(outputDirectory, { recursive: true });
+await Promise.all([
+  mkdir(outputDirectory, { recursive: true }),
+  mkdir(previewDirectory, { recursive: true }),
+]);
 
 async function validateSource(source, label, requireAlpha = true) {
   const metadata = await sharp(source).metadata();
@@ -40,10 +59,10 @@ async function generateVariants(source, name, resize) {
         });
       return [
         image()
-          .avif({ quality: 60, effort: 4 })
+          .avif({ quality: 54, effort: 4 })
           .toFile(path.join(outputDirectory, `${name}${suffix}.avif`)),
         image()
-          .webp({ quality: 78, alphaQuality: 90, effort: 5 })
+          .webp({ quality: 74, alphaQuality: 88, effort: 5 })
           .toFile(path.join(outputDirectory, `${name}${suffix}.webp`)),
       ];
     }),
@@ -77,20 +96,29 @@ await Promise.all([
   }),
 ]);
 
+const previews = [
+  ...sourceNames.map((name) => ({
+    name,
+    source: path.join(sourceDirectory, `${name}.webp`),
+  })),
+  ...publicPreviewSources,
+];
+
+await Promise.all(
+  previews.map(({ name, source }) =>
+    sharp(source)
+      .resize({ width: 80, withoutEnlargement: true })
+      .webp({ quality: 28, alphaQuality: 60, effort: 4 })
+      .toFile(path.join(previewDirectory, `${name}.webp`)),
+  ),
+);
+
 const sourceBytes = (
   await Promise.all(
-    [
-      "background.webp",
-      ...characters.map((name) => `character-${name}.webp`),
-      ...copies.map((name) => `copy-${name}.webp`),
-    ].map((name) => stat(path.join(sourceDirectory, name))),
+    sourceNames.map((name) => stat(path.join(sourceDirectory, `${name}.webp`))),
   )
 ).reduce((total, file) => total + file.size, 0);
-const outputNames = [
-  "background",
-  ...characters.map((name) => `character-${name}`),
-  ...copies.map((name) => `copy-${name}`),
-].flatMap((name) =>
+const outputNames = sourceNames.flatMap((name) =>
   ["", "-mobile"].flatMap((suffix) => [
     `${name}${suffix}.avif`,
     `${name}${suffix}.webp`,
@@ -98,10 +126,13 @@ const outputNames = [
 );
 const outputBytes = (
   await Promise.all(
-    outputNames.map((name) => stat(path.join(outputDirectory, name))),
+    [
+      ...outputNames.map((name) => path.join(outputDirectory, name)),
+      ...previews.map(({ name }) => path.join(previewDirectory, `${name}.webp`)),
+    ].map((name) => stat(name)),
   )
 ).reduce((total, file) => total + file.size, 0);
 
 console.log(
-  `Generated ${outputNames.length} Halloween Canada assets (${sourceBytes} -> ${outputBytes} bytes)`,
+  `Generated ${outputNames.length} optimized assets and ${previews.length} previews (${sourceBytes} -> ${outputBytes} bytes)`,
 );

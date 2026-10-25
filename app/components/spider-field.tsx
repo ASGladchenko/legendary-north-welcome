@@ -26,16 +26,13 @@ type SpiderSpec = {
 
 type Point = { x: number; y: number };
 type RouteStart = { point: Point; angle: number };
-type Flee = (index: number, clientX: number, clientY: number) => void;
 type Explode = (index: number) => void;
-type LastPress = { index: number; time: number; x: number; y: number };
 type Gesture = {
   pointerId: number;
   index: number;
   startX: number;
   startY: number;
   dragging: boolean;
-  doublePress: boolean;
 };
 type BeginDrag = (index: number, clientX: number, clientY: number) => void;
 type MoveDrag = (index: number, clientX: number, clientY: number) => void;
@@ -138,12 +135,10 @@ export function SpiderField({
 }: SpiderFieldProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const moversRef = useRef(new Map<number, HTMLDivElement>());
-  const fleeRef = useRef<Flee>(() => {});
   const explodeRef = useRef<Explode>(() => {});
   const beginDragRef = useRef<BeginDrag>(() => {});
   const moveDragRef = useRef<MoveDrag>(() => {});
   const releaseDragRef = useRef<ReleaseDrag>(() => {});
-  const lastPressRef = useRef<LastPress | null>(null);
   const gestureRef = useRef<Gesture | null>(null);
   const [isMobile, setIsMobile] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -247,7 +242,6 @@ export function SpiderField({
       const mover = movers.get(index);
       const spec = specs[index];
       if (!mover || !spec) return;
-      mover.classList.remove(styles.fleeing);
       mover.classList.remove(styles.exploding);
       mover.style.opacity = "";
       routeBySpider[index] = route;
@@ -329,113 +323,6 @@ export function SpiderField({
         .catch(() => undefined);
     };
 
-    const flee = (index: number, clientX: number, clientY: number) => {
-      if (!isActive()) return;
-      const mover = movers.get(index);
-      const spec = specs[index];
-      if (!mover || !spec) return;
-
-      const hostRect = host.getBoundingClientRect();
-      const moverRect = mover.getBoundingClientRect();
-      const current = {
-        x: moverRect.left + moverRect.width / 2 - hostRect.left,
-        y: moverRect.top + moverRect.height / 2 - hostRect.top,
-      };
-      let directionX = current.x - (clientX - hostRect.left);
-      let directionY = current.y - (clientY - hostRect.top);
-      let length = Math.hypot(directionX, directionY);
-
-      if (length < 1) {
-        const random = randomFrom(
-          hash(`${seed}:flee:${index}:${routeBySpider[index]}`),
-        );
-        const angle = random() * Math.PI * 2;
-        directionX = Math.cos(angle);
-        directionY = Math.sin(angle);
-        length = 1;
-      }
-
-      directionX /= length;
-      directionY /= length;
-      const fleeDistance = clamp(spec.size * 1.1, 60, 120);
-      const inset = Math.min(
-        spec.size * 0.3,
-        hostRect.width / 2,
-        hostRect.height / 2,
-      );
-      let destination = {
-        x: clamp(
-          current.x + directionX * fleeDistance,
-          inset,
-          hostRect.width - inset,
-        ),
-        y: clamp(
-          current.y + directionY * fleeDistance,
-          inset,
-          hostRect.height - inset,
-        ),
-      };
-      let travel = Math.hypot(
-        destination.x - current.x,
-        destination.y - current.y,
-      );
-      if (travel < Math.min(30, fleeDistance / 2)) {
-        destination = {
-          x: current.x + directionX * fleeDistance,
-          y: current.y + directionY * fleeDistance,
-        };
-        travel = fleeDistance;
-      }
-      const angle = angleBetween(current, destination);
-
-      animations.get(index)?.cancel();
-      mover.classList.add(styles.fleeing);
-      const animation = mover.animate(
-        [
-          { transform: transformAt(current, angle, spec.size, spec.mirrored) },
-          {
-            transform: transformAt(
-              destination,
-              angle,
-              spec.size,
-              spec.mirrored,
-            ),
-          },
-        ],
-        {
-          duration: clamp(travel * 4.5, 380, 620),
-          easing: "cubic-bezier(0.3, 0, 0.8, 0.35)",
-          fill: "both",
-        },
-      );
-      animations.set(index, animation);
-      const pass = generation;
-      const nextRoute = routeBySpider[index] + 1;
-
-      animation.finished
-        .then(() => {
-          if (animations.get(index) !== animation) return;
-          mover.style.transform = transformAt(
-            destination,
-            angle,
-            spec.size,
-            spec.mirrored,
-          );
-          mover.classList.remove(styles.fleeing);
-          animation.cancel();
-          animations.delete(index);
-          if (!disposed && pass === generation) {
-            schedule(index, pass, nextRoute, 180, {
-              point: destination,
-              angle,
-            });
-          }
-        })
-        .catch(() => undefined);
-    };
-
-    fleeRef.current = flee;
-
     const explode = (index: number) => {
       if (!isActive()) return;
       const mover = movers.get(index);
@@ -448,7 +335,6 @@ export function SpiderField({
           : computedTransform;
       animations.get(index)?.cancel();
       mover.style.transform = currentTransform;
-      mover.classList.remove(styles.fleeing);
       mover.classList.add(styles.exploding);
 
       const animation = mover.animate(
@@ -510,7 +396,6 @@ export function SpiderField({
         computedTransform === "none"
           ? mover.style.transform
           : computedTransform;
-      mover.classList.remove(styles.fleeing);
       dragged = {
         index,
         offsetX: clientX - hostRect.left - point.x,
@@ -582,11 +467,7 @@ export function SpiderField({
       animations.forEach((animation) => animation.cancel());
       animations.clear();
       movers.forEach((mover) => {
-        mover.classList.remove(
-          styles.fleeing,
-          styles.exploding,
-          styles.dragging,
-        );
+        mover.classList.remove(styles.exploding, styles.dragging);
         mover.style.opacity = "";
       });
       timers.forEach(clearTimeout);
@@ -619,7 +500,6 @@ export function SpiderField({
 
     return () => {
       disposed = true;
-      fleeRef.current = () => {};
       explodeRef.current = () => {};
       beginDragRef.current = () => {};
       moveDragRef.current = () => {};
@@ -632,11 +512,7 @@ export function SpiderField({
       timers.forEach(clearTimeout);
       animations.forEach((animation) => animation.cancel());
       movers.forEach((mover) => {
-        mover.classList.remove(
-          styles.fleeing,
-          styles.exploding,
-          styles.dragging,
-        );
+        mover.classList.remove(styles.exploding, styles.dragging);
         mover.style.opacity = "";
       });
       timers.clear();
@@ -655,29 +531,19 @@ export function SpiderField({
     if (!spidersEnabled) return;
     if ((event.target as Element).closest(`.${styles.toggle}`)) return;
 
-    const now = performance.now();
-    const lastPress = lastPressRef.current;
-    const doublePress = Boolean(
-      lastPress &&
-        now - lastPress.time <= 360 &&
-        Math.hypot(event.clientX - lastPress.x, event.clientY - lastPress.y) <=
-          48,
-    );
-    const hit = doublePress
-      ? moversRef.current.get(lastPress!.index)
-      : [...moversRef.current.entries()].reverse().find(([, mover]) => {
-          const rect = mover.getBoundingClientRect();
-          return (
-            !mover.classList.contains(styles.exploding) &&
-            event.clientX >= rect.left &&
-            event.clientX <= rect.right &&
-            event.clientY >= rect.top &&
-            event.clientY <= rect.bottom
-          );
-        });
-    const index = doublePress
-      ? lastPress!.index
-      : (hit as [number, HTMLDivElement] | undefined)?.[0];
+    const hit = [...moversRef.current.entries()]
+      .reverse()
+      .find(([, mover]) => {
+        const rect = mover.getBoundingClientRect();
+        return (
+          !mover.classList.contains(styles.exploding) &&
+          event.clientX >= rect.left &&
+          event.clientX <= rect.right &&
+          event.clientY >= rect.top &&
+          event.clientY <= rect.bottom
+        );
+      });
+    const index = hit?.[0];
     if (index === undefined || !hit) return;
 
     event.preventDefault();
@@ -689,7 +555,6 @@ export function SpiderField({
       startX: event.clientX,
       startY: event.clientY,
       dragging: false,
-      doublePress,
     };
     beginDragRef.current(index, event.clientX, event.clientY);
   };
@@ -708,8 +573,6 @@ export function SpiderField({
       ) >= 7
     ) {
       gesture.dragging = true;
-      gesture.doublePress = false;
-      lastPressRef.current = null;
     }
     if (gesture.dragging) {
       moveDragRef.current(gesture.index, event.clientX, event.clientY);
@@ -736,19 +599,7 @@ export function SpiderField({
     }
 
     releaseDragRef.current(gesture.index, false);
-    if (gesture.doublePress) {
-      lastPressRef.current = null;
-      explodeRef.current(gesture.index);
-      return;
-    }
-
-    lastPressRef.current = {
-      index: gesture.index,
-      time: performance.now(),
-      x: event.clientX,
-      y: event.clientY,
-    };
-    fleeRef.current(gesture.index, event.clientX, event.clientY);
+    explodeRef.current(gesture.index);
   };
 
   const renderSpider = (spec: SpiderSpec, index: number) => (

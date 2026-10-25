@@ -12,13 +12,27 @@ import {
   HalloweenSlider,
   type HalloweenSlide,
 } from "./halloween-slider";
+import { HalloweenTournamentMascot } from "./halloween-tournament-mascot";
 
 type HalloweenCanadaPageProps = {
-  searchParams: Promise<{ lang?: string | string[] }>;
+  searchParams: Promise<{
+    delay?: string | string[];
+    frequency?: string | string[];
+    lang?: string | string[];
+  }>;
 };
 
 const getLocale = (lang: string | string[] | undefined): HalloweenLocale =>
   lang === "fr" ? "fr" : "en";
+
+const getIntegerParam = (
+  value: string | string[] | undefined,
+  fallback: number,
+  maximum: number,
+) =>
+  typeof value === "string" && /^\d+$/.test(value)
+    ? Math.min(Number(value), maximum)
+    : fallback;
 
 const cards = [
   { id: "witch", accent: "#c97ae4", title: { en: "Witch", fr: "Sorcière" } },
@@ -42,6 +56,7 @@ const getCards = (locale: HalloweenLocale): HalloweenSlide[] =>
     accent: card.accent,
     title: card.title[locale],
     image: `/images/halloween-canada/cards/${card.id}.webp`,
+    preview: `/images/halloween-canada/previews/card-${card.id}.webp`,
     href: "/casino",
   }));
 
@@ -63,50 +78,62 @@ export async function generateMetadata({
 export default async function HalloweenCanadaPage({
   searchParams,
 }: HalloweenCanadaPageProps) {
-  const locale = getLocale((await searchParams).lang);
+  const query = await searchParams;
+  const locale = getLocale(query.lang);
+  const mascotDelay = getIntegerParam(query.delay, 2_600, 2_147_483_647);
+  const mascotFrequency = getIntegerParam(query.frequency, 1, 20);
 
   return (
-    <SpiderField
-      className="canada-spider-field"
-      seed="halloween-canada"
-      toggleLabel={locale === "fr" ? "Araignées" : "Spiders"}
-    >
-      <main
-        className="canada-page"
-        lang={locale === "fr" ? "fr-CA" : "en-CA"}
+    <>
+      <SpiderField
+        className="canada-spider-field"
+        seed="halloween-canada"
+        toggleLabel={locale === "fr" ? "Araignées" : "Spiders"}
       >
-        <HalloweenCanadaBanner locale={locale} />
-        <HalloweenSlider
-          items={getCards(locale)}
-          labels={
-            locale === "fr"
-              ? {
-                  carousel: "Jeux d’Halloween",
-                  previous: "Jeu précédent",
-                  next: "Jeu suivant",
-                  position: "Position dans le carrousel",
-                  goTo: "Afficher",
-                  cube: "Faire tourner le cube citrouille",
-                  cubeTap: "Touche-moi",
-                  cubeResult: "Le cube a choisi",
-                  cubePlay: "Jouer",
-                  cubeClose: "Fermer",
-                }
-              : {
-                  carousel: "Halloween games",
-                  previous: "Previous game",
-                  next: "Next game",
-                  position: "Carousel position",
-                  goTo: "Show",
-                  cube: "Spin the pumpkin cube",
-                  cubeTap: "Tap me",
-                  cubeResult: "The cube chose",
-                  cubePlay: "Play game",
-                  cubeClose: "Close",
-                }
-          }
-        />
-      </main>
-    </SpiderField>
+        <main
+          className="canada-page"
+          lang={locale === "fr" ? "fr-CA" : "en-CA"}
+        >
+          <HalloweenCanadaBanner locale={locale} />
+          <HalloweenSlider
+            items={getCards(locale)}
+            labels={
+              locale === "fr"
+                ? {
+                    carousel: "Jeux d’Halloween",
+                    previous: "Jeu précédent",
+                    next: "Jeu suivant",
+                    position: "Position dans le carrousel",
+                    goTo: "Afficher",
+                    cube: "Faire tourner le cube citrouille",
+                    cubeLoading: "Chargement du cube citrouille",
+                    cubeTap: "Touche-moi",
+                    cubeResult: "Le cube a choisi",
+                    cubePlay: "Jouer",
+                    cubeClose: "Fermer",
+                  }
+                : {
+                    carousel: "Halloween games",
+                    previous: "Previous game",
+                    next: "Next game",
+                    position: "Carousel position",
+                    goTo: "Show",
+                    cube: "Spin the pumpkin cube",
+                    cubeLoading: "Loading the pumpkin cube",
+                    cubeTap: "Tap me",
+                    cubeResult: "The cube chose",
+                    cubePlay: "Play game",
+                    cubeClose: "Close",
+                  }
+            }
+          />
+        </main>
+      </SpiderField>
+      <HalloweenTournamentMascot
+        delay={mascotDelay}
+        frequency={mascotFrequency}
+        locale={locale}
+      />
+    </>
   );
 }

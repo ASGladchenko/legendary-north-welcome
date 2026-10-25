@@ -6,6 +6,47 @@
   overflow: hidden;
 }
 
+.progressive {
+  position: relative;
+  overflow: hidden;
+  display: block;
+}
+
+.progressivePreview,
+.progressiveFull {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.progressivePreview {
+  z-index: 0;
+  background-image: var(--halloween-preview);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: blur(9px) saturate(1.08);
+  transform: scale(1.06);
+  transition: opacity 240ms ease;
+}
+
+.progressiveFull {
+  z-index: 1;
+  opacity: 0;
+  animation: halloween-progressive-fallback 300ms linear 800ms forwards;
+  transition: opacity 240ms ease;
+}
+
+.progressive.loaded > .progressivePreview {
+  opacity: 0;
+}
+
+.progressive.loaded > .progressiveFull {
+  opacity: 1;
+  animation: none;
+}
+
 .webDecor {
   position: absolute;
   inset: 0;
@@ -17,10 +58,17 @@
 .webImage {
   position: absolute;
   width: clamp(300px, 31vw, 450px);
-  height: auto;
-  opacity: 0.32;
-  filter: saturate(0.8);
+  overflow: visible;
+  opacity: 0.4;
+  filter: brightness(1.16) contrast(1.06) saturate(0.9);
   user-select: none;
+  aspect-ratio: 3 / 2;
+}
+
+.webImage .progressivePreview,
+.webImage .progressiveFull {
+  object-fit: contain;
+  background-size: contain;
 }
 
 .webTopLeft {
@@ -42,18 +90,38 @@
   isolation: isolate;
   width: min(100%, 1180px);
   height: 140px;
-  padding: 0 44px 14px;
+  padding: 0 0 14px;
   margin: 6px auto 0;
   overflow: hidden;
   background: transparent;
   contain: layout style;
 }
 
+.root::before,
+.root::after {
+  content: "";
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  bottom: 14px;
+  width: clamp(48px, 7vw, 88px);
+  pointer-events: none;
+}
+
+.root::before {
+  left: 0;
+  background: linear-gradient(90deg, #02070b 0%, rgb(2 7 11 / 80%) 32%, transparent 100%);
+}
+
+.root::after {
+  right: 0;
+  background: linear-gradient(270deg, #02070b 0%, rgb(2 7 11 / 80%) 32%, transparent 100%);
+}
+
 .window {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 960px;
   height: 122px;
   margin: 0 auto;
   overflow: hidden;
@@ -62,6 +130,11 @@
 .swiper {
   height: 120px;
   overflow: visible;
+  visibility: hidden;
+}
+
+.swiper:global(.swiper-initialized) {
+  visibility: visible;
 }
 
 .swiper :global(.swiper-wrapper) {
@@ -124,6 +197,12 @@
   object-fit: cover;
   object-position: center;
   user-select: none;
+}
+
+.cardMedia {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
 }
 
 .insideBorder {
@@ -265,18 +344,6 @@
   border: 0;
   border-radius: 22px;
   background: transparent;
-  cursor: pointer;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.pumpkinCube:disabled {
-  cursor: wait;
-}
-
-.pumpkinCube:focus-visible {
-  outline: 2px solid #ffa64c;
-  outline-offset: -5px;
 }
 
 .pumpkinCanvas {
@@ -294,15 +361,52 @@
 
 .pumpkinLoader {
   position: absolute;
+  z-index: 3;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle, rgb(1 8 13 / 72%), transparent 36%);
+  pointer-events: none;
+}
+
+.pumpkinLoaderLogo {
+  width: clamp(118px, 28%, 168px);
+  height: auto;
+  animation: pumpkin-brand-loading 1.5s ease-in-out infinite;
+}
+
+.pumpkinTrigger {
+  position: absolute;
   top: 50%;
   left: 50%;
-  width: 26px;
-  border: 2px solid rgb(255 157 69 / 24%);
-  border-top-color: #ff9d45;
+  z-index: 2;
+  width: clamp(156px, 40%, 220px);
+  padding: 0;
+  border: 1px solid rgb(171 238 255 / 42%);
   border-radius: 50%;
+  background: rgb(2 12 18 / 12%);
+  box-shadow:
+    0 0 0 1px rgb(125 225 255 / 10%),
+    inset 0 0 30px rgb(93 213 255 / 8%);
+  cursor: pointer;
   transform: translate(-50%, -50%);
-  animation: pumpkin-cube-loading 850ms linear infinite;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
   aspect-ratio: 1;
+}
+
+.pumpkinTrigger::before {
+  position: absolute;
+  inset: 0;
+  border: 2px solid rgb(174 240 255 / 82%);
+  border-radius: inherit;
+  content: "";
+  animation: pumpkin-tap-ring 2s ease-out infinite;
+}
+
+.pumpkinTrigger:focus-visible {
+  outline: 2px solid #d8f8ff;
+  outline-offset: 4px;
 }
 
 .pumpkinTap {
@@ -315,21 +419,15 @@
   letter-spacing: 0.14em;
   white-space: nowrap;
   text-transform: uppercase;
-  color: #fff1c9;
+  color: #f3fcff;
   text-shadow:
     0 2px 3px rgb(0 0 0 / 96%),
-    0 0 8px rgb(255 112 31 / 90%),
-    0 0 20px rgb(255 87 20 / 64%);
+    0 0 8px rgb(128 228 255 / 92%),
+    0 0 20px rgb(73 190 255 / 68%);
   transform: translate(-50%, -50%);
   animation: pumpkin-tap-pulse 1.8s ease-in-out infinite;
   transition: opacity 180ms ease, transform 180ms ease;
   pointer-events: none;
-}
-
-.pumpkinCube:disabled .pumpkinTap {
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(0.9);
-  animation: none;
 }
 
 .gameDialog {
@@ -361,7 +459,7 @@
   z-index: 2;
   width: 32px;
   height: 32px;
-  padding: 0 0 3px;
+  padding: 0;
   border: 1px solid rgb(255 168 94 / 66%);
   border-radius: 50%;
   display: grid;
@@ -373,11 +471,13 @@
   cursor: pointer;
 }
 
-.gameDialogImage {
+.gameDialogImageFrame {
   width: 100%;
-  height: auto;
-  display: block;
   border-radius: 10px;
+  aspect-ratio: 416 / 234;
+}
+
+.gameDialogImage {
   object-fit: cover;
 }
 
@@ -425,9 +525,18 @@
   outline-offset: 2px;
 }
 
-@keyframes pumpkin-cube-loading {
-  to {
-    transform: translate(-50%, -50%) rotate(1turn);
+@keyframes pumpkin-brand-loading {
+  0%,
+  100% {
+    opacity: 0.45;
+    filter: brightness(0.65);
+    transform: scale(0.97);
+  }
+
+  50% {
+    opacity: 1;
+    filter: brightness(1.18) drop-shadow(0 0 15px rgb(117 225 255 / 26%));
+    transform: scale(1.02);
   }
 }
 
@@ -435,9 +544,32 @@
   50% {
     text-shadow:
       0 2px 3px rgb(0 0 0 / 96%),
-      0 0 12px rgb(255 141 53 / 100%),
-      0 0 30px rgb(255 87 20 / 82%);
-    transform: translate(-50%, -50%) scale(1.05);
+      0 0 12px rgb(172 241 255 / 100%),
+      0 0 30px rgb(73 190 255 / 82%);
+    transform: translate(-50%, -50%) scale(1.03);
+  }
+}
+
+@keyframes pumpkin-tap-ring {
+  0% {
+    opacity: 0;
+    transform: scale(0.24);
+  }
+
+  18% {
+    opacity: 0.88;
+  }
+
+  76%,
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+@keyframes halloween-progressive-fallback {
+  to {
+    opacity: 1;
   }
 }
 
@@ -448,10 +580,23 @@
   }
 }
 
+@media (min-width: 1000px) {
+  .slide {
+    width: calc((100% - 72px) / 5);
+    height: 120px;
+  }
+
+  .card {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 91 / 48;
+  }
+}
+
 @media (max-width: 620px) {
   .webImage {
     width: 230px;
-    opacity: 0.27;
+    opacity: 0.34;
   }
 
   .webTopLeft {
@@ -468,8 +613,14 @@
 
   .root {
     height: 124px;
-    padding: 0 32px 12px;
+    padding: 0 0 12px;
     margin-top: 4px;
+  }
+
+  .root::before,
+  .root::after {
+    bottom: 12px;
+    width: 44px;
   }
 
   .window {
@@ -517,6 +668,11 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .progressivePreview,
+  .progressiveFull {
+    transition: none;
+  }
+
   .slide,
   .card,
   .arrow,
@@ -524,11 +680,9 @@
     transition-duration: 0.01ms;
   }
 
-  .pumpkinLoader {
-    animation: none;
-  }
-
-  .pumpkinTap {
+  .pumpkinLoaderLogo,
+  .pumpkinTap,
+  .pumpkinTrigger::before {
     animation: none;
   }
 

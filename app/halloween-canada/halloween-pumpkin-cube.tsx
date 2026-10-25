@@ -3,13 +3,16 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
+import logo from "../../public/svg/logo.svg";
 import { ParentSiteLink } from "../components/parent-site-link";
 import type { PumpkinCubeScene } from "../pumpkin-cube/pumpkin-cube-scene";
+import { HalloweenProgressiveImage } from "./halloween-progressive-image";
 import styles from "./halloween-slider.module.css";
 
 type CubeGame = {
   href: string;
   image: string;
+  preview: string;
   title: string;
 };
 
@@ -17,6 +20,7 @@ type HalloweenPumpkinCubeProps = {
   items: CubeGame[];
   labels: {
     close: string;
+    loading: string;
     play: string;
     result: string;
     spin: string;
@@ -102,28 +106,39 @@ export function HalloweenPumpkinCube({
 
   return (
     <>
-      <button
-        aria-busy={spinning}
-        aria-label={labels.spin}
-        className={styles.pumpkinCube}
-        disabled={status !== "ready" || spinning}
-        onClick={() => void spin()}
-        type="button"
-      >
+      <div className={styles.pumpkinCube}>
         <span
           aria-hidden="true"
           className={styles.pumpkinCanvas}
           ref={hostRef}
         />
         {status === "loading" && (
-          <span aria-hidden="true" className={styles.pumpkinLoader} />
-        )}
-        {status === "ready" && (
-          <span aria-hidden="true" className={styles.pumpkinTap}>
-            {labels.tap}
+          <span
+            aria-label={labels.loading}
+            className={styles.pumpkinLoader}
+            role="status"
+          >
+            <Image
+              alt=""
+              className={styles.pumpkinLoaderLogo}
+              fetchPriority="high"
+              src={logo}
+            />
           </span>
         )}
-      </button>
+        {status === "ready" && !spinning && (
+          <button
+            aria-label={labels.spin}
+            className={styles.pumpkinTrigger}
+            onClick={() => void spin()}
+            type="button"
+          >
+            <span aria-hidden="true" className={styles.pumpkinTap}>
+              {labels.tap}
+            </span>
+          </button>
+        )}
+      </div>
 
       <dialog
         aria-labelledby="pumpkin-game-title"
@@ -151,14 +166,14 @@ export function HalloweenPumpkinCube({
             >
               ×
             </button>
-            <Image
+            <HalloweenProgressiveImage
               alt=""
-              className={styles.gameDialogImage}
-              height={234}
-              quality={75}
+              className={styles.gameDialogImageFrame}
+              imageClassName={styles.gameDialogImage}
+              preview={selectedGame.preview}
+              quality={70}
               sizes="(max-width: 620px) 82vw, 380px"
               src={selectedGame.image}
-              width={416}
             />
             <p className={styles.gameDialogEyebrow}>{labels.result}</p>
             <h2 id="pumpkin-game-title">{selectedGame.title}</h2>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback, useState, type CSSProperties } from "react";
 import { A11y, Autoplay, EffectFade } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
@@ -63,28 +64,51 @@ function BannerPicture({
   eager?: boolean;
   name: string;
 }) {
+  const [loaded, setLoaded] = useState(false);
+  const reveal = useCallback((image: HTMLImageElement) => {
+    void image
+      .decode()
+      .catch(() => undefined)
+      .then(() => setLoaded(true));
+  }, []);
+  const catchCachedImage = useCallback((image: HTMLImageElement | null) => {
+    if (image?.complete && image.naturalWidth > 0) reveal(image);
+  }, [reveal]);
+
   return (
-    <picture className={className}>
-      <source
-        media="(max-width: 768px)"
-        srcSet={`${assetRoot}/${name}-mobile.avif`}
-        type="image/avif"
-      />
-      <source
-        media="(max-width: 768px)"
-        srcSet={`${assetRoot}/${name}-mobile.webp`}
-        type="image/webp"
-      />
-      <source srcSet={`${assetRoot}/${name}.avif`} type="image/avif" />
-      <img
-        alt={alt}
-        decoding="async"
-        draggable={false}
-        fetchPriority={eager ? "high" : "low"}
-        loading={eager ? "eager" : "lazy"}
-        src={`${assetRoot}/${name}.webp`}
-      />
-    </picture>
+    <span
+      className={`canada-progressive ${className}${loaded ? " is-loaded" : ""}`}
+      style={
+        {
+          "--canada-preview": `url("${assetRoot}/previews/${name}.webp")`,
+        } as CSSProperties
+      }
+    >
+      <span aria-hidden="true" className="canada-progressive-preview" />
+      <picture className="canada-progressive-full">
+        <source
+          media="(max-width: 768px)"
+          srcSet={`${assetRoot}/${name}-mobile.avif`}
+          type="image/avif"
+        />
+        <source
+          media="(max-width: 768px)"
+          srcSet={`${assetRoot}/${name}-mobile.webp`}
+          type="image/webp"
+        />
+        <source srcSet={`${assetRoot}/${name}.avif`} type="image/avif" />
+        <img
+          alt={alt}
+          decoding="async"
+          draggable={false}
+          fetchPriority={eager ? "high" : "low"}
+          loading={eager ? "eager" : "lazy"}
+          onLoad={(event) => reveal(event.currentTarget)}
+          ref={catchCachedImage}
+          src={`${assetRoot}/${name}.webp`}
+        />
+      </picture>
+    </span>
   );
 }
 

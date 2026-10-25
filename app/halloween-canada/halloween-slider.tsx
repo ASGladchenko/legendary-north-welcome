@@ -2,7 +2,6 @@
 
 import type { CSSProperties } from "react";
 import { useCallback, useRef, useState } from "react";
-import Image from "next/image";
 import type { Swiper as SwiperInstance } from "swiper";
 import { A11y } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -10,12 +9,14 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
 import { ParentSiteLink } from "../components/parent-site-link";
+import { HalloweenProgressiveImage } from "./halloween-progressive-image";
 import { HalloweenPumpkinCube } from "./halloween-pumpkin-cube";
 import styles from "./halloween-slider.module.css";
 
 export type HalloweenSlide = {
   id: string;
   image: string;
+  preview: string;
   title: string;
   href: string;
   accent?: string;
@@ -28,6 +29,7 @@ type HalloweenSliderLabels = {
   position: string;
   goTo: string;
   cube: string;
+  cubeLoading: string;
   cubeTap: string;
   cubeResult: string;
   cubePlay: string;
@@ -48,7 +50,7 @@ export function HalloweenSlider({
   className,
 }: HalloweenSliderProps) {
   const swiperRef = useRef<SwiperInstance | null>(null);
-  const initialSlide = Math.floor(Math.max(items.length - 1, 0) / 2);
+  const initialSlide = Math.min(2, Math.max(items.length - 1, 0));
   const [activeIndex, setActiveIndex] = useState(initialSlide);
   const [atStart, setAtStart] = useState(initialSlide === 0);
   const [atEnd, setAtEnd] = useState(initialSlide === items.length - 1);
@@ -64,25 +66,21 @@ export function HalloweenSlider({
   return (
     <div className={styles.experience}>
       <div aria-hidden="true" className={styles.webDecor}>
-        <Image
+        <HalloweenProgressiveImage
           alt=""
           className={`${styles.webImage} ${styles.webTopLeft}`}
-          height={512}
-          loading="lazy"
+          preview="/images/halloween-canada/previews/web-top-left.webp"
           quality={70}
           sizes="(max-width: 620px) 250px, 440px"
           src="/images/halloween-canada/decor/web-top-left.webp"
-          width={768}
         />
-        <Image
+        <HalloweenProgressiveImage
           alt=""
           className={`${styles.webImage} ${styles.webBottomRight}`}
-          height={512}
-          loading="lazy"
+          preview="/images/halloween-canada/previews/web-bottom-right.webp"
           quality={70}
           sizes="(max-width: 620px) 240px, 420px"
           src="/images/halloween-canada/decor/web-bottom-right.webp"
-          width={768}
         />
       </div>
 
@@ -133,18 +131,15 @@ export function HalloweenSlider({
                     } as CardStyle
                   }
                 >
-                  <Image
+                  <HalloweenProgressiveImage
                     alt={item.title}
-                    className={styles.image}
-                    decoding="async"
-                    draggable={false}
-                    fetchPriority={index === initialSlide ? "high" : "auto"}
-                    height="234"
-                    loading={index === initialSlide ? "eager" : "lazy"}
+                    className={styles.cardMedia}
+                    eager={index === initialSlide}
+                    imageClassName={styles.image}
+                    preview={item.preview}
                     quality={70}
                     sizes="(max-width: 620px) 158px, 182px"
                     src={item.image}
-                    width="416"
                   />
                   <span aria-hidden="true" className={styles.insideBorder} />
                 </ParentSiteLink>
@@ -183,6 +178,7 @@ export function HalloweenSlider({
         items={items}
         labels={{
           close: labels.cubeClose,
+          loading: labels.cubeLoading,
           play: labels.cubePlay,
           result: labels.cubeResult,
           spin: labels.cube,

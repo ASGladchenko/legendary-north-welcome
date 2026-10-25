@@ -96,12 +96,11 @@
   top: 0;
   left: 0;
   opacity: 0;
+  pointer-events: auto;
+  touch-action: none;
+  user-select: none;
   transform-origin: 50% 50%;
   will-change: transform;
-}
-
-.fleeing {
-  --spider-speed: 0.45;
 }
 
 .dragging {

@@ -45,6 +45,56 @@
   object-fit: cover;
 }
 
+.canada-progressive-preview,
+.canada-progressive-full {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+
+.canada-progressive-preview {
+  z-index: 0;
+  background-image: var(--canada-preview);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  filter: blur(10px) saturate(1.08);
+  transform: scale(1.035);
+  will-change: opacity;
+}
+
+.canada-progressive-full {
+  z-index: 1;
+  opacity: 0;
+  will-change: opacity;
+}
+
+.canada-progressive.is-loaded > .canada-progressive-preview {
+  opacity: 0;
+  animation: canada-preview-out 650ms ease both;
+}
+
+.canada-progressive.is-loaded > .canada-progressive-full {
+  opacity: 1;
+  animation: canada-full-in 650ms ease both;
+}
+
+@keyframes canada-preview-out {
+  from {
+    opacity: 1;
+  }
+}
+
+@keyframes canada-full-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.canada-background > .canada-progressive-preview {
+  background-size: cover;
+}
+
 .canada-slider,
 .canada-slider .swiper-wrapper,
 .canada-slider .swiper-slide {
@@ -93,6 +143,10 @@
   object-position: bottom left;
 }
 
+.canada-character--left > .canada-progressive-preview {
+  background-position: bottom left;
+}
+
 .canada-character--right {
   right: -1%;
 }
@@ -101,16 +155,22 @@
   object-position: bottom right;
 }
 
+.canada-character--right > .canada-progressive-preview {
+  background-position: bottom right;
+}
+
 .canada-copy {
-  top: 50%;
+  top: 54%;
   width: 43%;
+  aspect-ratio: 1100 / 580;
   transform: translateY(-50%);
 }
 
 .canada-copy img {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
+  object-fit: contain;
   filter: drop-shadow(0 14px 14px rgb(0 0 0 / 62%));
 }
 
@@ -133,29 +193,11 @@
   border: 0;
 }
 
-.canada-slider .swiper-slide-active .canada-character {
-  animation: canada-character-enter 1100ms cubic-bezier(0.2, 0.7, 0.25, 1) both;
-}
-
-.canada-slider .swiper-slide-active .canada-copy {
-  animation: canada-copy-enter 900ms 120ms ease-out both;
-}
-
-@keyframes canada-character-enter {
-  from {
-    opacity: 0;
-    transform: translateY(4%) scale(0.98);
-  }
-}
-
-@keyframes canada-copy-enter {
-  from {
-    opacity: 0;
-    transform: translateY(-46%) scale(0.96);
-  }
-}
-
 @media (max-width: 768px) {
+  .canada-banner {
+    aspect-ratio: 12 / 5;
+  }
+
   .canada-character {
     bottom: -4%;
     width: 58%;
@@ -184,8 +226,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .canada-slider .swiper-slide-active .canada-character,
-  .canada-slider .swiper-slide-active .canada-copy {
+  .canada-progressive-preview,
+  .canada-progressive-full {
     animation: none;
+    transition: none;
   }
 }

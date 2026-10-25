@@ -1,0 +1,201 @@
+.root {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  z-index: 30;
+  width: min(580px, 96vw);
+  height: 340px;
+  visibility: hidden;
+  pointer-events: none;
+  contain: layout paint;
+  transform: translateY(-50%);
+}
+
+.ready {
+  visibility: visible;
+}
+
+.character {
+  position: absolute;
+  right: clamp(-38px, -3vw, -18px);
+  bottom: 0;
+  z-index: 2;
+  width: clamp(240px, 26vw, 300px);
+  height: auto;
+  opacity: 0;
+  filter: drop-shadow(-12px 12px 18px rgb(0 0 0 / 48%));
+  transform: translate3d(112%, 4%, 0) rotate(4deg);
+  transition:
+    opacity 700ms ease,
+    transform 1000ms cubic-bezier(0.55, 0.02, 0.8, 0.3);
+  user-select: none;
+}
+
+.bubble {
+  position: absolute;
+  left: clamp(8px, 3vw, 38px);
+  bottom: 92px;
+  z-index: 3;
+  width: clamp(230px, 41vw, 320px);
+  padding: 22px 24px 18px;
+  border: 1px solid transparent;
+  border-radius: 24px 24px 30px 24px;
+  opacity: 0;
+  color: #fff8ef;
+  background: rgb(9 8 18 / 20%);
+  -webkit-backdrop-filter: blur(18px) saturate(1.2);
+  backdrop-filter: blur(18px) saturate(1.2);
+  box-shadow:
+    0 16px 34px rgb(0 0 0 / 48%),
+    0 0 24px rgb(255 67 154 / 22%);
+  transform: translate3d(42px, 8px, 0) scale(0.9);
+  transform-origin: 100% 70%;
+  transition:
+    opacity 520ms ease,
+    transform 620ms ease-in;
+}
+
+.bubble::before {
+  position: absolute;
+  inset: -1px;
+  padding: 1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #ff9b34, #ff4e82 58%, #9c38ff);
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  content: "";
+  pointer-events: none;
+}
+
+.visible .character {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) rotate(0);
+  transition-duration: 220ms, 680ms;
+  transition-timing-function: ease, cubic-bezier(0.16, 0.8, 0.24, 1);
+}
+
+.visible .bubble {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate3d(0, 0, 0) scale(1);
+  transition-duration: 180ms, 260ms;
+  transition-delay: 300ms;
+}
+
+.close {
+  position: absolute;
+  top: 8px;
+  right: 9px;
+  z-index: 2;
+  width: 27px;
+  height: 27px;
+  padding: 0 0 2px;
+  border: 1px solid rgb(238 119 255 / 58%);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #dba8e4;
+  background: rgb(18 14 27 / 78%);
+  font: 400 20px/1 Arial, sans-serif;
+  cursor: pointer;
+}
+
+.message {
+  position: relative;
+  z-index: 1;
+  padding: 0 26px 0 0;
+  margin: 0 0 15px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: clamp(19px, 2.5vw, 25px);
+  font-weight: 800;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  text-shadow: 0 2px 4px rgb(0 0 0 / 55%);
+}
+
+.message span,
+.message strong {
+  display: block;
+}
+
+.message strong {
+  color: #ff9a2f;
+  font-weight: 900;
+}
+
+.action {
+  position: relative;
+  z-index: 1;
+  min-height: 42px;
+  padding: 0 18px;
+  border: 1px solid rgb(255 195 87 / 78%);
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  color: #1a0c08;
+  background: linear-gradient(180deg, #ffb53c, #ff731d);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 42%),
+    0 5px 12px rgb(255 89 26 / 28%);
+  font: 900 12px/1 Arial, sans-serif;
+  letter-spacing: 0.025em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.action:hover {
+  filter: brightness(1.08);
+}
+
+.action:focus-visible,
+.close:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+@media (max-width: 620px) {
+  .root {
+    width: 100vw;
+    height: 270px;
+  }
+
+  .character {
+    right: -30px;
+    width: 225px;
+  }
+
+  .bubble {
+    left: 8px;
+    bottom: 63px;
+    width: min(238px, 64vw);
+    padding: 19px 18px 15px;
+    border-radius: 20px 20px 26px;
+  }
+
+  .message {
+    margin-bottom: 12px;
+    font-size: clamp(17px, 5vw, 21px);
+  }
+
+  .action {
+    min-height: 39px;
+    padding-inline: 12px;
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .character,
+  .bubble {
+    transition-duration: 1ms;
+    transition-delay: 0ms;
+  }
+}
