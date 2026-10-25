@@ -98,6 +98,8 @@
   opacity: 0;
   pointer-events: auto;
   touch-action: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
   user-select: none;
   transform-origin: 50% 50%;
   will-change: transform;

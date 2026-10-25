@@ -527,24 +527,17 @@ export function SpiderField({
   const spidersPaused =
     paused || reducedMotion || !spidersEnabled || !fieldActive;
 
-  const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (!spidersEnabled) return;
-    if ((event.target as Element).closest(`.${styles.toggle}`)) return;
-
-    const hit = [...moversRef.current.entries()]
-      .reverse()
-      .find(([, mover]) => {
-        const rect = mover.getBoundingClientRect();
-        return (
-          !mover.classList.contains(styles.exploding) &&
-          event.clientX >= rect.left &&
-          event.clientX <= rect.right &&
-          event.clientY >= rect.top &&
-          event.clientY <= rect.bottom
-        );
-      });
-    const index = hit?.[0];
-    if (index === undefined || !hit) return;
+  const handlePointerDown = (
+    event: ReactPointerEvent<HTMLDivElement>,
+    index: number,
+  ) => {
+    if (
+      !spidersEnabled ||
+      !event.isPrimary ||
+      gestureRef.current ||
+      event.currentTarget.classList.contains(styles.exploding)
+    )
+      return;
 
     event.preventDefault();
     event.stopPropagation();
@@ -606,6 +599,10 @@ export function SpiderField({
     <div
       className={styles.mover}
       key={index}
+      onPointerCancel={(event) => finishPointerGesture(event, true)}
+      onPointerDown={(event) => handlePointerDown(event, index)}
+      onPointerMove={handlePointerMove}
+      onPointerUp={finishPointerGesture}
       ref={(node) => {
         if (node) moversRef.current.set(index, node);
         else moversRef.current.delete(index);
@@ -628,10 +625,6 @@ export function SpiderField({
   return (
     <div
       className={[styles.field, className].filter(Boolean).join(" ")}
-      onPointerDownCapture={handlePointerDown}
-      onPointerMoveCapture={handlePointerMove}
-      onPointerUpCapture={finishPointerGesture}
-      onPointerCancelCapture={(event) => finishPointerGesture(event, true)}
       ref={hostRef}
     >
       <div aria-hidden="true" className={`${styles.layer} ${styles.back}`}>
