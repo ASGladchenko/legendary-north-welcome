@@ -1,6 +1,6 @@
 import type { HeroLocale } from "./hero-banner";
 
-export type OfferModalLocale = HeroLocale | "pt-BR";
+export type OfferModalLocale = HeroLocale | "en-BR" | "pt-BR";
 
 export const offerModalConfig = {
   delayMs: 12000,
@@ -37,6 +37,18 @@ export const offerModalConfig = {
       action: "C'EST PARTI",
       dismissAction: "NE PLUS AFFICHER",
       closeLabel: "Fermer l’offre",
+    },
+    "en-BR": {
+      eyebrow: "",
+      titleLead: "OOPS...",
+      titleAccent: "I CAN'T BELIEVE I'M TELLING YOU THIS",
+      descriptionLead: "Make your first deposit of",
+      amount: "200 BRL or more, ",
+      descriptionTail:
+        "and unlock an incredible journey packed with seriously epic rewards!",
+      action: "LET'S GO",
+      dismissAction: "DON'T SHOW AGAIN",
+      closeLabel: "Close offer",
     },
     "pt-BR": {
       eyebrow: "",

@@ -13,8 +13,9 @@ import "swiper/css/effect-fade";
 import { CapybaraPeekMascot } from "../components/capybara-peek-mascot";
 import { ParentSiteLink } from "../components/parent-site-link";
 import {
+  getWelcomeBrazilConfig,
   getWelcomeBrazilSteps,
-  welcomeBrazilConfig as config,
+  type WelcomeBrazilLocale,
   type WelcomeBrazilVariant,
 } from "../config/welcome-brazil";
 
@@ -84,16 +85,19 @@ function mobileFor(src: string) {
 
 export function WelcomeBrazil({
   actionHref,
+  locale,
   mascotDelay,
   variant,
 }: {
   actionHref: string;
+  locale: WelcomeBrazilLocale;
   mascotDelay: number | null;
   variant: WelcomeBrazilVariant;
 }) {
   const [activeStep, setActiveStep] = useState(0);
   const rewardSwiperRef = useRef<SwiperInstance | null>(null);
-  const steps = getWelcomeBrazilSteps(variant);
+  const config = getWelcomeBrazilConfig(locale);
+  const steps = getWelcomeBrazilSteps(locale, variant);
   const isFourStepJourney = steps.length === 4;
   const desktopMapPath = isFourStepJourney
     ? "M125 90 C210 70 285 180 375 160 C465 140 535 70 625 90 C715 110 785 180 875 160"
@@ -108,7 +112,9 @@ export function WelcomeBrazil({
 
   return (
     <main className="brazil-page" lang={config.locale}>
-      {mascotDelay !== null && <CapybaraPeekMascot delay={mascotDelay} />}
+      {mascotDelay !== null && (
+        <CapybaraPeekMascot delay={mascotDelay} locale={locale} />
+      )}
       <div className="brazil-banner">
         <section className="brazil-hero" aria-label={config.hero.label}>
           <ProgressiveImage
@@ -240,7 +246,6 @@ export function WelcomeBrazil({
                       <span className="brazil-map-step-number">{index + 1}</span>
                     </button>
                     <strong>{item.shortTitle}</strong>
-                    <small>{item.caption}</small>
                   </li>
                 );
               })}
@@ -254,7 +259,7 @@ export function WelcomeBrazil({
           </ParentSiteLink>
         </div>
 
-        <section className="brazil-rewards-carousel" aria-label="Recompensas de boas-vindas">
+        <section className="brazil-rewards-carousel" aria-label={config.labels.rewards}>
           <button className="brazil-arrow brazil-arrow--left" type="button" aria-label={config.labels.previous} disabled={activeStep === 0} onClick={() => rewardSwiperRef.current?.slidePrev()}>‹</button>
           <button className="brazil-arrow brazil-arrow--right" type="button" aria-label={config.labels.next} disabled={activeStep === steps.length - 1} onClick={() => rewardSwiperRef.current?.slideNext()}>›</button>
 

@@ -619,18 +619,6 @@
   text-shadow: 0 2px 5px rgb(0 0 0 / 65%);
 }
 
-.brazil-map small {
-  max-width: 180px;
-
-  margin-top: 2px;
-
-  font-size: clamp(7px, 0.72vw, 9px);
-  line-height: 1.15;
-  text-shadow: 0 2px 5px rgb(0 0 0 / 65%);
-
-  color: rgb(255 255 255 / 72%);
-}
-
 .brazil-cta-anchor {
   position: relative;
   z-index: 5;
@@ -1094,13 +1082,6 @@
     font-size: 8px;
   }
 
-  .brazil-map small {
-    max-width: 130px;
-
-    margin-top: 1px;
-
-    font-size: 7px;
-  }
 }
 
 @media (max-width: 900px) {
@@ -1286,14 +1267,6 @@
     margin-top: 4px;
 
     font-size: 6px;
-  }
-
-  .brazil-map small {
-    max-width: 76px;
-
-    margin-top: 1px;
-
-    font-size: 5px;
   }
 
   .brazil-cta {

@@ -59,7 +59,7 @@ export function OfferModal({
   return (
     <dialog
       ref={dialogRef}
-      className={`offer-modal${locale === "pt-BR" ? " offer-modal--brazil" : ""}`}
+      className={`offer-modal${locale === "pt-BR" || locale === "en-BR" ? " offer-modal--brazil" : ""}`}
       lang={locale}
       aria-labelledby="offer-modal-title"
       onClick={(event) => {

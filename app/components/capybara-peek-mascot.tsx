@@ -7,7 +7,6 @@ import styles from "./capybara-peek-mascot.module.css";
 
 const OPEN_IMAGE = "/images/welcome-brazil/capybara-original.webp";
 const WINK_IMAGE = "/images/welcome-brazil/capybara-wink.webp";
-const SPEECH_IMAGE = "/images/welcome-brazil/capybara-speech-pt-br.webp";
 const ANIMATION_DURATION = 5600;
 
 export type CapybaraPeekMascotProps = {
@@ -15,6 +14,7 @@ export type CapybaraPeekMascotProps = {
   className?: string;
   delay?: number;
   enabled?: boolean;
+  locale?: "en" | "pt-BR";
   repeat?: boolean;
   repeatDelay?: number;
   replayKey?: string | number;
@@ -66,11 +66,13 @@ export function CapybaraPeekMascot({
   className,
   delay = 2600,
   enabled = true,
+  locale = "pt-BR",
   repeat = false,
   repeatDelay = 30000,
   replayKey = 0,
   size = "clamp(210px, 25vw, 340px)",
 }: CapybaraPeekMascotProps) {
+  const speechImage = `/images/welcome-brazil/capybara-speech-${locale === "en" ? "en" : "pt-br"}.webp`;
   const viewportRef = useRef<HTMLDivElement>(null);
   const mascotRef = useRef<HTMLDivElement>(null);
   const openImageRef = useRef<HTMLImageElement>(null);
@@ -235,7 +237,7 @@ export function CapybaraPeekMascot({
       <Image
         ref={speechImageRef}
         className={styles.speech}
-        src={SPEECH_IMAGE}
+        src={speechImage}
         alt=""
         width={640}
         height={250}
