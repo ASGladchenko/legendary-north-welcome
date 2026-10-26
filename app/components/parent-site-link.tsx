@@ -2,18 +2,32 @@
 
 import { useEffect, useRef, type ComponentProps } from "react";
 
-let didLogReferrer = false;
+let didLogParentUrl = false;
 
 type ParentSiteLinkProps = Omit<ComponentProps<"a">, "href" | "ref" | "target"> & {
   href: string;
 };
 
-export function getParentSiteHref(href: string) {
-  if (window.self === window.top || !document.referrer) return href;
+function getParentSiteOrigin() {
+  if (window.self === window.top) return null;
+
+  const ancestorOrigins = window.location.ancestorOrigins;
+  const ancestorOrigin = ancestorOrigins?.item(ancestorOrigins.length - 1);
+  if (ancestorOrigin) return ancestorOrigin;
 
   try {
+    return document.referrer ? new URL(document.referrer).origin : null;
+  } catch {
+    return null;
+  }
+}
+
+export function getParentSiteHref(href: string) {
+  try {
     const target = new URL(href, window.location.origin);
-    const parentOrigin = new URL(document.referrer).origin;
+    const parentOrigin = getParentSiteOrigin();
+
+    if (!parentOrigin) return href;
 
     return new URL(
       `${target.pathname}${target.search}${target.hash}`,
@@ -28,9 +42,15 @@ export function ParentSiteLink({ href, ...props }: ParentSiteLinkProps) {
   const linkRef = useRef<HTMLAnchorElement>(null);
 
   useEffect(() => {
-    if (!didLogReferrer) {
-      console.log("[welcome] document.referrer:", document.referrer || "(empty)");
-      didLogReferrer = true;
+    if (!didLogParentUrl) {
+      let parentUrl = document.referrer || getParentSiteOrigin();
+
+      try {
+        if (window.self !== window.top) parentUrl = window.top!.location.href;
+      } catch {}
+
+      console.log("[welcome] parent URL:", parentUrl || "(unavailable)");
+      didLogParentUrl = true;
     }
 
     const link = linkRef.current;
