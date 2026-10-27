@@ -41,7 +41,7 @@ export const brazilFortuneWheelConfig = {
   locale: "pt-BR",
   prizeUrl: "https://1mlnbet.com/pt/registration/7",
   rewards: [
-    { value: "100% +", label: "100 FS" },
+    { value: "135% +", label: "50 FS" },
     { value: "BONUS", label: "GAME" },
     { value: "75%", label: "" },
     { value: "50% +", label: "50 FS" },
