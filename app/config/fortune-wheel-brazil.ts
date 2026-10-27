@@ -34,6 +34,8 @@ export type FortuneWheelConfig = {
   };
 };
 
+export type BrazilFortuneWheelLocale = "en" | "pt-BR";
+
 export const brazilFortuneWheelConfig = {
   id: "brazil",
   locale: "pt-BR",
@@ -67,3 +69,27 @@ export const brazilFortuneWheelConfig = {
     wheelLabel: "Roda da fortuna com seis prêmios",
   },
 } as const satisfies FortuneWheelConfig;
+
+export const brazilFortuneWheelEnglishConfig = {
+  ...brazilFortuneWheelConfig,
+  locale: "en",
+  prizeUrl: "https://1mlnbet.com/en/registration/7",
+  copy: {
+    action: "Spin the wheel",
+    spinning: "Finding your fortune...",
+    won: "CONGRATULATIONS!",
+    wonLabel: "YOU WON",
+    claim: "GET BONUS",
+    redirecting: "CLAIM IN",
+    loading: "Loading fortune wheel",
+    wheelLabel: "Fortune wheel with six prizes",
+  },
+} as const satisfies FortuneWheelConfig;
+
+export function getBrazilFortuneWheelConfig(
+  locale: BrazilFortuneWheelLocale,
+): FortuneWheelConfig {
+  return locale === "en"
+    ? brazilFortuneWheelEnglishConfig
+    : brazilFortuneWheelConfig;
+}

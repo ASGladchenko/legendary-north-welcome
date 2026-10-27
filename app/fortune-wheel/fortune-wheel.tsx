@@ -12,7 +12,8 @@ import wheelDisk from "../../public/images/fortune-wheel/fw-disk.webp";
 import wheelFrame from "../../public/images/fortune-wheel/fw-frame.webp";
 import wheelHint from "../../public/images/fortune-wheel/fw-hint.webp";
 import {
-  brazilFortuneWheelConfig,
+  getBrazilFortuneWheelConfig,
+  type BrazilFortuneWheelLocale,
   type FortuneWheelConfig,
 } from "../config/fortune-wheel-brazil";
 import {
@@ -89,12 +90,12 @@ const defaultCopy = {
 } as const;
 
 type FortuneWheelProps =
-  | { market: "brazil"; locale?: never }
+  | { market: "brazil"; locale: BrazilFortuneWheelLocale }
   | { market?: "default"; locale: DefaultLocale };
 
 export function FortuneWheel(props: FortuneWheelProps) {
   const config: FortuneWheelConfig = props.market === "brazil"
-    ? brazilFortuneWheelConfig
+    ? getBrazilFortuneWheelConfig(props.locale)
     : {
         id: "default",
         locale: props.locale,
