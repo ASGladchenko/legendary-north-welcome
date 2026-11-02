@@ -61,8 +61,8 @@ export const brazilFortuneWheelConfig = {
   copy: {
     action: "Girar a roda",
     spinning: "Encontrando sua sorte...",
-    won: "PARABÉNS!",
-    wonLabel: "VOCÊ GANHOU",
+    won: "Você ganhou",
+    wonLabel: "no seu primeiro depósito",
     claim: "RECEBER BÔNUS",
     redirecting: "RESGATE EM",
     loading: "Carregando a roda da fortuna",
@@ -77,8 +77,8 @@ export const brazilFortuneWheelEnglishConfig = {
   copy: {
     action: "Spin the wheel",
     spinning: "Finding your fortune...",
-    won: "CONGRATULATIONS!",
-    wonLabel: "YOU WON",
+    won: "You Won",
+    wonLabel: "on your first deposit",
     claim: "GET BONUS",
     redirecting: "CLAIM IN",
     loading: "Loading fortune wheel",
