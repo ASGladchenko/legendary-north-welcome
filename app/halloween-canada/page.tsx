@@ -91,15 +91,6 @@ const cards = [
     href: "/casino/slots/game/pragmatic-gates-of-hades",
   },
   {
-    id: "ghost-booster-go-guaranteed",
-    accent: "#75ef58",
-    title: {
-      en: "Ghost Booster! GO Guaranteed",
-      fr: "Ghost Booster! GO Guaranteed",
-    },
-    href: "/casino/slots/game/softgamings-playngo-ghost-booster-go-guaranteed",
-  },
-  {
     id: "infective-wild",
     accent: "#c653ef",
     title: { en: "Infective Wild™", fr: "Infective Wild™" },

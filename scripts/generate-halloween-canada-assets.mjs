@@ -28,7 +28,6 @@ const gameCards = [
   "frightening-frankie",
   "le-vampire",
   "gates-of-hades",
-  "ghost-booster-go-guaranteed",
   "infective-wild",
 ].map((name) => ({
   name,
