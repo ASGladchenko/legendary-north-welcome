@@ -130,6 +130,7 @@ export function FortuneWheel(props: FortuneWheelProps) {
   const [showPrize, setShowPrize] = useState(false);
   const [countdown, setCountdown] = useState(REDIRECT_COUNTDOWN_SECONDS);
   const prize = rewards[config.winningRewardIndex];
+  const modalPrize = config.modalReward ?? prize;
   const prizeUrl = config.prizeUrl;
 
   const markAssetLoaded = (asset: string) => {
@@ -418,8 +419,8 @@ export function FortuneWheel(props: FortuneWheelProps) {
               <p>{text.won}</p>
               <span className="fortune-win-label">{text.wonLabel}</span>
               <h2 id="fortune-win-title">
-                <span className="fortune-win-percentage">{prize.value}</span>{" "}
-                <span className="fortune-win-spins">{prize.label}</span>
+                <span className="fortune-win-percentage">{modalPrize.value}</span>{" "}
+                <span className="fortune-win-spins">{modalPrize.label}</span>
               </h2>
               <ParentSiteLink className="fortune-win-action" href={prizeUrl}>
                 {text.claim}

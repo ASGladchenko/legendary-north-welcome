@@ -12,6 +12,7 @@ export type FortuneWheelConfig = {
   prizeUrl: string;
   rewards: readonly { value: string; label: string }[];
   winningRewardIndex: number;
+  modalReward?: { value: string; label: string };
   assets: {
     backgroundLandscape: StaticImageData;
     backgroundPortrait: StaticImageData;
@@ -41,14 +42,15 @@ export const brazilFortuneWheelConfig = {
   locale: "pt-BR",
   prizeUrl: "https://1mlnbet.com/pt/registration/7",
   rewards: [
-    { value: "135% +", label: "50 FS" },
-    { value: "BONUS", label: "GAME" },
-    { value: "75%", label: "" },
-    { value: "50% +", label: "50 FS" },
-    { value: "100", label: "FS" },
-    { value: "50%", label: "" },
+    { value: "500% +", label: "255 FS" },
+    { value: "150% +", label: "75 FS" },
+    { value: "250% +", label: "150 FS" },
+    { value: "100% +", label: "50 FS" },
+    { value: "300% +", label: "200 FS" },
+    { value: "200% +", label: "100 FS" },
   ],
   winningRewardIndex: 0,
+  modalReward: { value: "ATÉ 500%", label: "& 255 FS" },
   assets: {
     backgroundLandscape,
     backgroundPortrait,
@@ -62,7 +64,7 @@ export const brazilFortuneWheelConfig = {
     action: "Girar a roda",
     spinning: "Encontrando sua sorte...",
     won: "Você ganhou",
-    wonLabel: "no seu primeiro depósito",
+    wonLabel: "Pacote de boas-vindas de slots",
     claim: "RECEBER BÔNUS",
     redirecting: "RESGATE EM",
     loading: "Carregando a roda da fortuna",
@@ -74,11 +76,12 @@ export const brazilFortuneWheelEnglishConfig = {
   ...brazilFortuneWheelConfig,
   locale: "en",
   prizeUrl: "https://1mlnbet.com/en/registration/7",
+  modalReward: { value: "UP TO 500%", label: "& 255 FS" },
   copy: {
     action: "Spin the wheel",
     spinning: "Finding your fortune...",
-    won: "You Won",
-    wonLabel: "on your first deposit",
+    won: "You won",
+    wonLabel: "Slots welcome package",
     claim: "GET BONUS",
     redirecting: "CLAIM IN",
     loading: "Loading fortune wheel",
