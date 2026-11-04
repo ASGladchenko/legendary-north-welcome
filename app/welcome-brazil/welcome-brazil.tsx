@@ -30,6 +30,117 @@ type ProgressiveImageProps = {
   wrapperClassName: string;
 };
 
+type InstantOption = {
+  depositBonus: string;
+  gameName: string;
+  id: string;
+  image: string;
+  reward: string;
+  rewardLabel: string;
+  rewardWager?: string;
+};
+
+function InstantOptionCard({
+  depositBonusLabel,
+  option,
+  wagerLabel,
+}: {
+  depositBonusLabel: string;
+  option: InstantOption;
+  wagerLabel: string;
+}) {
+  return (
+    <div className="brazil-instant-package">
+      <div className="brazil-instant-benefit">
+        <Image
+          src="/icons/rewards/deposit-bonus.webp"
+          alt=""
+          width={76}
+          height={76}
+          sizes="54px"
+        />
+        <span>
+          <strong>{option.depositBonus}</strong>
+          <small>{depositBonusLabel}</small>
+        </span>
+      </div>
+      <div className="brazil-instant-benefit brazil-instant-benefit--game">
+        <Image
+          src={option.image}
+          alt=""
+          width={256}
+          height={256}
+          sizes="54px"
+        />
+        <span>
+          <strong>{option.reward}</strong>
+          <small>{option.gameName} · {option.rewardLabel}</small>
+          {option.rewardWager && (
+            <em>{wagerLabel} {option.rewardWager}</em>
+          )}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function InstantOptions({
+  depositBonusLabel,
+  label,
+  options,
+  orLabel,
+  wagerLabel,
+}: {
+  depositBonusLabel: string;
+  label: string;
+  options: readonly InstantOption[];
+  orLabel: string;
+  wagerLabel: string;
+}) {
+  if (options.length === 1) {
+    return (
+      <div
+        className="brazil-instant-options brazil-instant-options--single"
+        role="group"
+        aria-label={label}
+      >
+        <InstantOptionCard
+          depositBonusLabel={depositBonusLabel}
+          option={options[0]}
+          wagerLabel={wagerLabel}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="brazil-instant-options" role="group" aria-label={label}>
+      <div className="brazil-instant-marquee">
+        <div className="brazil-instant-track">
+          {[false, true].map((duplicate) => (
+            <div
+              className="brazil-instant-group"
+              aria-hidden={duplicate || undefined}
+              key={duplicate ? "duplicate" : "original"}
+            >
+              {options.map((option) => (
+                <div className="brazil-instant-choice" key={option.id}>
+                  <InstantOptionCard
+                    depositBonusLabel={depositBonusLabel}
+                    option={option}
+                    wagerLabel={wagerLabel}
+                  />
+                  <span className="brazil-instant-separator">{orLabel}</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function ProgressiveImage({
   alt,
   eager = false,
@@ -98,6 +209,7 @@ export function WelcomeBrazil({
   const rewardSwiperRef = useRef<SwiperInstance | null>(null);
   const config = getWelcomeBrazilConfig(locale);
   const steps = getWelcomeBrazilSteps(locale, variant);
+  const isInstant = variant === "instant";
   const isFourStepJourney = steps.length === 4;
   const desktopMapPath = isFourStepJourney
     ? "M125 90 C210 70 285 180 375 160 C465 140 535 70 625 90 C715 110 785 180 875 160"
@@ -138,8 +250,12 @@ export function WelcomeBrazil({
           >
             {config.hero.slides.map((slide, index) => {
               const isOffer = slide.id === "welcome-offer";
-              const copy = variant === "vip" && isOffer
-                ? config.hero.vipWelcome
+              const copy = isOffer
+                ? variant === "vip"
+                  ? config.hero.vipWelcome
+                  : isInstant
+                    ? config.hero.instantWelcome
+                    : slide
                 : slide;
 
               return (
@@ -278,7 +394,7 @@ export function WelcomeBrazil({
           >
             {steps.map((item, index) => (
               <SwiperSlide key={item.id}>
-                <article className="brazil-reward">
+                <article className={`brazil-reward${isInstant ? " brazil-reward--instant" : ""}`}>
                   <div className="brazil-card-background" aria-hidden="true">
                     <ProgressiveImage wrapperClassName="brazil-card-background-image" src={`${assetRoot}/card-bg.avif`} preview={`${assetRoot}/previews/card-bg.webp`} alt="" />
                   </div>
@@ -292,32 +408,44 @@ export function WelcomeBrazil({
                     <p>{item.description}</p>
                     <p className="brazil-offer-mode">
                       {item.bonusChoice
-                        ? config.labels.chooseOne
+                        ? isInstant
+                          ? config.labels.chooseOneCombo
+                          : config.labels.chooseOne
                         : "bonusGame" in item
                           ? config.labels.triple
                           : config.labels.combo}
                     </p>
-                    <div className={`brazil-offers${"bonusGame" in item && item.freeSpins !== "—" ? " brazil-offers--triple" : ""}`}>
-                      <div>
-                        <Image src="/icons/rewards/deposit-bonus.webp" alt="" width={76} height={76} />
-                        <span><strong>{item.depositBonus}</strong><small>{config.labels.depositBonus}</small></span>
-                      </div>
-                      {item.freeSpins !== "—" && (
+                    {"instantOptions" in item ? (
+                      <InstantOptions
+                        options={item.instantOptions}
+                        depositBonusLabel={config.labels.depositBonus}
+                        label={config.labels.instantOptions}
+                        orLabel={config.labels.or}
+                        wagerLabel={config.labels.wager}
+                      />
+                    ) : (
+                      <div className={`brazil-offers${"bonusGame" in item && item.freeSpins !== "—" ? " brazil-offers--triple" : ""}`}>
                         <div>
-                          <Image src="/icons/rewards/free-spins.webp" alt="" width={76} height={76} />
-                          <span><strong>{item.freeSpins}</strong><small>{config.labels.freeSpins}</small></span>
+                          <Image src="/icons/rewards/deposit-bonus.webp" alt="" width={76} height={76} />
+                          <span><strong>{item.depositBonus}</strong><small>{config.labels.depositBonus}</small></span>
                         </div>
-                      )}
-                      {"bonusGame" in item && (
-                        <div className="brazil-offer-game">
-                          <Image src={item.bonusGame.image} alt="" width={76} height={76} />
-                          <span>
-                            <strong>{item.bonusGame.name}</strong>
-                            <small>{config.labels.bonusGame}{item.bonusGame.wager ? ` · ${config.labels.wager} ${item.bonusGame.wager}` : ""}</small>
-                          </span>
-                        </div>
-                      )}
-                    </div>
+                        {item.freeSpins !== "—" && (
+                          <div>
+                            <Image src="/icons/rewards/free-spins.webp" alt="" width={76} height={76} />
+                            <span><strong>{item.freeSpins}</strong><small>{config.labels.freeSpins}</small></span>
+                          </div>
+                        )}
+                        {"bonusGame" in item && (
+                          <div className="brazil-offer-game">
+                            <Image src={item.bonusGame.image} alt="" width={76} height={76} />
+                            <span>
+                              <strong>{item.bonusGame.name}</strong>
+                              <small>{config.labels.bonusGame}{item.bonusGame.wager ? ` · ${config.labels.wager} ${item.bonusGame.wager}` : ""}</small>
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    )}
                     <dl className="brazil-details">
                       <div>
                         <Image src="/icons/rewards/minimum-deposit.webp" alt="" width={48} height={48} />
@@ -325,9 +453,9 @@ export function WelcomeBrazil({
                       </div>
                       <div>
                         <Image src="/icons/rewards/wagering-requirement.webp" alt="" width={48} height={48} />
-                        <dt>{config.labels.wager}</dt><dd>{item.depositWager}</dd>
+                        <dt>{isInstant ? config.labels.instantOnly : config.labels.wager}</dt><dd>{item.depositWager}</dd>
                       </div>
-                      {item.freeSpins !== "—" && (
+                      {!isInstant && "freeSpins" in item && item.freeSpins !== "—" && (
                         <div>
                           <Image src="/icons/rewards/wagering-requirement.webp" alt="" width={48} height={48} />
                           <dt>FS {config.labels.wager}</dt><dd>{item.freeSpinsWager}</dd>

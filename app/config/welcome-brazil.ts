@@ -1,4 +1,4 @@
-export type WelcomeBrazilVariant = "standard" | "vip";
+export type WelcomeBrazilVariant = "instant" | "standard" | "vip";
 export type WelcomeBrazilLocale = "en" | "pt-BR";
 
 export const welcomeBrazilConfig = {
@@ -23,6 +23,13 @@ export const welcomeBrazilConfig = {
       titleLead: "ATÉ 750%",
       titleAccent: "450 RODADAS GRÁTIS",
       subtitle: "5 ETAPAS VIP — RECOMPENSAS AINDA MAIORES!",
+      action: "COMEÇAR AGORA",
+    },
+    instantWelcome: {
+      eyebrow: "OFERTA DE BOAS-VINDAS INSTANT",
+      titleLead: "ATÉ 400%",
+      titleAccent: "75 FF + 70 FS",
+      subtitle: "4 ETAPAS — ESCOLHA SUA RECOMPENSA NA 4ª ETAPA",
       action: "COMEÇAR AGORA",
     },
     vipBadge: "/images/hero/bonus-game.webp",
@@ -78,10 +85,14 @@ export const welcomeBrazilConfig = {
     cashback: "Cashback",
     bonusGame: "Bonus Game",
     chooseOne: "ESCOLHA 1 BÔNUS",
+    chooseOneCombo: "ESCOLHA 1 COMBO",
     combo: "COMBO",
     triple: "COMBO TRIPLO",
     previous: "Etapa anterior",
     next: "Próxima etapa",
+    instantOnly: "Somente Instant — sem slots",
+    instantOptions: "Opções de bônus Instant",
+    or: "OU",
   },
   steps: [
     {
@@ -241,6 +252,111 @@ export const welcomeBrazilVipSteps = [
   },
 ] as const;
 
+const aviatorImage = "/images/welcome-brazil/rewards/aviator.webp";
+const bigBassBonanzaImage =
+  "/images/welcome-brazil/rewards/big-bass-bonanza.webp";
+
+export const welcomeBrazilInstantSteps = [
+  {
+    id: "instant-first-deposit",
+    bonusChoice: false,
+    shortTitle: "PRIMEIRO DEPÓSITO",
+    title: "PRIMEIRO DEPÓSITO",
+    description:
+      "Deposite 30 BRL e receba 75% até 1.500 BRL + 10 FF no Aviator.",
+    image: "/images/welcome-brazil/step-1.avif",
+    minimumDeposit: "30 BRL",
+    depositWager: "×25",
+    cashback: "—",
+    instantOptions: [
+      {
+        id: "aviator-10",
+        image: aviatorImage,
+        depositBonus: "75% até 1.500 BRL",
+        reward: "10 FF",
+        rewardLabel: "Voos grátis",
+        gameName: "Aviator",
+      },
+    ],
+  },
+  {
+    id: "instant-second-deposit",
+    bonusChoice: false,
+    shortTitle: "SEGUNDO DEPÓSITO",
+    title: "SEGUNDO DEPÓSITO",
+    description:
+      "Deposite 50 BRL e receba 100% até 1.000 BRL + 15 FF no Aviator.",
+    image: "/images/welcome-brazil/step-2.avif",
+    minimumDeposit: "50 BRL",
+    depositWager: "×25",
+    cashback: "—",
+    instantOptions: [
+      {
+        id: "aviator-15",
+        image: aviatorImage,
+        depositBonus: "100% até 1.000 BRL",
+        reward: "15 FF",
+        rewardLabel: "Voos grátis",
+        gameName: "Aviator",
+      },
+    ],
+  },
+  {
+    id: "instant-third-deposit",
+    bonusChoice: false,
+    shortTitle: "TERCEIRO DEPÓSITO",
+    title: "TERCEIRO DEPÓSITO",
+    description:
+      "Deposite 70 BRL e receba 125% até 750 BRL + 20 FF no Aviator.",
+    image: "/images/welcome-brazil/step-3.avif",
+    minimumDeposit: "70 BRL",
+    depositWager: "×25",
+    cashback: "—",
+    instantOptions: [
+      {
+        id: "aviator-20",
+        image: aviatorImage,
+        depositBonus: "125% até 750 BRL",
+        reward: "20 FF",
+        rewardLabel: "Voos grátis",
+        gameName: "Aviator",
+      },
+    ],
+  },
+  {
+    id: "instant-fourth-deposit",
+    bonusChoice: true,
+    shortTitle: "QUARTO DEPÓSITO",
+    title: "QUARTO DEPÓSITO",
+    description:
+      "Deposite 70 BRL e escolha uma das duas ofertas Instant.",
+    image: "/images/welcome-brazil/step-5.avif",
+    mapImageIndex: 5,
+    minimumDeposit: "70 BRL",
+    depositWager: "×25",
+    cashback: "—",
+    instantOptions: [
+      {
+        id: "big-bass-bonanza-70",
+        image: bigBassBonanzaImage,
+        depositBonus: "100% até 1.800 BRL",
+        reward: "70 FS",
+        rewardLabel: "Rodadas grátis",
+        gameName: "Big Bass Bonanza",
+        rewardWager: "×35",
+      },
+      {
+        id: "aviator-30",
+        image: aviatorImage,
+        depositBonus: "50% até 1.800 BRL",
+        reward: "30 FF",
+        rewardLabel: "Voos grátis",
+        gameName: "Aviator",
+      },
+    ],
+  },
+] as const;
+
 export const welcomeBrazilEnglishConfig = {
   ...welcomeBrazilConfig,
   locale: "en",
@@ -257,6 +373,13 @@ export const welcomeBrazilEnglishConfig = {
       titleLead: "UP TO 750%",
       titleAccent: "450 FREE SPINS",
       subtitle: "5 VIP STAGES — EVEN BIGGER REWARDS!",
+      action: "START NOW",
+    },
+    instantWelcome: {
+      eyebrow: "INSTANT WELCOME OFFER",
+      titleLead: "UP TO 400%",
+      titleAccent: "75 FF + 70 FS",
+      subtitle: "4 STAGES — CHOOSE YOUR REWARD AT STAGE 4",
       action: "START NOW",
     },
     slides: [
@@ -296,10 +419,14 @@ export const welcomeBrazilEnglishConfig = {
     cashback: "Cashback",
     bonusGame: "Bonus Game",
     chooseOne: "CHOOSE 1 BONUS",
+    chooseOneCombo: "CHOOSE 1 COMBO",
     combo: "COMBO",
     triple: "TRIPLE COMBO",
     previous: "Previous stage",
     next: "Next stage",
+    instantOnly: "Instant only — no slots",
+    instantOptions: "Instant bonus options",
+    or: "OR",
   },
   steps: [
     {
@@ -373,6 +500,37 @@ export const welcomeBrazilEnglishVipSteps = [
   },
 ] as const;
 
+export const welcomeBrazilEnglishInstantSteps = welcomeBrazilInstantSteps.map(
+  (step, index) => ({
+    ...step,
+    shortTitle: [
+      "FIRST DEPOSIT",
+      "SECOND DEPOSIT",
+      "THIRD DEPOSIT",
+      "FOURTH DEPOSIT",
+    ][index],
+    title: [
+      "FIRST DEPOSIT",
+      "SECOND DEPOSIT",
+      "THIRD DEPOSIT",
+      "FOURTH DEPOSIT",
+    ][index],
+    description: [
+      "Deposit 30 BRL and receive 75% up to 1,500 BRL + 10 FF in Aviator.",
+      "Deposit 50 BRL and receive 100% up to 1,000 BRL + 15 FF in Aviator.",
+      "Deposit 70 BRL and receive 125% up to 750 BRL + 20 FF in Aviator.",
+      "Deposit 70 BRL and choose one of two Instant offers.",
+    ][index],
+    instantOptions: step.instantOptions.map((option) => ({
+      ...option,
+      depositBonus: option.depositBonus.replace("até", "up to"),
+      rewardLabel: option.reward.endsWith("FF")
+        ? "Free flights"
+        : "Free spins",
+    })),
+  }),
+);
+
 export function getWelcomeBrazilConfig(locale: WelcomeBrazilLocale) {
   return locale === "en" ? welcomeBrazilEnglishConfig : welcomeBrazilConfig;
 }
@@ -382,11 +540,11 @@ export function getWelcomeBrazilSteps(
   variant: WelcomeBrazilVariant,
 ) {
   if (locale === "en") {
-    return variant === "vip"
-      ? welcomeBrazilEnglishVipSteps
-      : welcomeBrazilEnglishConfig.steps;
+    if (variant === "instant") return welcomeBrazilEnglishInstantSteps;
+    return variant === "vip" ? welcomeBrazilEnglishVipSteps : welcomeBrazilEnglishConfig.steps;
   }
 
+  if (variant === "instant") return welcomeBrazilInstantSteps;
   return variant === "vip" ? welcomeBrazilVipSteps : welcomeBrazilConfig.steps;
 }
 

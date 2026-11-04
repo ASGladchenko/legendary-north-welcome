@@ -891,6 +891,133 @@
   font-size: 9px;
 }
 
+.brazil-instant-options {
+  min-width: 0;
+
+  overflow: hidden;
+}
+
+.brazil-instant-options--single {
+  display: block;
+}
+
+.brazil-instant-marquee {
+  overflow: hidden;
+}
+
+.brazil-instant-track {
+  width: max-content;
+
+  display: flex;
+
+  animation: brazil-instant-scroll 18s linear infinite;
+  will-change: transform;
+}
+
+.brazil-instant-group,
+.brazil-instant-choice {
+  display: flex;
+  align-items: center;
+}
+
+.brazil-instant-group {
+  flex: 0 0 auto;
+}
+
+.brazil-instant-choice {
+  gap: 10px;
+}
+
+.brazil-instant-choice .brazil-instant-package {
+  width: clamp(430px, 54vw, 590px);
+  flex: 0 0 auto;
+}
+
+.brazil-instant-package {
+  box-sizing: border-box;
+  min-width: 0;
+  height: 100%;
+
+  display: grid;
+  gap: 6px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.brazil-instant-benefit {
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 76px;
+
+  padding: 6px 8px;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  background: rgb(0 72 54 / 78%);
+  border: 1px solid #cfbe24;
+  border-radius: 12px;
+  box-shadow: inset 0 0 14px rgb(0 0 0 / 20%);
+}
+
+.brazil-instant-benefit > img {
+  width: 52px;
+  height: 52px;
+
+  flex: 0 0 auto;
+
+  object-fit: cover;
+  border-radius: 9px;
+}
+
+.brazil-instant-benefit > span {
+  min-width: 0;
+
+  display: grid;
+}
+
+.brazil-instant-benefit strong {
+  font-size: clamp(11px, 1.1vw, 15px);
+  line-height: 1.05;
+
+  color: var(--brazil-yellow);
+}
+
+.brazil-instant-benefit small,
+.brazil-instant-benefit em {
+  margin-top: 3px;
+
+  font-size: 9px;
+  line-height: 1.1;
+}
+
+.brazil-instant-benefit em {
+  font-weight: 800;
+  font-style: normal;
+
+  color: #fff;
+}
+
+.brazil-instant-separator {
+  width: 34px;
+  height: 34px;
+
+  margin-right: 10px;
+
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+
+  font-size: 9px;
+  font-weight: 950;
+
+  color: #173023;
+  background: var(--brazil-yellow);
+  border: 2px solid #fff7ad;
+  border-radius: 50%;
+  box-shadow: 0 0 12px rgb(255 197 28 / 42%);
+}
+
 .brazil-details {
   margin: 7px 0 0;
 
@@ -1372,6 +1499,54 @@
     grid-column: 1 / -1;
   }
 
+  .brazil-instant-options {
+    grid-row: 4;
+    grid-column: 1 / -1;
+  }
+
+  .brazil-instant-package {
+    gap: 5px;
+  }
+
+  .brazil-instant-benefit {
+    min-height: 64px;
+
+    padding: 5px;
+
+    gap: 5px;
+  }
+
+  .brazil-instant-benefit > img {
+    width: 38px;
+    height: 38px;
+  }
+
+  .brazil-instant-benefit strong {
+    font-size: clamp(10px, 3vw, 13px);
+  }
+
+  .brazil-instant-benefit small,
+  .brazil-instant-benefit em {
+    font-size: 7px;
+  }
+
+  .brazil-instant-choice {
+    gap: 7px;
+  }
+
+  .brazil-instant-choice .brazil-instant-package {
+    width: min(78vw, 330px);
+  }
+
+  .brazil-instant-separator {
+    width: 28px;
+    height: 28px;
+
+    margin-right: 7px;
+
+    font-size: 7px;
+  }
+
   .brazil-offers > div {
     min-height: 54px;
 
@@ -1475,6 +1650,16 @@
 
   .brazil-cta {
     animation: none;
+  }
+
+  .brazil-instant-track {
+    animation: none;
+  }
+}
+
+@keyframes brazil-instant-scroll {
+  to {
+    transform: translateX(-50%);
   }
 }
 

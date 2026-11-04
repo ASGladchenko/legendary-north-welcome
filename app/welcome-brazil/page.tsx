@@ -15,7 +15,20 @@ const getLocale = (lang: string | string[] | undefined): WelcomeBrazilLocale =>
 export async function generateMetadata({
   searchParams,
 }: PageProps<"/welcome-brazil">): Promise<Metadata> {
-  const locale = getLocale((await searchParams).lang);
+  const query = await searchParams;
+  const locale = getLocale(query.lang);
+
+  if (query.welcome === "instant") {
+    return locale === "en"
+      ? {
+          title: "Instant welcome offer | 1MLNBET Brazil",
+          description: "Four Instant bonus stages with Aviator and Big Bass Bonanza rewards.",
+        }
+      : {
+          title: "Oferta de boas-vindas Instant | 1MLNBET Brasil",
+          description: "Quatro etapas de bônus Instant com recompensas no Aviator e Big Bass Bonanza.",
+        };
+  }
 
   return locale === "en"
     ? {
@@ -34,7 +47,11 @@ export default async function WelcomeBrazilPage({
   const { lang, login, maskot, modal, welcome } = await searchParams;
   const locale = getLocale(lang);
   const config = getWelcomeBrazilConfig(locale);
-  const variant = welcome === "vip" ? "vip" : "standard";
+  const variant = welcome === "instant"
+    ? "instant"
+    : welcome === "vip"
+      ? "vip"
+      : "standard";
   const showSignup = login === "no";
   const showModal = modal === "yes";
   const mascotDelay = typeof maskot === "string" && /^\d+$/.test(maskot)
