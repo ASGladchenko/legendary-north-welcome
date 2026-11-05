@@ -7,6 +7,7 @@ export const welcomeBrazilConfig = {
     action: "COMEÇAR AGORA",
     promoUrl: "https://1mlnbet.com/pt/promo",
     signupUrl: "https://1mlnbet.com/pt/registration/7",
+    instantSignupUrl: "https://1mlnbet.com/pt/registration/11",
   },
   modal: {
     image: {
@@ -26,10 +27,10 @@ export const welcomeBrazilConfig = {
       action: "COMEÇAR AGORA",
     },
     instantWelcome: {
-      eyebrow: "OFERTA DE BOAS-VINDAS INSTANT",
-      titleLead: "ATÉ 400%",
-      titleAccent: "75 FF + 70 FS",
-      subtitle: "4 ETAPAS — ESCOLHA SUA RECOMPENSA NA 4ª ETAPA",
+      eyebrow: "OFERTA DE BOAS-VINDAS PARA JOGOS DE CRASH",
+      titleLead: "ATÉ 400% +",
+      titleAccent: "70 GG + 45 VG NO AVIATOR",
+      subtitle: "",
       action: "COMEÇAR AGORA",
     },
     vipBadge: "/images/hero/bonus-game.webp",
@@ -364,6 +365,7 @@ export const welcomeBrazilEnglishConfig = {
     action: "START NOW",
     promoUrl: "https://1mlnbet.com/en/promo",
     signupUrl: "https://1mlnbet.com/en/registration/7",
+    instantSignupUrl: "https://1mlnbet.com/en/registration/11",
   },
   hero: {
     ...welcomeBrazilConfig.hero,
@@ -376,10 +378,10 @@ export const welcomeBrazilEnglishConfig = {
       action: "START NOW",
     },
     instantWelcome: {
-      eyebrow: "INSTANT WELCOME OFFER",
-      titleLead: "UP TO 400%",
-      titleAccent: "75 FF + 70 FS",
-      subtitle: "4 STAGES — CHOOSE YOUR REWARD AT STAGE 4",
+      eyebrow: "CRASH GAMES WELCOME OFFER",
+      titleLead: "UP TO 400% +",
+      titleAccent: "70 FS + 45 FF IN AVIATOR",
+      subtitle: "",
       action: "START NOW",
     },
     slides: [

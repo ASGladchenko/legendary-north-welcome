@@ -58,7 +58,9 @@ export default async function WelcomeBrazilPage({
     ? Math.min(Number(maskot), 2_147_483_647)
     : null;
   const actionHref = showSignup
-    ? config.cta.signupUrl
+    ? variant === "instant"
+      ? config.cta.instantSignupUrl
+      : config.cta.signupUrl
     : config.cta.promoUrl;
 
   return (

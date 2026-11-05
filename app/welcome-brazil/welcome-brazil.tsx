@@ -453,7 +453,7 @@ export function WelcomeBrazil({
                       </div>
                       <div>
                         <Image src="/icons/rewards/wagering-requirement.webp" alt="" width={48} height={48} />
-                        <dt>{isInstant ? config.labels.instantOnly : config.labels.wager}</dt><dd>{item.depositWager}</dd>
+                        <dt>{config.labels.wager}</dt><dd>{item.depositWager}</dd>
                       </div>
                       {!isInstant && "freeSpins" in item && item.freeSpins !== "—" && (
                         <div>
