@@ -7,12 +7,6 @@ import disk from "../../public/images/fortune-wheel-brazil/wheel-disk.webp";
 import frame from "../../public/images/fortune-wheel-brazil/wheel-frame.webp";
 
 export type FortuneWheelConfig = {
-  id: string;
-  locale: string;
-  prizeUrl: string;
-  rewards: readonly { value: string; label: string }[];
-  winningRewardIndex: number;
-  modalReward?: { value: string; label: string };
   assets: {
     backgroundLandscape: StaticImageData;
     backgroundPortrait: StaticImageData;
@@ -22,19 +16,30 @@ export type FortuneWheelConfig = {
     disk: StaticImageData;
     frame: StaticImageData;
     pointer?: StaticImageData;
-  };
+};
   copy: {
     action: string;
+    claim: string;
+    loading: string;
+    redirecting: string;
     spinning: string;
+    wheelLabel: string;
     won: string;
     wonLabel: string;
-    claim: string;
-    redirecting: string;
-    loading: string;
-    wheelLabel: string;
-  };
 };
+  id: string;
+  locale: string;
+  modalReward?: {
+ value: string; label: string 
 
+};
+  prizeUrl: string;
+  rewards: readonly {
+ value: string; label: string 
+
+}[];
+  winningRewardIndex: number;
+};
 export type BrazilFortuneWheelLocale = "en" | "pt-BR";
 
 export const brazilFortuneWheelConfig = {
@@ -42,7 +47,7 @@ export const brazilFortuneWheelConfig = {
   locale: "pt-BR",
   prizeUrl: "https://1mlnbet.com/pt/registration/7",
   rewards: [
-    { value: "500% +", label: "255 FS" },
+    { value: "500% +", label: "235 FS" },
     { value: "150% +", label: "75 FS" },
     { value: "250% +", label: "150 FS" },
     { value: "100% +", label: "50 FS" },
@@ -50,7 +55,7 @@ export const brazilFortuneWheelConfig = {
     { value: "200% +", label: "100 FS" },
   ],
   winningRewardIndex: 0,
-  modalReward: { value: "ATÉ 500%", label: "& 255 FS" },
+  modalReward: { value: "ATÉ 500%", label: "& 235 FS" },
   assets: {
     backgroundLandscape,
     backgroundPortrait,
@@ -76,7 +81,7 @@ export const brazilFortuneWheelEnglishConfig = {
   ...brazilFortuneWheelConfig,
   locale: "en",
   prizeUrl: "https://1mlnbet.com/en/registration/7",
-  modalReward: { value: "UP TO 500%", label: "& 255 FS" },
+  modalReward: { value: "UP TO 500%", label: "& 235 FS" },
   copy: {
     action: "Spin the wheel",
     spinning: "Finding your fortune...",
