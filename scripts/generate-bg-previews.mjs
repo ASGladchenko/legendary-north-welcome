@@ -90,7 +90,7 @@ const brazilSourceDirectory = "assets/welcome-brazil";
 const brazilPublicDirectory = "public/images/welcome-brazil";
 const brazilPreviewsDirectory = join(brazilPublicDirectory, "previews");
 const brazilSources = (await readdir(brazilSourceDirectory))
-  .filter((filename) => filename.endsWith(".png"));
+  .filter((filename) => supportedExtensions.has(extname(filename).toLowerCase()));
 const brazilPublishedSources = brazilSources.filter(
   (filename) => filename !== "map-desktop.png",
 );
@@ -102,14 +102,19 @@ await Promise.all(
     const source = join(brazilSourceDirectory, filename);
     const avifOutput = join(brazilPublicDirectory, `${name}.avif`);
     const webpOutput = join(brazilPublicDirectory, `${name}.webp`);
-    const mobileOutputs = name.startsWith("step-")
+    const mobileResize = name.startsWith("step-") || name.startsWith("sport-slider-")
+      ? { width: 320, withoutEnlargement: true }
+      : name.startsWith("sport-map-")
+        ? { width: 128, height: 128, fit: "cover" }
+        : null;
+    const mobileOutputs = mobileResize
       ? [
           sharp(source)
-            .resize({ width: 320, withoutEnlargement: true })
+            .resize(mobileResize)
             .avif({ quality: 45, effort: 4 })
             .toFile(join(brazilPublicDirectory, `${name}-mobile.avif`)),
           sharp(source)
-            .resize({ width: 320, withoutEnlargement: true })
+            .resize(mobileResize)
             .webp({ quality: 65, effort: 5 })
             .toFile(join(brazilPublicDirectory, `${name}-mobile.webp`)),
         ]
@@ -138,8 +143,11 @@ await Promise.all(
         `${parse(filename).name}.webp`,
       );
 
+      const name = parse(filename).name;
       await sharp(join(brazilSourceDirectory, filename))
-        .resize({ width: 80, withoutEnlargement: true })
+        .resize(name.startsWith("sport-map-")
+          ? { width: 80, height: 80, fit: "cover" }
+          : { width: 80, withoutEnlargement: true })
         .webp({ quality: 30 })
         .toFile(output);
 

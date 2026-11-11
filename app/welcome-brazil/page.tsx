@@ -18,6 +18,18 @@ export async function generateMetadata({
   const query = await searchParams;
   const locale = getLocale(query.lang);
 
+  if (query.welcome === "sport") {
+    return locale === "en"
+      ? {
+          title: "Sport welcome offer | 1MLNBET Brazil",
+          description: "A sports-themed welcome offer for new players.",
+        }
+      : {
+          title: "Oferta de boas-vindas Sport | 1MLNBET Brasil",
+          description: "Uma oferta de boas-vindas esportiva para novos jogadores.",
+        };
+  }
+
   if (query.welcome === "instant") {
     return locale === "en"
       ? {
@@ -49,18 +61,23 @@ export default async function WelcomeBrazilPage({
   const config = getWelcomeBrazilConfig(locale);
   const variant = welcome === "instant"
     ? "instant"
-    : welcome === "vip"
-      ? "vip"
-      : "standard";
+    : welcome === "sport"
+      ? "sport"
+      : welcome === "vip"
+        ? "vip"
+        : "standard";
   const showSignup = login === "no";
   const showModal = modal === "yes";
   const mascotDelay = typeof maskot === "string" && /^\d+$/.test(maskot)
     ? Math.min(Number(maskot), 2_147_483_647)
     : null;
+  const signupHref = variant === "sport"
+    ? config.cta.sportSignupUrl
+    : config.cta.signupUrl;
   const actionHref = showSignup
     ? variant === "instant"
       ? config.cta.instantSignupUrl
-      : config.cta.signupUrl
+      : signupHref
     : config.cta.promoUrl;
 
   return (
@@ -73,7 +90,7 @@ export default async function WelcomeBrazilPage({
       />
       {showModal && (
         <OfferModal
-          actionHref={config.cta.signupUrl}
+          actionHref={signupHref}
           image={config.modal.image}
           locale={locale === "en" ? "en-BR" : "pt-BR"}
         />

@@ -129,14 +129,11 @@
   opacity: 0;
 
   transition: opacity 240ms ease;
-  animation: brazil-progressive-full-fallback 300ms linear 800ms forwards;
   will-change: opacity;
 }
 
 .brazil-progressive-full.is-loaded {
   opacity: 1;
-
-  animation: none;
 }
 
 .brazil-progressive-full > img {
@@ -425,6 +422,14 @@
 
 .brazil-map::-webkit-scrollbar {
   display: none;
+}
+
+.brazil-map--sport {
+  z-index: auto;
+}
+
+.brazil-map--sport li:first-child .brazil-map-link[aria-pressed="true"] {
+  z-index: 7;
 }
 
 .brazil-map-track {
@@ -845,6 +850,43 @@
   box-shadow: inset 0 0 14px rgb(0 0 0 / 20%);
 }
 
+.brazil-offers > div:only-child,
+.brazil-details > div:only-child {
+  width: fit-content;
+  max-width: 100%;
+
+  margin-inline: auto;
+
+  grid-column: 1 / -1;
+  justify-self: center;
+}
+
+.brazil-offers > div:only-child {
+  min-width: min(100%, 220px);
+}
+
+.brazil-offers > .brazil-offer--wow {
+  background:
+    radial-gradient(circle at 22% 50%, rgb(255 211 37 / 34%), transparent 48%),
+    linear-gradient(135deg, rgb(0 112 73 / 96%), rgb(0 56 43 / 96%));
+  border: 2px solid #ffe36a;
+  box-shadow:
+    0 0 22px rgb(255 197 28 / 48%),
+    inset 0 0 18px rgb(255 224 103 / 16%);
+
+  transform: scale(1.04);
+}
+
+.brazil-offer--wow strong {
+  text-shadow: 0 0 10px rgb(255 224 103 / 68%);
+}
+
+.brazil-details > div:only-child {
+  min-width: min(100%, 160px);
+
+  flex: 0 1 auto;
+}
+
 .brazil-offers img {
   width: 42px;
   height: 42px;
@@ -1191,6 +1233,10 @@
     grid-column: 2 / 4;
   }
 
+  .brazil-map--three li:nth-child(2) {
+    grid-row: 2;
+  }
+
   .brazil-map-link {
     width: clamp(76px, 9vw, 92px);
   }
@@ -1371,6 +1417,15 @@
   .brazil-map li:nth-child(5) {
     grid-row: 2;
     grid-column: 2 / 4;
+  }
+
+  .brazil-map--three li,
+  .brazil-map--three li:nth-child(even) {
+    padding-top: 15px;
+  }
+
+  .brazil-map--three li:nth-child(2) {
+    grid-row: 2;
   }
 
   .brazil-map-link {
@@ -1695,12 +1750,6 @@
       0 10px 30px rgb(255 82 24 / 52%),
       0 0 0 6px rgb(255 106 36 / 8%);
     transform: translate(-50%, -50%) scale(1.04);
-  }
-}
-
-@keyframes brazil-progressive-full-fallback {
-  to {
-    opacity: 1;
   }
 }
 

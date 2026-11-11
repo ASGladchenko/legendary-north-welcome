@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type CSSProperties, type SyntheticEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 import Image from "next/image";
 import type { Swiper as SwiperInstance } from "swiper";
@@ -151,20 +151,23 @@ function ProgressiveImage({
 }: ProgressiveImageProps) {
   const fallbackSrc = src.replace(/\.avif$/, ".webp");
   const mobileFallbackSrc = mobileSrc?.replace(/\.avif$/, ".webp");
+  const sourceKey = `${src}|${mobileSrc ?? ""}`;
+  const imageRef = useRef<HTMLImageElement>(null);
+  const [loadedSource, setLoadedSource] = useState<string | null>(null);
+  const isLoaded = loadedSource === sourceKey;
 
-  const reveal = (event: SyntheticEvent<HTMLImageElement>) => {
-    const imageHost = event.currentTarget.parentElement;
-    imageHost?.classList.add("is-loaded");
-    imageHost?.parentElement?.classList.add("is-loaded");
-  };
+  useEffect(() => {
+    const image = imageRef.current;
+    if (image?.complete && image.naturalWidth > 0) setLoadedSource(sourceKey);
+  }, [sourceKey]);
 
   return (
     <span
-      className={`brazil-progressive ${wrapperClassName}`}
+      className={`brazil-progressive ${wrapperClassName}${isLoaded ? " is-loaded" : ""}`}
       style={{ "--brazil-preview": `url("${preview}")` } as CSSProperties}
     >
       <span className="brazil-progressive-preview" aria-hidden="true" />
-      <picture className="brazil-progressive-full">
+      <picture className={`brazil-progressive-full${isLoaded ? " is-loaded" : ""}`}>
         {mobileSrc?.endsWith(".avif") && (
           <source media="(max-width: 700px)" srcSet={mobileSrc} type="image/avif" />
         )}
@@ -173,13 +176,14 @@ function ProgressiveImage({
         )}
         {src.endsWith(".avif") && <source srcSet={src} type="image/avif" />}
         <img
+          ref={imageRef}
           src={fallbackSrc}
           alt={alt}
           decoding="async"
           draggable={false}
           fetchPriority={eager ? "high" : "low"}
           loading={eager ? "eager" : "lazy"}
-          onLoad={reveal}
+          onLoad={() => setLoadedSource(sourceKey)}
         />
       </picture>
     </span>
@@ -210,13 +214,22 @@ export function WelcomeBrazil({
   const config = getWelcomeBrazilConfig(locale);
   const steps = getWelcomeBrazilSteps(locale, variant);
   const isInstant = variant === "instant";
+  const isSport = variant === "sport";
+  const heroBackground = isSport
+    ? config.hero.sportBackground
+    : `${assetRoot}/bg-desktop.avif`;
+  const isThreeStepJourney = steps.length === 3;
   const isFourStepJourney = steps.length === 4;
-  const desktopMapPath = isFourStepJourney
-    ? "M125 90 C210 70 285 180 375 160 C465 140 535 70 625 90 C715 110 785 180 875 160"
-    : "M100 90 C130 72 150 112 180 101 C205 92 215 151 250 143 C270 139 280 158 300 160 C338 174 356 188 389 172 C425 155 448 121 467 105 C480 94 488 91 500 90 C535 70 545 125 575 112 C605 98 598 160 635 145 C662 132 670 174 700 160 C735 178 748 132 780 145 C808 158 820 105 850 118 C872 128 880 92 900 90";
-  const mobileMapPath = isFourStepJourney
-    ? "M113 52 C155 30 210 72 250 50 C270 39 282 38 300 52 C330 70 365 28 405 48 C430 62 452 70 478 52 C535 74 548 112 520 132 C500 150 455 143 446 165 C438 181 420 190 400 187"
-    : "M113 52 C155 30 210 72 250 50 C270 39 282 38 300 52 C330 70 365 28 405 48 C430 62 452 70 478 52 C535 74 548 112 520 132 C500 150 455 143 446 165 C438 181 420 190 400 187 C360 165 330 215 285 192 C250 174 230 205 200 187";
+  const desktopMapPath = isThreeStepJourney
+    ? "M167 87 C278 60 389 155 500 155 C611 155 722 60 833 87"
+    : isFourStepJourney
+      ? "M125 90 C210 70 285 180 375 160 C465 140 535 70 625 90 C715 110 785 180 875 160"
+      : "M100 90 C130 72 150 112 180 101 C205 92 215 151 250 143 C270 139 280 158 300 160 C338 174 356 188 389 172 C425 155 448 121 467 105 C480 94 488 91 500 90 C535 70 545 125 575 112 C605 98 598 160 635 145 C662 132 670 174 700 160 C735 178 748 132 780 145 C808 158 820 105 850 118 C872 128 880 92 900 90";
+  const mobileMapPath = isThreeStepJourney
+    ? "M110 72 C175 42 235 205 300 205 C365 205 425 42 490 72"
+    : isFourStepJourney
+      ? "M113 52 C155 30 210 72 250 50 C270 39 282 38 300 52 C330 70 365 28 405 48 C430 62 452 70 478 52 C535 74 548 112 520 132 C500 150 455 143 446 165 C438 181 420 190 400 187"
+      : "M113 52 C155 30 210 72 250 50 C270 39 282 38 300 52 C330 70 365 28 405 48 C430 62 452 70 478 52 C535 74 548 112 520 132 C500 150 455 143 446 165 C438 181 420 190 400 187 C360 165 330 215 285 192 C250 174 230 205 200 187";
 
   const selectStep = (index: number) => {
     rewardSwiperRef.current?.slideTo(index);
@@ -231,8 +244,8 @@ export function WelcomeBrazil({
         <section className="brazil-hero" aria-label={config.hero.label}>
           <ProgressiveImage
             wrapperClassName="brazil-hero-background"
-            src={`${assetRoot}/bg-desktop.avif`}
-            preview={`${assetRoot}/previews/bg-desktop.webp`}
+            src={heroBackground}
+            preview={previewFor(heroBackground)}
             alt=""
             eager
           />
@@ -250,9 +263,12 @@ export function WelcomeBrazil({
           >
             {config.hero.slides.map((slide, index) => {
               const isOffer = slide.id === "welcome-offer";
+              const personSrc = isSport ? slide.sportSrc : slide.src;
               const copy = isOffer
                 ? variant === "vip"
                   ? config.hero.vipWelcome
+                  : isSport
+                    ? config.hero.sportWelcome
                   : isInstant
                     ? config.hero.instantWelcome
                     : slide
@@ -276,9 +292,9 @@ export function WelcomeBrazil({
 
                 <ProgressiveImage
                   wrapperClassName={`brazil-person brazil-person--${slide.characterSide} brazil-person--${slide.id}`}
-                  src={slide.src}
-                  preview={previewFor(slide.src)}
-                  alt={slide.alt}
+                  src={personSrc}
+                  preview={previewFor(personSrc)}
+                  alt={isSport ? slide.sportAlt : slide.alt}
                   eager={index === 0}
                 />
 
@@ -312,7 +328,7 @@ export function WelcomeBrazil({
         </div>
 
         <section className="brazil-journey" aria-label={config.labels.map}>
-        <div className="brazil-map">
+        <div className={`brazil-map${isThreeStepJourney ? " brazil-map--three" : ""}${isSport ? " brazil-map--sport" : ""}`}>
           <div className="brazil-map-track">
             <svg className="brazil-map-line brazil-map-line--desktop" viewBox="0 0 1000 285" preserveAspectRatio="none" aria-hidden="true">
               <defs>
@@ -341,6 +357,9 @@ export function WelcomeBrazil({
             <ol style={{ "--brazil-step-count": steps.length } as CSSProperties}>
               {steps.map((item, index) => {
                 const mapImageIndex = "mapImageIndex" in item ? item.mapImageIndex : index + 1;
+                const mapImage = isSport
+                  ? `${assetRoot}/sport-map-${index + 1}`
+                  : `${assetRoot}/map-${mapImageIndex}`;
 
                 return (
                   <li key={item.id}>
@@ -353,9 +372,9 @@ export function WelcomeBrazil({
                     >
                       <ProgressiveImage
                         wrapperClassName="brazil-map-thumb"
-                        src={`${assetRoot}/map-${mapImageIndex}.avif`}
-                        mobileSrc={`${assetRoot}/map-${mapImageIndex}-mobile.avif`}
-                        preview={`${assetRoot}/previews/map-${mapImageIndex}.webp`}
+                        src={`${mapImage}.avif`}
+                        mobileSrc={`${mapImage}-mobile.avif`}
+                        preview={previewFor(`${mapImage}.avif`)}
                         alt=""
                         eager={index === 0}
                       />
@@ -399,22 +418,33 @@ export function WelcomeBrazil({
                     <ProgressiveImage wrapperClassName="brazil-card-background-image" src={`${assetRoot}/card-bg.avif`} preview={`${assetRoot}/previews/card-bg.webp`} alt="" />
                   </div>
                   <div className="brazil-step-image">
-                    <ProgressiveImage wrapperClassName="brazil-step-visual" src={item.image} mobileSrc={mobileFor(item.image)} preview={previewFor(item.image)} alt="" eager={index === 0} />
+                    <ProgressiveImage
+                      wrapperClassName="brazil-step-visual"
+                      src={isSport ? `${assetRoot}/sport-slider-${index + 1}.avif` : item.image}
+                      mobileSrc={isSport ? `${assetRoot}/sport-slider-${index + 1}-mobile.avif` : mobileFor(item.image)}
+                      preview={previewFor(isSport ? `${assetRoot}/sport-slider-${index + 1}.avif` : item.image)}
+                      alt=""
+                      eager={index === 0}
+                    />
                   </div>
                   <span className="brazil-step-label">{config.labels.step} {index + 1}/{steps.length}</span>
 
                   <div className="brazil-reward-copy">
                     <h2>{item.title}</h2>
                     <p>{item.description}</p>
-                    <p className="brazil-offer-mode">
-                      {item.bonusChoice
-                        ? isInstant
-                          ? config.labels.chooseOneCombo
-                          : config.labels.chooseOne
-                        : "bonusGame" in item
+                    {(!isSport || index === 0) && (
+                      <p className="brazil-offer-mode">
+                        {isSport
                           ? config.labels.triple
-                          : config.labels.combo}
-                    </p>
+                          : item.bonusChoice
+                            ? isInstant
+                              ? config.labels.chooseOneCombo
+                              : config.labels.chooseOne
+                            : "bonusGame" in item
+                              ? config.labels.triple
+                              : config.labels.combo}
+                      </p>
+                    )}
                     {"instantOptions" in item ? (
                       <InstantOptions
                         options={item.instantOptions}
@@ -424,11 +454,22 @@ export function WelcomeBrazil({
                         wagerLabel={config.labels.wager}
                       />
                     ) : (
-                      <div className={`brazil-offers${"bonusGame" in item && item.freeSpins !== "—" ? " brazil-offers--triple" : ""}`}>
-                        <div>
-                          <Image src="/icons/rewards/deposit-bonus.webp" alt="" width={76} height={76} />
-                          <span><strong>{item.depositBonus}</strong><small>{config.labels.depositBonus}</small></span>
-                        </div>
+                      <div className={`brazil-offers${("bonusGame" in item && item.freeSpins !== "—") || ("freeBet" in item && item.freeBet !== "—" && item.depositBonus !== "—" && item.freeSpins !== "—") ? " brazil-offers--triple" : ""}`}>
+                        {item.depositBonus !== "—" && (
+                          <div>
+                            <Image src="/icons/rewards/deposit-bonus.webp" alt="" width={76} height={76} />
+                            <span><strong>{item.depositBonus}</strong><small>{config.labels.depositBonus}</small></span>
+                          </div>
+                        )}
+                        {"freeBet" in item && item.freeBet !== "—" && (
+                          <div className={isSport && index === 2 ? "brazil-offer--wow" : undefined}>
+                            <Image src="/icons/rewards/deposit-bonus.webp" alt="" width={76} height={76} />
+                            <span>
+                              <strong>{item.freeBet}</strong>
+                              <small>{"freeBetDescription" in item && item.freeBetDescription ? item.freeBetDescription : config.labels.freeBet}</small>
+                            </span>
+                          </div>
+                        )}
                         {item.freeSpins !== "—" && (
                           <div>
                             <Image src="/icons/rewards/free-spins.webp" alt="" width={76} height={76} />
@@ -451,11 +492,13 @@ export function WelcomeBrazil({
                         <Image src="/icons/rewards/minimum-deposit.webp" alt="" width={48} height={48} />
                         <dt>{config.labels.minimumDeposit}</dt><dd>{item.minimumDeposit}</dd>
                       </div>
-                      <div>
-                        <Image src="/icons/rewards/wagering-requirement.webp" alt="" width={48} height={48} />
-                        <dt>{config.labels.wager}</dt><dd>{item.depositWager}</dd>
-                      </div>
-                      {!isInstant && "freeSpins" in item && item.freeSpins !== "—" && (
+                      {item.depositWager !== "—" && (
+                        <div>
+                          <Image src="/icons/rewards/wagering-requirement.webp" alt="" width={48} height={48} />
+                          <dt>{config.labels.wager}</dt><dd>{item.depositWager}</dd>
+                        </div>
+                      )}
+                      {!isInstant && "freeSpins" in item && item.freeSpins !== "—" && item.freeSpinsWager !== "—" && (
                         <div>
                           <Image src="/icons/rewards/wagering-requirement.webp" alt="" width={48} height={48} />
                           <dt>FS {config.labels.wager}</dt><dd>{item.freeSpinsWager}</dd>

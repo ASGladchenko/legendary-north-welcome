@@ -1,4 +1,4 @@
-export type WelcomeBrazilVariant = "instant" | "standard" | "vip";
+export type WelcomeBrazilVariant = "instant" | "sport" | "standard" | "vip";
 export type WelcomeBrazilLocale = "en" | "pt-BR";
 
 export const welcomeBrazilConfig = {
@@ -8,6 +8,7 @@ export const welcomeBrazilConfig = {
     promoUrl: "https://1mlnbet.com/pt/promo",
     signupUrl: "https://1mlnbet.com/pt/registration/7",
     instantSignupUrl: "https://1mlnbet.com/pt/registration/11",
+    sportSignupUrl: "https://1mlnbet.com/pt/registration/1",
   },
   modal: {
     image: {
@@ -19,6 +20,7 @@ export const welcomeBrazilConfig = {
   },
   hero: {
     label: "Oferta de boas-vindas do Brasil",
+    sportBackground: "/images/welcome-brazil/sport-bg-desktop.avif",
     vipWelcome: {
       eyebrow: "OFERTA DE BOAS-VINDAS VIP",
       titleLead: "ATÉ 750%",
@@ -33,12 +35,21 @@ export const welcomeBrazilConfig = {
       subtitle: "",
       action: "COMEÇAR AGORA",
     },
+    sportWelcome: {
+      eyebrow: "OFERTA DE BOAS-VINDAS",
+      titleLead: "ATÉ 175%",
+      titleAccent: "+ APOSTAS GRÁTIS + 25 RODADAS GRÁTIS",
+      subtitle: "",
+      action: "COMEÇAR AGORA",
+    },
     vipBadge: "/images/hero/bonus-game.webp",
     slides: [
       {
         id: "welcome-offer",
         src: "/images/welcome-brazil/banner-person-2.avif",
+        sportSrc: "/images/welcome-brazil/sport-banner-person-1.avif",
         alt: "Mulher celebrando no Rio de Janeiro",
+        sportAlt: "Torcedora do Brasil comemorando",
         characterSide: "right",
         textSide: "left",
         eyebrow: "OFERTA DE BOAS-VINDAS",
@@ -50,7 +61,9 @@ export const welcomeBrazilConfig = {
       {
         id: "journey",
         src: "/images/welcome-brazil/banner-person-1.avif",
+        sportSrc: "/images/welcome-brazil/sport-banner-person-2.avif",
         alt: "Homem brindando com um coquetel",
+        sportAlt: "Torcedora do Brasil com a bandeira nacional",
         characterSide: "left",
         textSide: "right",
         eyebrow: "",
@@ -64,7 +77,9 @@ export const welcomeBrazilConfig = {
       {
         id: "good-vibes",
         src: "/images/welcome-brazil/banner-person-3.avif",
+        sportSrc: "/images/welcome-brazil/sport-banner-person-3.avif",
         alt: "Mulher com um coquetel tropical",
+        sportAlt: "Torcedor do Brasil comemorando",
         characterSide: "right",
         textSide: "left",
         eyebrow: "",
@@ -80,6 +95,7 @@ export const welcomeBrazilConfig = {
     rewards: "Recompensas de boas-vindas",
     step: "ETAPA",
     depositBonus: "Bônus de depósito",
+    freeBet: "Aposta grátis",
     freeSpins: "Rodadas grátis",
     minimumDeposit: "Depósito mín.",
     wager: "Rollover",
@@ -358,6 +374,58 @@ export const welcomeBrazilInstantSteps = [
   },
 ] as const;
 
+export const welcomeBrazilSportSteps = [
+  {
+    id: "sport-first-deposit",
+    bonusChoice: false,
+    shortTitle: "PRIMEIRO DEPÓSITO",
+    title: "PRIMEIRO DEPÓSITO",
+    description:
+      "Deposite 5 BRL e receba um bônus de 100% até 700 BRL, uma aposta grátis de 10 BRL e 25 rodadas grátis.",
+    image: "/images/welcome-brazil/step-1.avif",
+    depositBonus: "100% até 700 BRL",
+    freeBet: "10 BRL",
+    freeSpins: "25 FS",
+    minimumDeposit: "5 BRL",
+    depositWager: "—",
+    freeSpinsWager: "—",
+    cashback: "—",
+  },
+  {
+    id: "sport-second-deposit",
+    bonusChoice: false,
+    shortTitle: "SEGUNDO DEPÓSITO",
+    title: "SEGUNDO DEPÓSITO",
+    description:
+      "Deposite 5 BRL e receba um bônus de 75% até 1.000 BRL.",
+    image: "/images/welcome-brazil/step-2.avif",
+    depositBonus: "75% até 1.000 BRL",
+    freeBet: "—",
+    freeSpins: "—",
+    minimumDeposit: "5 BRL",
+    depositWager: "—",
+    freeSpinsWager: "—",
+    cashback: "—",
+  },
+  {
+    id: "sport-third-deposit",
+    bonusChoice: false,
+    shortTitle: "TERCEIRO DEPÓSITO",
+    title: "TERCEIRO DEPÓSITO",
+    description:
+      "Deposite 5 BRL e receba uma Free Bet de +30% do valor do depósito.",
+    image: "/images/welcome-brazil/step-3.avif",
+    depositBonus: "—",
+    freeBet: "+30% FREE BET",
+    freeBetDescription: "do valor do depósito",
+    freeSpins: "—",
+    minimumDeposit: "5 BRL",
+    depositWager: "—",
+    freeSpinsWager: "—",
+    cashback: "—",
+  },
+] as const;
+
 export const welcomeBrazilEnglishConfig = {
   ...welcomeBrazilConfig,
   locale: "en",
@@ -366,6 +434,7 @@ export const welcomeBrazilEnglishConfig = {
     promoUrl: "https://1mlnbet.com/en/promo",
     signupUrl: "https://1mlnbet.com/en/registration/7",
     instantSignupUrl: "https://1mlnbet.com/en/registration/11",
+    sportSignupUrl: "https://1mlnbet.com/en/registration/1",
   },
   hero: {
     ...welcomeBrazilConfig.hero,
@@ -384,10 +453,18 @@ export const welcomeBrazilEnglishConfig = {
       subtitle: "",
       action: "START NOW",
     },
+    sportWelcome: {
+      eyebrow: "WELCOME OFFER",
+      titleLead: "UP TO 175%",
+      titleAccent: "+ FREE BETS + 25 FREE SPINS",
+      subtitle: "",
+      action: "START NOW",
+    },
     slides: [
       {
         ...welcomeBrazilConfig.hero.slides[0],
         alt: "Woman celebrating in Rio de Janeiro",
+        sportAlt: "Brazil supporter celebrating",
         eyebrow: "WELCOME OFFER",
         titleLead: "UP TO 500%",
         titleAccent: "235 FREE SPINS",
@@ -397,6 +474,7 @@ export const welcomeBrazilEnglishConfig = {
       {
         ...welcomeBrazilConfig.hero.slides[1],
         alt: "Man raising a cocktail",
+        sportAlt: "Brazil supporter holding the national flag",
         titleLead: "YOUR JOURNEY",
         titleAccent: "STARTS AT ",
         action: "START NOW",
@@ -404,6 +482,7 @@ export const welcomeBrazilEnglishConfig = {
       {
         ...welcomeBrazilConfig.hero.slides[2],
         alt: "Woman holding a tropical cocktail",
+        sportAlt: "Brazil supporter celebrating",
         titleLead: "GOOD VIBES",
         titleAccent: "EVEN BIGGER WINS",
         action: "START NOW",
@@ -415,6 +494,7 @@ export const welcomeBrazilEnglishConfig = {
     rewards: "Welcome rewards",
     step: "STAGE",
     depositBonus: "Deposit bonus",
+    freeBet: "Free Bet",
     freeSpins: "Free spins",
     minimumDeposit: "Min. deposit",
     wager: "Wager",
@@ -533,6 +613,22 @@ export const welcomeBrazilEnglishInstantSteps = welcomeBrazilInstantSteps.map(
   }),
 );
 
+export const welcomeBrazilEnglishSportSteps = welcomeBrazilSportSteps.map(
+  (step, index) => ({
+    ...step,
+    shortTitle: ["FIRST DEPOSIT", "SECOND DEPOSIT", "THIRD DEPOSIT"][index],
+    title: ["FIRST DEPOSIT", "SECOND DEPOSIT", "THIRD DEPOSIT"][index],
+    description: [
+      "Deposit 5 BRL and receive a 100% bonus up to 700 BRL, a 10 BRL Free Bet and 25 Free Spins.",
+      "Deposit 5 BRL and receive a 75% bonus up to 1,000 BRL.",
+      "Deposit 5 BRL and receive a Free Bet worth +30% of the deposit.",
+    ][index],
+    depositBonus: ["100% up to 700 BRL", "75% up to 1,000 BRL", "—"][index],
+    freeBet: ["10 BRL", "—", "+30% FREE BET"][index],
+    freeBetDescription: [undefined, undefined, "of the deposit"][index],
+  }),
+);
+
 export function getWelcomeBrazilConfig(locale: WelcomeBrazilLocale) {
   return locale === "en" ? welcomeBrazilEnglishConfig : welcomeBrazilConfig;
 }
@@ -543,10 +639,12 @@ export function getWelcomeBrazilSteps(
 ) {
   if (locale === "en") {
     if (variant === "instant") return welcomeBrazilEnglishInstantSteps;
+    if (variant === "sport") return welcomeBrazilEnglishSportSteps;
     return variant === "vip" ? welcomeBrazilEnglishVipSteps : welcomeBrazilEnglishConfig.steps;
   }
 
   if (variant === "instant") return welcomeBrazilInstantSteps;
+  if (variant === "sport") return welcomeBrazilSportSteps;
   return variant === "vip" ? welcomeBrazilVipSteps : welcomeBrazilConfig.steps;
 }
 
